@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ *
+ * All rights reserved.
+ *
+ */
+
+@import "Assets/Fonts/Fonts.css";
+
+@tailwind components;
+@tailwind utilities;
+
+* {
+  user-select: none;
+}
