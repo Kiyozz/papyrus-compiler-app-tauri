@@ -5,17 +5,19 @@
  *
  */
 
-import AppProvider from 'App/Hooks/UseApp'
-import Compilation from 'App/Pages/Compilation/Page'
-import Groups from 'App/Pages/Groups/Page'
-import Logs from 'App/Pages/Logs/Page'
-import Settings from 'App/Pages/Settings/Page'
+import AppProvider from 'App/Hook/UseApp'
+import CompilationPage from 'App/Page/CompilationPage'
+import GroupsPage from 'App/Page/GroupsPage'
+import SettingsPage from 'App/Page/SettingsPage'
+import { configureTranslations } from 'App/Translations/ConfigureTranslations'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import App from './App'
 import MuiTheme from './MuiTheme'
 import './style.css'
+
+await configureTranslations()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -24,10 +26,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <MemoryRouter>
           <Routes>
             <Route path="/" element={<App />}>
-              <Route index element={<Compilation />} />
-              <Route path="/groups" element={<Groups />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/logs" element={<Logs />} />
+              <Route index element={<CompilationPage />} />
+              <Route path="/groups" element={<GroupsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
             </Route>
           </Routes>
         </MemoryRouter>

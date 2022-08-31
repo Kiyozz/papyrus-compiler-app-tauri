@@ -5,19 +5,25 @@
  *
  */
 
-import { DarkMode } from 'App/Types/DarkMode'
-import { useBooleanLocalStorage } from 'App/Utils/UseBooleanLocalStorage'
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react'
+import { DarkMode } from 'App/Type/DarkMode'
+import { useBooleanLocalStorage } from 'App/Util/UseBooleanLocalStorage'
+import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
 import useLocalStorage from 'react-use-localstorage'
 
 type ContextType = {
   drawer: [boolean, Dispatch<SetStateAction<boolean>>]
   dark: [DarkMode, Dispatch<SetStateAction<DarkMode>>]
+  dialogs: {
+    logs: [boolean, Dispatch<SetStateAction<boolean>>]
+    openDocumentation: [boolean, Dispatch<SetStateAction<boolean>>]
+  }
 }
 
 const Context = createContext<ContextType>({} as ContextType)
 
 function AppProvider({ children }: PropsWithChildren) {
+  const logs = useState(false)
+  const openDocumentation = useState(false)
   const drawerOpen = useBooleanLocalStorage('isDrawerOpen', false)
   const dark = useLocalStorage('darkMode', 'system') as [DarkMode, Dispatch<SetStateAction<DarkMode>>]
 
@@ -26,6 +32,10 @@ function AppProvider({ children }: PropsWithChildren) {
       value={{
         drawer: drawerOpen,
         dark,
+        dialogs: {
+          logs,
+          openDocumentation,
+        },
       }}
     >
       {children}

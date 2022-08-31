@@ -5,8 +5,8 @@
  *
  */
 
-import { useApp } from 'App/Hooks/UseApp'
-import { useSystemDarkPreference } from 'App/Hooks/UseSystemDarkPreference'
+import { useApp } from 'App/Hook/UseApp'
+import { useSystemDarkPreference } from 'App/Hook/UseSystemDarkPreference'
 
 export const useIsSystemDarkTheme = () => {
   const isDark = useSystemDarkPreference()

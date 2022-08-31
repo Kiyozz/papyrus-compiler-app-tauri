@@ -5,7 +5,7 @@
  *
  */
 
-@import "Assets/Fonts/Fonts.css";
+@import "Asset/Font/Fonts.css";
 
 @tailwind components;
 @tailwind utilities;

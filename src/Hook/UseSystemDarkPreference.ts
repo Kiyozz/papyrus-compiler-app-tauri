@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useState } from 'react'
-import { isDark, onDarkPreferenceChanges } from 'App/Utils/DarkTheme'
+import { isDark, onDarkPreferenceChanges } from 'App/Util/DarkTheme'
 
 export const useSystemDarkPreference = (): boolean => {
   const [isUsingDark, setDark] = useState(isDark)

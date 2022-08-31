@@ -8,7 +8,7 @@
 import type { PaletteMode, PaletteOptions } from '@mui/material'
 import { createTheme, CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material'
 import red from '@mui/material/colors/red'
-import { useIsSystemDarkTheme } from 'App/Hooks/UseIsSystemDarkTheme'
+import { useIsSystemDarkTheme } from 'App/Hook/UseIsSystemDarkTheme'
 import React from 'react'
 
 function MuiTheme({ children }: React.PropsWithChildren) {
@@ -47,14 +47,14 @@ function MuiTheme({ children }: React.PropsWithChildren) {
         styleOverrides: {
           root: {
             // top: platform === 'windows' ? 32 : 34,
-            top: 34,
+            // top: 34,
           },
         },
       },
       MuiDialog: {
         styleOverrides: {
           root: {
-            top: 32,
+            // top: 32,
           },
           scrollBody: {
             '& .MuiDialog-paper': {

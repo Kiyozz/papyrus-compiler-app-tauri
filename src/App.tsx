@@ -5,8 +5,10 @@
  *
  */
 
-import AppDrawer from 'App/Components/AppDrawer'
-import { useSyncHtmlTheme } from 'App/Hooks/UseSyncHtmlTheme'
+import LogsDialog from 'App/Component/Dialog/LogsDialog'
+import OpenDocumentationDialog from 'App/Component/Dialog/OpenDocumentationDialog'
+import AppDrawer from 'App/Component/Drawer/AppDrawer'
+import { useSyncHtmlTheme } from 'App/Hook/UseSyncHtmlTheme'
 import { Outlet } from 'react-router-dom'
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
   return (
     <>
       <AppDrawer />
+      <LogsDialog />
+      <OpenDocumentationDialog />
 
       <Outlet />
     </>

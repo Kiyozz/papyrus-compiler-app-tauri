@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-import { useIsSystemDarkTheme } from 'App/Hooks/UseIsSystemDarkTheme'
+import { useIsSystemDarkTheme } from 'App/Hook/UseIsSystemDarkTheme'
 import { useEffect } from 'react'
 
 export const useSyncHtmlTheme = (): void => {
