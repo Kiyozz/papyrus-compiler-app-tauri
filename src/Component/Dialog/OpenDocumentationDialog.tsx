@@ -16,7 +16,6 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import { useApp } from 'App/Hook/UseApp'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
-import { useBooleanLocalStorage } from 'App/Util/UseBooleanLocalStorage'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,24 +23,27 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
   const { t } = useTranslation()
   const {
     dialogs: {
-      openDocumentation: [isOpen, setOpen],
+      openDocumentation: {
+        show: [isOpen, setOpen],
+        doNotShowAgain: [isDoNotShowAnymoreDocumentationDialog, setDoNotShowAnymoreDocumentationDialog],
+      },
     },
   } = useApp()
   const { open: openTheDocumentation } = useDocumentation()
-  const [isShowDialog, setRememberDocumentationDialog] = useBooleanLocalStorage('showOpenDocumentationDialog', true)
 
   const onDialogKeyDown = (evt: React.KeyboardEvent) => {
     if (evt.key === 'Enter') {
       openTheDocumentation('enter')
-      onClose()
+      setOpen(false)
     }
   }
 
   const toggleRememberDocumentationDialog = () => {
-    setRememberDocumentationDialog((v) => !v)
+    setDoNotShowAnymoreDocumentationDialog((v) => !v)
   }
 
-  const onClose = () => {
+  const onConfirm = () => {
+    openTheDocumentation('click')
     setOpen(false)
   }
 
@@ -54,7 +56,7 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
           <FormControlLabel
             control={
               <Checkbox
-                checked={!isShowDialog}
+                checked={isDoNotShowAnymoreDocumentationDialog}
                 inputProps={{ 'aria-label': 'controlled' }}
                 onChange={toggleRememberDocumentationDialog}
               />
@@ -64,10 +66,10 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
         </FormGroup>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="inherit">
+        <Button onClick={() => setOpen(false)} color="inherit">
           {t('common.cancel')}
         </Button>
-        <Button onClick={onClose} color="inherit" autoFocus>
+        <Button onClick={onConfirm} color="inherit" autoFocus>
           {t('common.confirm')}
         </Button>
       </DialogActions>

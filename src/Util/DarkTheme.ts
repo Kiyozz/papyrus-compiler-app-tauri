@@ -10,9 +10,7 @@ export const isDark = () => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
-export const onDarkPreferenceChanges = (
-  onChange: (isDark: boolean) => void,
-): Unsubscribe => {
+export const onDarkPreferenceChanges = (onChange: (isDark: boolean) => void): Unsubscribe => {
   const media = window.matchMedia('(prefers-color-scheme: dark)')
 
   const onChangeInternal = (e: MediaQueryListEvent) => {

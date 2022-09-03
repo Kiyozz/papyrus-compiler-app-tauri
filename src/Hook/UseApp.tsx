@@ -15,7 +15,10 @@ type ContextType = {
   dark: [DarkMode, Dispatch<SetStateAction<DarkMode>>]
   dialogs: {
     logs: [boolean, Dispatch<SetStateAction<boolean>>]
-    openDocumentation: [boolean, Dispatch<SetStateAction<boolean>>]
+    openDocumentation: {
+      show: [boolean, Dispatch<SetStateAction<boolean>>]
+      doNotShowAgain: [boolean, Dispatch<SetStateAction<boolean>>]
+    }
   }
 }
 
@@ -24,6 +27,7 @@ const Context = createContext<ContextType>({} as ContextType)
 function AppProvider({ children }: PropsWithChildren) {
   const logs = useState(false)
   const openDocumentation = useState(false)
+  const doNotShowOpenDocumentationAgain = useBooleanLocalStorage('doNotShowAnymoreDocumentationDialog', false)
   const drawerOpen = useBooleanLocalStorage('isDrawerOpen', false)
   const dark = useLocalStorage('darkMode', 'system') as [DarkMode, Dispatch<SetStateAction<DarkMode>>]
 
@@ -34,7 +38,10 @@ function AppProvider({ children }: PropsWithChildren) {
         dark,
         dialogs: {
           logs,
-          openDocumentation,
+          openDocumentation: {
+            show: openDocumentation,
+            doNotShowAgain: doNotShowOpenDocumentationAgain,
+          },
         },
       }}
     >

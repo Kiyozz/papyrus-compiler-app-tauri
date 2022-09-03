@@ -16,16 +16,21 @@ import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import AppDrawerLink from 'App/Component/Drawer/AppDrawerLink'
 import { useApp } from 'App/Hook/UseApp'
+import { useDocumentation } from 'App/Hook/UseDocumentation'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 
 function AppDrawer() {
   const { t } = useTranslation()
+  const { open } = useDocumentation()
   const {
     drawer: [isDrawerExpanded, setDrawerExpanded],
     dialogs: {
       logs: [, setLogsDialogOpen],
-      openDocumentation: [, setOpenDocumentationDialogOpen],
+      openDocumentation: {
+        show: [, setOpenDocumentationDialog],
+        doNotShowAgain: [isDoNotShowAgainOpenDocumentationDialog],
+      },
     },
   } = useApp()
 
@@ -66,7 +71,11 @@ function AppDrawer() {
       Icon: HelpIcon,
       onClick: () => {
         // open the doc website
-        setOpenDocumentationDialogOpen(true)
+        if (isDoNotShowAgainOpenDocumentationDialog) {
+          open('click')
+        } else {
+          setOpenDocumentationDialog(true)
+        }
       },
     },
     {

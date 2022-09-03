@@ -13,15 +13,11 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import clsx from 'clsx'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 function GroupDialog(props: Omit<DialogProps, 'onKeyDown'> & { onClose: () => void; onSubmit: () => void }) {
   const { t } = useTranslation()
-
-  const hasNoLogs = false
 
   const handleDialogKeyDown = (evt: React.KeyboardEvent) => {
     if (evt.key === 'Enter') {
