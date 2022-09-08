@@ -13,3 +13,11 @@
 * {
   user-select: none;
 }
+
+body {
+  @apply bg-light-600;
+}
+
+html.dark body {
+  @apply bg-black-800;
+}

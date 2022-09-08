@@ -15,8 +15,10 @@ export const useSyncHtmlTheme = (): void => {
 
     if (isDark) {
       list.add('dark')
+      document.documentElement.classList.add('dark')
     } else {
       list.remove('dark')
+      document.documentElement.classList.remove('dark')
     }
   }, [isDark])
 }
