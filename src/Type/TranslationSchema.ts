@@ -37,8 +37,10 @@ export type TranslationSchema = {
       noLogs: string
     }
     group: {
-      title: string
       dropScripts: string
+      name: {
+        label: string
+      }
       actions: {
         edit: string
         create: string

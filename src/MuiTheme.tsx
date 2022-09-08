@@ -90,6 +90,16 @@ function MuiTheme({ children }: React.PropsWithChildren) {
           dense: true,
         },
       },
+      MuiTextField: {
+        defaultProps: {
+          size: 'small',
+        },
+      },
+      MuiOutlinedInput: {
+        defaultProps: {
+          size: 'small',
+        },
+      },
       MuiButton: {
         defaultProps: {
           type: 'button',

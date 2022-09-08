@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ *
+ * All rights reserved.
+ *
+ */
+
 import CreateIcon from '@mui/icons-material/Create'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'

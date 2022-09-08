@@ -39,8 +39,10 @@ const fr: TranslationSchema = {
       noLogs: 'Aucun log',
     },
     group: {
-      title: 'Groupe',
       dropScripts: 'Glisser-déposer vos scripts ici',
+      name: {
+        label: 'Nom',
+      },
       actions: {
         edit: 'Editer',
         create: 'Créer',

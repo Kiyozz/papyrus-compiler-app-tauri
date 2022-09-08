@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ *
+ * All rights reserved.
+ *
+ */
+
 import HelpIcon from '@mui/icons-material/Help'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import Button from '@mui/material/Button'

@@ -23,7 +23,6 @@ function SettingsCompilationSection() {
         label={t('page.settings.sections.compilation.concurrentScripts.label')}
         name="compilation-concurrentScripts"
         //onChange={onChangeConcurrentScripts}
-        size="small"
         //value={compilation.concurrentScripts === 0 ? '' : compilation.concurrentScripts}
         value={concurrentScripts}
       />

@@ -12,6 +12,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
+import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,6 +27,7 @@ function GroupDialog(props: Omit<DialogProps, 'onKeyDown'> & { onClose: () => vo
   }
 
   const isEdit = false
+  const groupName = 'Group name'
 
   return (
     <Dialog
@@ -37,7 +39,14 @@ function GroupDialog(props: Omit<DialogProps, 'onKeyDown'> & { onClose: () => vo
     >
       <Toolbar className="p-0">
         <DialogTitle className="grow" id="group-title">
-          {t('dialog.group.title')}
+          <TextField
+            autoFocus
+            fullWidth
+            name="group-name"
+            //onChange={onChangeName}
+            placeholder={t('dialog.group.name.label')}
+            value={groupName}
+          />
         </DialogTitle>
       </Toolbar>
       <DialogContent className="flex items-center justify-center px-0" dividers id="group-content">
