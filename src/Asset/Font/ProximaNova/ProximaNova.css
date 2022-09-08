@@ -11,6 +11,5 @@
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: local('Proxima Nova '), local('Proxima Nova'),
-  url('./Proxima Nova.woff2') format('woff2'); /* Modern Browsers */
+  src: local('Proxima Nova '), local('Proxima Nova'), url('./Proxima Nova.woff2') format('woff2'); /* Modern Browsers */
 }

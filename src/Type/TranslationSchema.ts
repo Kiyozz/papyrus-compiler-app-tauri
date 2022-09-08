@@ -10,6 +10,10 @@ export type TranslationSchema = {
     close: string
     cancel: string
     clear: string
+    select: {
+      file: string
+      folder: string
+    }
   }
   nav: {
     compilation: string
@@ -47,6 +51,7 @@ export type TranslationSchema = {
       dragAndDropText: string
       dragAndDropAdmin: string
       appBar: {
+        title: string
         actions: {
           recentFiles: string
           searchScripts: string
@@ -58,6 +63,7 @@ export type TranslationSchema = {
       createGroupText: string
       whatIsAGroup: string
       appBar: {
+        title: string
         actions: {
           create: string
         }
@@ -65,9 +71,60 @@ export type TranslationSchema = {
     }
     settings: {
       appBar: {
+        title: string
         actions: {
           documentation: string
           refresh: string
+        }
+      }
+      sections: {
+        game: {
+          title: string
+          games: {
+            le: string
+            se: string
+            vr: string
+            fo4: string
+          }
+          gameFolder: {
+            label: string
+            tooltip: string
+          }
+          compiler: {
+            label: string
+            tooltip: string
+          }
+        }
+        compilation: {
+          title: string
+          concurrentScripts: {
+            label: string
+            helperText: string
+          }
+        }
+        mo2: {
+          title: string
+          use: {
+            label: string
+            helperText: string
+          }
+          instance: {
+            label: string
+          }
+        }
+        theme: {
+          title: string
+          options: {
+            system: string
+            light: string
+            dark: string
+          }
+        }
+        telemetry: {
+          title: string
+          use: {
+            label: string
+          }
         }
       }
     }

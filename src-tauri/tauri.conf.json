@@ -56,9 +56,11 @@
       {
         "fullscreen": false,
         "height": 820,
+        "width": 1000,
         "resizable": true,
         "title": "PCA",
-        "width": 1000
+        "minWidth": 650,
+        "minHeight": 800
       }
     ]
   }

@@ -12,8 +12,8 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import RecentFilesDialog from 'App/Component/Dialog/RecentFilesDialog'
 import GroupChooseButton from 'App/Component/GroupChooseButton'
-import Page from 'App/Component/Page'
-import PageAppBar from 'App/Component/PageAppBar'
+import Page from 'App/Component/Page/Page'
+import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { useState } from 'react'
@@ -32,7 +32,7 @@ function CompilationPage() {
         onSubmit={() => setRecentFilesDialogOpen(false)}
       />
 
-      <PageAppBar title="Compilation">
+      <PageAppBar title={t('page.compilation.appBar.title')}>
         <Button
           onClick={() => setRecentFilesDialogOpen(true)}
           className="px-3 py-2"

@@ -2,8 +2,8 @@ import CreateIcon from '@mui/icons-material/Create'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import GroupDialog from 'App/Component/Dialog/GroupDialog'
-import Page from 'App/Component/Page'
-import PageAppBar from 'App/Component/PageAppBar'
+import Page from 'App/Component/Page/Page'
+import PageAppBar from 'App/Component/Page/PageAppBar'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -19,7 +19,7 @@ function GroupsPage() {
         onSubmit={() => setGroupDialogOpen(false)}
       />
 
-      <PageAppBar title="Groups">
+      <PageAppBar title={t('page.groups.appBar.title')}>
         <Button
           className="px-3 py-2"
           color="inherit"
