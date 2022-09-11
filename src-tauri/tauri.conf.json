@@ -6,12 +6,15 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "tauri-app",
+    "productName": "PCA",
     "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
-      "all": true
+      "all": true,
+      "fs": {
+        "scope": ["$APP","$APP/*"]
+      }
     },
     "bundle": {
       "active": true,
