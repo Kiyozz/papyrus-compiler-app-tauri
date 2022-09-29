@@ -8,7 +8,8 @@
 import is from '@sindresorhus/is'
 import { getVersion } from '@tauri-apps/api/app'
 import { BaseDirectory, createDir, readTextFile, writeFile } from '@tauri-apps/api/fs'
-import { compareVersions } from 'compare-versions'
+import { ValidationError } from 'App/Error/ValidationError'
+import semver from 'semver'
 import { FsError } from 'App/Error/FsError'
 import { StoreInitializeError } from 'App/Error/StoreInitializeError'
 import { StoreMigrationsError } from 'App/Error/StoreMigrationsError'
@@ -20,20 +21,30 @@ export class Store<T extends Record<string, unknown>> {
   public initializeCalled = false
 
   private readonly name: string
-  private readonly store: T & { __migration__?: string }
+  private readonly validation: (store: T) => Promise<boolean>
+  private store: T & { __migration__?: string }
 
   private get file() {
     return `${this.name}.json`
   }
 
-  constructor({ name, default: defaultStore }: { name: string; default?: T }) {
+  constructor({
+    name,
+    default: defaultStore,
+    validation,
+  }: {
+    name: string
+    default?: T
+    validation: (store: T) => Promise<boolean>
+  }) {
     this.name = name
+    this.validation = validation
 
     this.store = defaultStore ?? ({} as T)
   }
 
-  public async get<V>(key: keyof T): Promise<V | undefined> {
-    return this.store[key] as V | undefined
+  public get<V extends keyof T>(key: V): T[V] {
+    return this.store[key] as T[V]
   }
 
   public async set<V, K extends keyof T>(key: K, value: T[K]): Promise<void> {
@@ -50,8 +61,10 @@ export class Store<T extends Record<string, unknown>> {
         await createDir('', { dir: BaseDirectory.App, recursive: true })
       } catch {}
 
-      // Read the file to ensure it exists
-      await this.read()
+      // Read the file to ensure it exists and store it
+      this.store = await this.read()
+      await this.validate()
+
       await this.processMigrations()
     } catch {
       try {
@@ -101,13 +114,21 @@ export class Store<T extends Record<string, unknown>> {
     }
 
     try {
-      if (compareVersions(await getVersion(), lastMigration) === 1) {
+      if (semver.gt(await getVersion(), lastMigration)) {
         this.store['__migration__'] = await getVersion()
 
         await this.write()
       }
     } catch (err) {
       throw new StoreMigrationsError(err)
+    }
+  }
+
+  private async validate(): Promise<void> {
+    const isValid = await this.validation(this.store)
+
+    if (!isValid) {
+      throw new ValidationError(this.store)
     }
   }
 }

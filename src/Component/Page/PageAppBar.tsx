@@ -6,13 +6,13 @@
  */
 
 import { AppBar, Toolbar, Typography } from '@mui/material'
-import clsx from 'clsx'
+import cx from 'classnames'
 import { PropsWithChildren } from 'react'
 
 function PageAppBar({ title, className, children }: PropsWithChildren<{ title: string; className?: string }>) {
   return (
     <AppBar aria-label={title}>
-      <Toolbar className={clsx('pr-6 pl-4', className)} disableGutters>
+      <Toolbar className={cx('pr-6 pl-4', className)} disableGutters>
         <Typography className="grow font-nova" fontWeight="bold" variant="h4">
           {title}
         </Typography>

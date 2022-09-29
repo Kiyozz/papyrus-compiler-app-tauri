@@ -131,8 +131,10 @@ function MuiTheme({ children }: React.PropsWithChildren) {
 
   return (
     <StyledEngineProvider injectFirst>
-      <CssBaseline />
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
     </StyledEngineProvider>
   )
 }

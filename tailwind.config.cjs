@@ -4,7 +4,7 @@ module.exports = {
     './index.html',
     './src/**/*.{ts,tsx}'
   ],
-  important: '#app', // problème avec les dialogs
+  important: '#app',
   darkMode: 'class',
   theme: {
     extend: {

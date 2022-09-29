@@ -17,7 +17,7 @@ import FormGroup from '@mui/material/FormGroup'
 import List from '@mui/material/List'
 import Toolbar from '@mui/material/Toolbar'
 import { useRecentFiles } from 'App/Hook/UseRecentFiles'
-import clsx from 'clsx'
+import cx from 'classnames'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -59,7 +59,7 @@ function RecentFilesDialog(
           />
         </FormGroup>
       </Toolbar>
-      <DialogContent className={clsx(recentFiles.length !== 0 && 'p-0')} dividers>
+      <DialogContent className={cx(recentFiles.length !== 0 && 'p-0')} dividers>
         {recentFiles.length === 0 ? (
           <DialogContentText>{t('dialog.recentFiles.noRecentFiles')}</DialogContentText>
         ) : (

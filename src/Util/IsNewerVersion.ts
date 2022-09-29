@@ -5,13 +5,13 @@
  *
  */
 
-import { compare } from 'compare-versions'
+import semver from 'semver'
 
 /**
- * Compare two version strings with compare-versions
+ * Compare two version strings with semver
  * @param version The version to compare
  * @param against The version to compare against
  */
 export function isNewerVersion(version: string, against: string) {
-  return compare(version, against, '>')
+  return semver.gt(version, against)
 }

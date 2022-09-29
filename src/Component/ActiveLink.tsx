@@ -5,7 +5,7 @@
  *
  */
 
-import clsx from 'clsx'
+import cx from 'classnames'
 import { forwardRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 
@@ -23,7 +23,7 @@ const ActiveLink = forwardRef<HTMLAnchorElement, ActiveLinkProps>(function Activ
     <NavLink
       {...props}
       className={({ isActive }) => {
-        return clsx(className, isActive && activeClassName)
+        return cx(className, isActive && activeClassName)
       }}
       ref={ref}
     >

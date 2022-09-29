@@ -17,7 +17,7 @@ import List from '@mui/material/List'
 import AppDrawerLink from 'App/Component/Drawer/AppDrawerLink'
 import { useApp } from 'App/Hook/UseApp'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
-import clsx from 'clsx'
+import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 function AppDrawer() {
@@ -97,7 +97,7 @@ function AppDrawer() {
         },
       }}
       classes={{
-        paper: clsx(
+        paper: cx(
           'overflow-x-hidden transition-[width] ease-sharp duration-[225ms]',
           isDrawerExpanded ? 'w-48' : 'w-14',
         ),

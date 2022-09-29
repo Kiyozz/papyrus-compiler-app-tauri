@@ -5,9 +5,9 @@
  *
  */
 
-import { GameTypeEnum } from 'App/Enum/GameTypeEnum'
+import { GameType } from 'App/Enum/GameType'
 
 export type SettingsGame = {
-  type: GameTypeEnum
+  type: GameType
   path: string
 }

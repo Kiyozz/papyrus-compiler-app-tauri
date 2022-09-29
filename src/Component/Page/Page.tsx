@@ -7,7 +7,7 @@
 
 import Paper from '@mui/material/Paper'
 import { useApp } from 'App/Hook/UseApp'
-import clsx from 'clsx'
+import cx from 'classnames'
 import { PropsWithChildren } from 'react'
 
 function Page({ children, className }: PropsWithChildren<{ className?: string }>) {
@@ -18,7 +18,7 @@ function Page({ children, className }: PropsWithChildren<{ className?: string }>
   return (
     <Paper
       component="main"
-      className={clsx(
+      className={cx(
         'min-h-app w-screen rounded-none p-6 transition-[padding-left] duration-[225ms] ease-sharp',
         isDrawerExpanded ? 'pl-[13.5rem]' : 'pl-20',
         className,

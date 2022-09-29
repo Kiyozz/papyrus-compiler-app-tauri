@@ -13,41 +13,60 @@ import RadioGroup from '@mui/material/RadioGroup'
 import Tooltip from '@mui/material/Tooltip'
 import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
-import { GameTypeEnum } from 'App/Enum/GameTypeEnum'
+import { GameType } from 'App/Enum/GameType'
+import { useConf } from 'App/Hook/UseConf'
+import { useConfKey } from 'App/Hook/useConfKey'
 import { toExecutable } from 'App/Util/ToExecutable'
 import { useTranslation } from 'react-i18next'
 
 function SettingsGameSection() {
   const { t } = useTranslation()
-
-  const gameType = GameTypeEnum.se
-  const gamePath = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Skyrim Special Edition'
-  const gameCompilerPath =
-    'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Skyrim Special Edition\\Papyrus Compiler\\PapyrusCompiler.exe'
+  const conf = useConf()
+  const gameConf = useConfKey('game')
+  const compilerConf = useConfKey('compilation')
 
   const games = [
     {
-      value: GameTypeEnum.le,
+      value: GameType.le,
       label: t('page.settings.sections.game.games.le'),
     },
     {
-      value: GameTypeEnum.se,
+      value: GameType.se,
       label: t('page.settings.sections.game.games.se'),
     },
     {
-      value: GameTypeEnum.vr,
+      value: GameType.vr,
       label: t('page.settings.sections.game.games.vr'),
     },
     {
-      value: GameTypeEnum.fo4,
+      value: GameType.fo4,
       label: t('page.settings.sections.game.games.fo4'),
     },
   ]
 
+  if (gameConf.isLoading || compilerConf.isLoading) return 'Loading'
+
+  if (!gameConf.data || !compilerConf.data) return 'Unknown error'
+
+  const gameType = gameConf.data.type
+  const gamePath = gameConf.data.path
+  const gameCompilerPath = compilerConf.data.compilerPath
+
   return (
     <SettingsSection id="game-section" title={t('page.settings.sections.game.title')} gutterTop={false}>
       <FormControl component="fieldset" fullWidth>
-        <RadioGroup classes={{ row: 'justify-between' }} row value={gameType}>
+        <RadioGroup
+          classes={{ row: 'justify-between' }}
+          row
+          onChange={(evt, value) => {
+            conf.set({
+              game: {
+                type: value as GameType,
+              },
+            })
+          }}
+          value={gameConf.data.type}
+        >
           {games.map((game) => {
             return (
               <FormControlLabel
@@ -79,6 +98,9 @@ function SettingsGameSection() {
           }
           id="settings-game-game-folder-text-field"
           defaultValue={gamePath}
+          onChange={(newValue) => {
+            conf.set('game.path', newValue)
+          }}
           type="folder"
         />
       </div>
@@ -96,6 +118,9 @@ function SettingsGameSection() {
           }
           defaultValue={gameCompilerPath}
           type="file"
+          onChange={(newValue) => {
+            conf.set('compilation.compilerPath', newValue)
+          }}
           placeholder={t('common.select.file')}
         />
       </div>

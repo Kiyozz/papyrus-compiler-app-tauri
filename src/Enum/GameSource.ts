@@ -5,7 +5,7 @@
  *
  */
 
-export enum GameSourceEnum {
+export enum GameSource {
   scriptsFirst = 'Scripts/Source',
   sourceFirst = 'Source/Scripts',
 }

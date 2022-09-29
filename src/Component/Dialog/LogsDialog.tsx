@@ -13,7 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useApp } from 'App/Hook/UseApp'
-import clsx from 'clsx'
+import cx from 'classnames'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -54,7 +54,7 @@ function LogsDialog(props: Omit<DialogProps, 'open' | 'onClose' | 'onKeyDown'>) 
         </Button>
       </Toolbar>
       <DialogContent
-        className={clsx('flex flex-col gap-4', hasNoLogs && 'items-center justify-center')}
+        className={cx('flex flex-col gap-4', hasNoLogs && 'items-center justify-center')}
         dividers
         id="logs-content"
       >

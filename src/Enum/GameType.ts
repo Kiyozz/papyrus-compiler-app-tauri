@@ -5,7 +5,7 @@
  *
  */
 
-export enum GameTypeEnum {
+export enum GameType {
   le = 'Skyrim LE',
   se = 'Skyrim SE',
   vr = 'Skyrim VR',

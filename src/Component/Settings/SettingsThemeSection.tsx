@@ -10,14 +10,14 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
-import { ThemeEnum } from 'App/Enum/ThemeEnum'
+import { Theme } from 'App/Enum/Theme'
 import { useTranslation } from 'react-i18next'
 
 function SettingsThemeSection() {
   const { t } = useTranslation()
 
-  const theme = ThemeEnum.system
-  const themes = [ThemeEnum.system, ThemeEnum.light, ThemeEnum.dark]
+  const theme = Theme.system
+  const themes = [Theme.system, Theme.light, Theme.dark]
 
   return (
     <SettingsSection id="theme-section" title={t('page.settings.sections.theme.title')}>

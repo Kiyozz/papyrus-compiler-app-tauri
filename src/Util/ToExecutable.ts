@@ -5,19 +5,19 @@
  *
  */
 
-import { GameExecutableEnum } from 'App/Enum/GameExecutableEnum'
-import { GameTypeEnum } from 'App/Enum/GameTypeEnum'
+import { GameExecutable } from 'App/Enum/GameExecutable'
+import { GameType } from 'App/Enum/GameType'
 
-export function toExecutable(game: GameTypeEnum): GameExecutableEnum {
+export function toExecutable(game: GameType): GameExecutable {
   switch (game) {
-    case GameTypeEnum.le:
-      return GameExecutableEnum.le
-    case GameTypeEnum.se:
-      return GameExecutableEnum.se
-    case GameTypeEnum.vr:
-      return GameExecutableEnum.vr
-    case GameTypeEnum.fo4:
-      return GameExecutableEnum.fo4
+    case GameType.le:
+      return GameExecutable.le
+    case GameType.se:
+      return GameExecutable.se
+    case GameType.vr:
+      return GameExecutable.vr
+    case GameType.fo4:
+      return GameExecutable.fo4
     default:
       throw new TypeError('RuntimeError: unsupported GameType')
   }

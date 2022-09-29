@@ -5,7 +5,7 @@
  *
  */
 
-import { ThemeEnum } from 'App/Enum/ThemeEnum'
+import { Theme } from 'App/Enum/Theme'
 import { SettingsCompilation } from 'App/Type/Settings/SettingsCompilation'
 import { SettingsGame } from 'App/Type/Settings/SettingsGame'
 import { SettingsLocale } from 'App/Type/Settings/SettingsLocale'
@@ -20,6 +20,6 @@ export type Settings = {
   mo2: SettingsMo2
   telemetry: SettingsTelemetry
   groups: unknown[]
-  theme: ThemeEnum
+  theme: Theme
   locale: SettingsLocale
 }

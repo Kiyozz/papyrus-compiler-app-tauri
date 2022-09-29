@@ -5,7 +5,7 @@
  *
  */
 
-export enum GameExecutableEnum {
+export enum GameExecutable {
   se = 'SkyrimSE.exe',
   le = 'TESV.exe',
   vr = 'SkyrimVR.exe',

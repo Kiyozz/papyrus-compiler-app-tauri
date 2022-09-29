@@ -5,17 +5,17 @@
  *
  */
 
-import { GameSourceEnum } from 'App/Enum/GameSourceEnum'
-import { GameTypeEnum } from 'App/Enum/GameTypeEnum'
+import { GameSource } from 'App/Enum/GameSource'
+import { GameType } from 'App/Enum/GameType'
 
-export const toOtherSource = (game: GameTypeEnum): GameSourceEnum => {
+export const toOtherSource = (game: GameType): GameSource => {
   switch (game) {
-    case GameTypeEnum.le:
-    case GameTypeEnum.fo4:
-      return GameSourceEnum.sourceFirst
-    case GameTypeEnum.se:
-    case GameTypeEnum.vr:
-      return GameSourceEnum.scriptsFirst
+    case GameType.le:
+    case GameType.fo4:
+      return GameSource.sourceFirst
+    case GameType.se:
+    case GameType.vr:
+      return GameSource.scriptsFirst
     default:
       throw new Error('RuntimeError: unsupported GameType')
   }
