@@ -33,7 +33,7 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
 
   const onDialogKeyDown = (evt: React.KeyboardEvent) => {
     if (evt.key === 'Enter') {
-      openTheDocumentation('enter')
+      void openTheDocumentation('enter')
       setOpen(false)
     }
   }
@@ -43,15 +43,15 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
   }
 
   const onConfirm = () => {
-    openTheDocumentation('click')
+    void openTheDocumentation('click')
     setOpen(false)
   }
 
   return (
     <Dialog open={isOpen} onClose={() => setOpen(false)} onKeyDown={onDialogKeyDown} {...props}>
-      <DialogTitle>{t('dialog.open-documentation.title')}</DialogTitle>
+      <DialogTitle>{t('dialog.openDocumentation.title')}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{t('dialog.open-documentation.text')}</DialogContentText>
+        <DialogContentText>{t('dialog.openDocumentation.text')}</DialogContentText>
         <FormGroup>
           <FormControlLabel
             control={
@@ -61,7 +61,7 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
                 onChange={toggleRememberDocumentationDialog}
               />
             }
-            label={t('dialog.open-documentation.actions.doNotShowAgain')}
+            label={t('dialog.openDocumentation.actions.doNotShowAgain')}
           />
         </FormGroup>
       </DialogContent>

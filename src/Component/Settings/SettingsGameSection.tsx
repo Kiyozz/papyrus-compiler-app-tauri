@@ -44,16 +44,16 @@ function SettingsGameSection() {
     },
   ]
 
-  if (gameConf.isLoading || compilerConf.isLoading) return 'Loading'
+  if (gameConf.isLoading || compilerConf.isLoading) return <>Loading</>
 
-  if (!gameConf.data || !compilerConf.data) return 'Unknown error'
+  if (!gameConf.data || !compilerConf.data) return <>Unknown error</>
 
   const gameType = gameConf.data.type
   const gamePath = gameConf.data.path
   const gameCompilerPath = compilerConf.data.compilerPath
 
   return (
-    <SettingsSection id="game-section" title={t('page.settings.sections.game.title')} gutterTop={false}>
+    <SettingsSection id="game-section" title={t<string>('page.settings.sections.game.title')} gutterTop={false}>
       <FormControl component="fieldset" fullWidth>
         <RadioGroup
           classes={{ row: 'justify-between' }}
@@ -121,7 +121,7 @@ function SettingsGameSection() {
           onChange={(newValue) => {
             conf.set('compilation.compilerPath', newValue)
           }}
-          placeholder={t('common.select.file')}
+          placeholder={t<string>('common.select.file')}
         />
       </div>
     </SettingsSection>

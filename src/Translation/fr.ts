@@ -9,9 +9,10 @@ import { TranslationSchema } from 'App/Type/TranslationSchema'
 
 const fr: TranslationSchema = {
   common: {
+    close: 'Fermer',
     cancel: 'Annuler',
     clear: 'Vider',
-    close: 'Fermer',
+    confirm: 'Confirmer',
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',
@@ -47,6 +48,13 @@ const fr: TranslationSchema = {
         edit: 'Editer',
         create: 'Créer',
         searchScripts: 'Rechercher',
+      },
+    },
+    openDocumentation: {
+      title: 'Ouvrir le site web de la documentation de PCA ?',
+      text: "Trouvez toutes les infos sur l'utilisation de PCA",
+      actions: {
+        doNotShowAgain: 'Ne plus afficher',
       },
     },
   },

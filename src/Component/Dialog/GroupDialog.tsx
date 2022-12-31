@@ -44,7 +44,7 @@ function GroupDialog(props: Omit<DialogProps, 'onKeyDown'> & { onClose: () => vo
             fullWidth
             name="group-name"
             //onChange={onChangeName}
-            placeholder={t('dialog.group.name.label')}
+            placeholder={t<string>('dialog.group.name.label')}
             value={groupName}
           />
         </DialogTitle>

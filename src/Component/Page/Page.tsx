@@ -19,7 +19,7 @@ function Page({ children, className }: PropsWithChildren<{ className?: string }>
     <Paper
       component="main"
       className={cx(
-        'min-h-app w-screen rounded-none p-6 transition-[padding-left] duration-[225ms] ease-sharp',
+        'min-h-app w-full rounded-none p-6 transition-[padding-left] duration-[225ms] ease-sharp',
         isDrawerExpanded ? 'pl-[13.5rem]' : 'pl-20',
         className,
       )}

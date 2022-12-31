@@ -74,7 +74,7 @@ function TextFieldDialog({
           setValue(newValue)
           onChange?.(newValue)
         }}
-        placeholder={placeholder ?? t('common.select.folder')}
+        placeholder={placeholder ?? t<string>('common.select.folder')}
         startAdornment={
           <InputAdornment position="start">
             <IconButton

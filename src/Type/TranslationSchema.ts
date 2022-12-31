@@ -10,6 +10,7 @@ export type TranslationSchema = {
     close: string
     cancel: string
     clear: string
+    confirm: string
     select: {
       file: string
       folder: string
@@ -45,6 +46,13 @@ export type TranslationSchema = {
         edit: string
         create: string
         searchScripts: string
+      }
+    }
+    openDocumentation: {
+      title: string
+      text: string
+      actions: {
+        doNotShowAgain: string
       }
     }
   }

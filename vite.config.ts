@@ -22,8 +22,8 @@ export default defineConfig({
         replacement: path.join('node_modules/$1'),
       },
       {
-        find: /^App(.*)/,
-        replacement: path.join('src/$1'),
+        find: /^App/,
+        replacement: path.resolve('src/'),
       },
     ],
   },
@@ -32,7 +32,8 @@ export default defineConfig({
   envPrefix: ['VITE_', 'TAURI_'],
   build: {
     // Tauri supports es2021
-    target: ['es2021', 'chrome100', 'safari13'],
+    target: ['esnext'],
+    //target: ['es2021', 'chrome100', 'safari13'],
     // don't minify for debug builds
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     // produce sourcemaps for debug builds

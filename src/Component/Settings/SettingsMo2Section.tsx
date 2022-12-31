@@ -18,7 +18,7 @@ function SettingsMo2Section() {
   const mo2Instance = 'C:\\Program Files (x86)\\Mod Organizer 2'
 
   return (
-    <SettingsSection title={t('page.settings.sections.mo2.title')} id="mo2-section">
+    <SettingsSection title={t<string>('page.settings.sections.mo2.title')} id="mo2-section">
       <FormControlLabel
         control={
           <Checkbox
