@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
  */
 
-import { ConfDecoder } from 'App/Service/Conf/ConfDecoder'
-import { E, flow, pipe } from 'App/Util/FpTs'
+import { E, flow, pipe } from 'App/Lib/FpTs'
 import * as DE from 'io-ts/Decoder'
 
 export const parseJson =
@@ -24,8 +23,6 @@ export const parseJson =
         ),
       ),
     )
-
-export const parseJsonConf = parseJson(ConfDecoder)
 
 export const stringJson = (contents: unknown): E.Either<Error, string> =>
   E.tryCatch(

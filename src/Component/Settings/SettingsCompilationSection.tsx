@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
@@ -10,7 +10,7 @@ import is from '@sindresorhus/is'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
-import { O, pipe } from 'App/Util/FpTs'
+import { O, pipe } from 'App/Lib/FpTs'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 

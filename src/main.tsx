@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
  */
 
-import { pipe } from 'App/Util/FpTs'
+import { pipe } from 'App/Lib/FpTs'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'

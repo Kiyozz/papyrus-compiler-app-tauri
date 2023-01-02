@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
@@ -7,7 +7,7 @@
 
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useSystemDarkPreference } from 'App/Hook/UseSystemDarkPreference'
-import { O, pipe } from 'App/Util/FpTs'
+import { O, pipe } from 'App/Lib/FpTs'
 
 export const useIsSystemDarkTheme = () => {
   const isDark = useSystemDarkPreference()

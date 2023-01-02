@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
@@ -10,7 +10,7 @@ import { Console } from 'App/Console/Console'
 import { documentationUrl } from 'App/Constant/Documentation'
 import { useProduction } from 'App/Hook/UseProduction'
 import { useTelemetry } from 'App/Hook/UseTelemetry'
-import { E, TE } from 'App/Util/FpTs'
+import { E, TE } from 'App/Lib/FpTs'
 
 const openUrl = (url: string) => () => open(url)
 

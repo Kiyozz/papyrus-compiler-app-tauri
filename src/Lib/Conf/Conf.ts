@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
  */
 import { join } from '@tauri-apps/api/path'
-import { Conf } from 'App/Service/Conf/ConfDecoder'
-import { readConfigFileJson } from 'App/Service/Conf/ReadConfigFile'
-import { writeConfigFile } from 'App/Service/Conf/WriteConfigFile'
-import { pipe, TE } from 'App/Util/FpTs'
 import deepmerge from 'deepmerge'
 import { PartialDeep } from 'type-fest'
-
-import { ConfOptions } from './ConfOptions'
+import { ConfOptions } from 'App/Lib/Conf/ConfOptions'
+import { Conf } from 'App/Lib/Conf/ConfDecoder'
+import { readConfigFileJson } from 'App/Lib/Conf/ReadConfigFile'
+import { writeConfigFile } from 'App/Lib/Conf/WriteConfigFile'
+import { pipe, TE } from 'App/Lib/FpTs'
 
 const suffixExt = (suffix: string) => (text: string) => `${text}.${suffix}`
 const writeDefaultConfig = (options: ConfOptions<Conf>) =>

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
  */
 
 import { GameSource } from 'App/Enum/GameSource'
-import { GameType } from 'App/Service/Conf/ConfDecoder'
+import { GameType } from 'App/Lib/Conf/ConfDecoder'
 
 export const toSource = (game: GameType): GameSource => {
   switch (game) {

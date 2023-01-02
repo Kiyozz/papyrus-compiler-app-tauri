@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
  */
 
 import is from '@sindresorhus/is'
-import { GameType, Game } from 'App/Service/Conf/ConfDecoder'
+import { GameType, Game } from 'App/Lib/Conf/ConfDecoder'
 
 export function validationGameType(gameType: unknown): gameType is GameType {
   if (is.undefined(gameType)) return false

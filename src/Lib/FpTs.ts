@@ -1,11 +1,20 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
  */
-
-export { pipe, flow, constant, identity } from 'fp-ts/function'
+export {
+  pipe,
+  flow,
+  constant,
+  identity,
+  constFalse,
+  constTrue,
+  constNull,
+  constUndefined,
+  constVoid,
+} from 'fp-ts/function'
 export * as T from 'fp-ts/Task'
 export * as TE from 'fp-ts/TaskEither'
 export * as O from 'fp-ts/Option'

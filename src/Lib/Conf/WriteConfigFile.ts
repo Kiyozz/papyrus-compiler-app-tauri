@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
  */
 
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
-import { Conf } from 'App/Service/Conf/ConfDecoder'
-import { stringJson } from 'App/Service/Json'
-import { TE, pipe } from 'App/Util/FpTs'
+import { Conf } from 'App/Lib/Conf/ConfDecoder'
+import { stringJson } from 'App/Lib/Json'
+import { TE, pipe } from 'App/Lib/FpTs'
 
 export const writeConfigFile = (path: string) => (contents: Conf) =>
   pipe(

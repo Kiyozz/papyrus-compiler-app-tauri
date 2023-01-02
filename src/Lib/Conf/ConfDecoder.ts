@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2022 Kiyozz~WK~WushuLate.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  *
  */
 
-import { pipe } from 'App/Util/FpTs'
+import { pipe } from 'App/Lib/FpTs'
 import * as D from 'io-ts/Decoder'
 
 export const GroupDecoder = D.boolean
