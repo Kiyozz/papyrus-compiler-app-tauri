@@ -14,22 +14,26 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
-import { useApp } from 'App/Hook/UseApp'
+import { useConf } from 'App/Hook/Conf/UseConf'
+import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
+import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
+import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose' | 'open'>) {
   const { t } = useTranslation()
   const {
-    dialogs: {
-      openDocumentation: {
-        show: [isOpen, setOpen],
-        doNotShowAgain: [isDoNotShowAnymoreDocumentationDialog, setDoNotShowAnymoreDocumentationDialog],
-      },
+    openDocumentation: {
+      show: [isOpen, setOpen],
     },
-  } = useApp()
+  } = useDialogs()
+  const conf = useConf()
+  const updateConf = useUpdateConf()
   const { open: openTheDocumentation } = useDocumentation()
+
+  if (!isQueryNonNullable(conf)) return <>Waiting...</>
 
   const onDialogKeyDown = (evt: React.KeyboardEvent) => {
     if (evt.key === 'Enter') {
@@ -39,7 +43,13 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
   }
 
   const toggleRememberDocumentationDialog = () => {
-    setDoNotShowAnymoreDocumentationDialog((v) => !v)
+    updateConf.mutate({
+      misc: {
+        documentation: {
+          reminder: !conf.data?.misc.documentation.reminder,
+        },
+      },
+    })
   }
 
   const onConfirm = () => {
@@ -56,7 +66,7 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
           <FormControlLabel
             control={
               <Checkbox
-                checked={isDoNotShowAnymoreDocumentationDialog}
+                checked={!conf.data.misc.documentation.reminder}
                 inputProps={{ 'aria-label': 'controlled' }}
                 onChange={toggleRememberDocumentationDialog}
               />

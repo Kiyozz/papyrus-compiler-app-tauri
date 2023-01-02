@@ -12,7 +12,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import { useApp } from 'App/Hook/UseApp'
+import { useDialogs } from 'App/Hook/UseDialogs'
 import cx from 'classnames'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,10 +20,8 @@ import { useTranslation } from 'react-i18next'
 function LogsDialog(props: Omit<DialogProps, 'open' | 'onClose' | 'onKeyDown'>) {
   const { t } = useTranslation()
   const {
-    dialogs: {
-      logs: [isLogsDialogOpen, setLogsDialogOpen],
-    },
-  } = useApp()
+    logs: [isLogsDialogOpen, setLogsDialogOpen],
+  } = useDialogs()
 
   const hasNoLogs = false
 

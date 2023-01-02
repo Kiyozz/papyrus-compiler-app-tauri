@@ -5,11 +5,12 @@
  *
  */
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { pipe } from 'App/Lib/FpTs'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import AppProvider from 'App/Hook/UseApp'
+import DialogsProvider from 'App/Hook/UseDialogs'
 import CompilationPage from 'App/Page/CompilationPage'
 import GroupsPage from 'App/Page/GroupsPage'
 import SettingsPage from 'App/Page/SettingsPage'
@@ -24,7 +25,7 @@ await configureTranslations()
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchIntervalInBackground: true,
+      refetchOnReconnect: true,
     },
   },
 })
@@ -33,7 +34,8 @@ pipe(document.getElementById('root') as HTMLElement, ReactDOM.createRoot, (root)
   root.render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <AppProvider>
+        <ReactQueryDevtools position="bottom-right" />
+        <DialogsProvider>
           <MuiTheme>
             <MemoryRouter>
               <Routes>
@@ -45,7 +47,7 @@ pipe(document.getElementById('root') as HTMLElement, ReactDOM.createRoot, (root)
               </Routes>
             </MemoryRouter>
           </MuiTheme>
-        </AppProvider>
+        </DialogsProvider>
       </QueryClientProvider>
     </React.StrictMode>,
   ),

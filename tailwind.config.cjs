@@ -17,7 +17,6 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Roboto', '-apple-system', 'sans-serif'],
-        nova: ['Proxima Nova', 'sans-serif'],
         body: ['Roboto', '-apple-system', 'sans-serif'],
       },
       boxShadow: {

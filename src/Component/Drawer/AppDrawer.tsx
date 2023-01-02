@@ -15,8 +15,11 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import AppDrawerLink from 'App/Component/Drawer/AppDrawerLink'
-import { useApp } from 'App/Hook/UseApp'
+import { useConf } from 'App/Hook/Conf/UseConf'
+import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
+import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
+import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -24,15 +27,15 @@ function AppDrawer() {
   const { t } = useTranslation()
   const { open } = useDocumentation()
   const {
-    drawer: [isDrawerExpanded, setDrawerExpanded],
-    dialogs: {
-      logs: [, setLogsDialogOpen],
-      openDocumentation: {
-        show: [, setOpenDocumentationDialog],
-        doNotShowAgain: [isDoNotShowAgainOpenDocumentationDialog],
-      },
+    logs: [, setLogsDialogOpen],
+    openDocumentation: {
+      show: [, setOpenDocumentationDialogOpen],
     },
-  } = useApp()
+  } = useDialogs()
+  const conf = useConf()
+  const updateConf = useUpdateConf()
+
+  if (!isQueryNonNullable(conf)) return <>Waiting...</>
 
   const links = [
     {
@@ -71,19 +74,23 @@ function AppDrawer() {
       Icon: HelpIcon,
       onClick: () => {
         // open the doc website
-        if (isDoNotShowAgainOpenDocumentationDialog) {
-          open('click')
+        if (conf.data.misc.documentation.reminder) {
+          setOpenDocumentationDialogOpen(true)
         } else {
-          setOpenDocumentationDialog(true)
+          void open('click')
         }
       },
     },
     {
       id: 'drawer-expand',
       label: t('nav.drawerClose'),
-      Icon: isDrawerExpanded ? ChevronLeftIcon : ChevronRightIcon,
+      Icon: conf.data?.misc.drawerOpen ? ChevronLeftIcon : ChevronRightIcon,
       onClick: () => {
-        setDrawerExpanded((v) => !v)
+        updateConf.mutate({
+          misc: {
+            drawerOpen: !conf.data!.misc.drawerOpen,
+          },
+        })
       },
     },
   ]
@@ -99,7 +106,7 @@ function AppDrawer() {
       classes={{
         paper: cx(
           'overflow-x-hidden transition-[width] ease-sharp duration-[225ms]',
-          isDrawerExpanded ? 'w-48' : 'w-14',
+          conf.data.misc.drawerOpen ? 'w-48' : 'w-14',
         ),
       }}
       open={true}

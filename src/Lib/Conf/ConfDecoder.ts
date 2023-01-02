@@ -6,7 +6,15 @@
  */
 
 import { pipe } from 'App/Lib/FpTs'
-import * as D from 'io-ts/Decoder'
+import { D } from 'App/Lib/IoTs'
+
+export const MiscDecoder = D.struct({
+  drawerOpen: D.boolean,
+  documentation: D.struct({
+    reminder: D.boolean,
+  }),
+})
+export type Misc = D.TypeOf<typeof MiscDecoder>
 
 export const GroupDecoder = D.boolean
 export type Group = D.TypeOf<typeof GroupDecoder>
@@ -76,6 +84,7 @@ export const ConfDecoder = D.struct({
   telemetry: TelemetryDecoder,
   theme: ThemeDecoder,
   locale: LocaleDecoder,
+  misc: MiscDecoder,
 })
 
 export type Conf = D.TypeOf<typeof ConfDecoder>

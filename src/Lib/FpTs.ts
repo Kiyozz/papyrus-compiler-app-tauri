@@ -17,6 +17,7 @@ export {
 } from 'fp-ts/function'
 export * as T from 'fp-ts/Task'
 export * as TE from 'fp-ts/TaskEither'
+export * as TO from 'fp-ts/TaskOption'
 export * as O from 'fp-ts/Option'
 export * as E from 'fp-ts/Either'
 export * as A from 'fp-ts/Array'

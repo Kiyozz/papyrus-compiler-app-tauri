@@ -74,6 +74,12 @@ function MuiTheme({ children }: React.PropsWithChildren) {
         defaultProps: {
           gutterBottom: false,
         },
+        styleOverrides: {
+          h4: {
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 600,
+          },
+        },
       },
       MuiList: {
         defaultProps: {

@@ -6,21 +6,22 @@
  */
 
 import Paper from '@mui/material/Paper'
-import { useApp } from 'App/Hook/UseApp'
+import { useConf } from 'App/Hook/Conf/UseConf'
+import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import cx from 'classnames'
 import { PropsWithChildren } from 'react'
 
 function Page({ children, className }: PropsWithChildren<{ className?: string }>) {
-  const {
-    drawer: [isDrawerExpanded],
-  } = useApp()
+  const conf = useConf()
+
+  if (!isQueryNonNullable(conf)) return <>Waiting...</>
 
   return (
     <Paper
       component="main"
       className={cx(
         'min-h-app w-full rounded-none p-6 transition-[padding-left] duration-[225ms] ease-sharp',
-        isDrawerExpanded ? 'pl-[13.5rem]' : 'pl-20',
+        conf.data.misc.drawerOpen ? 'pl-[13.5rem]' : 'pl-20',
         className,
       )}
     >

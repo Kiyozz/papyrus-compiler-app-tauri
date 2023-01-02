@@ -5,6 +5,6 @@
  *
  */
 
-@import 'ProximaNova/ProximaNova.css';
+@import '@fontsource/inter/latin.css';
 @import '~@fontsource/roboto/latin.css';
 /*@import '~@fontsource/ibm-plex-mono/latin-500.css';*/

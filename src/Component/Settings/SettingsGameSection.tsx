@@ -13,7 +13,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import Tooltip from '@mui/material/Tooltip'
 import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
-import { GameType } from 'App/Enum/GameType'
+import { GameType } from 'App/Lib/Conf/ConfDecoder'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { toExecutable } from 'App/Util/ToExecutable'
@@ -25,21 +25,21 @@ function SettingsGameSection() {
   const conf = useConf()
   const updateConf = useUpdateConf()
 
-  const games = [
+  const games: { value: GameType; label: string }[] = [
     {
-      value: GameType.le,
+      value: 'Skyrim LE',
       label: t('page.settings.sections.game.games.le'),
     },
     {
-      value: GameType.se,
+      value: 'Skyrim SE',
       label: t('page.settings.sections.game.games.se'),
     },
     {
-      value: GameType.vr,
+      value: 'Skyrim VR',
       label: t('page.settings.sections.game.games.vr'),
     },
     {
-      value: GameType.fo4,
+      value: 'Fallout 4',
       label: t('page.settings.sections.game.games.fo4'),
     },
   ]

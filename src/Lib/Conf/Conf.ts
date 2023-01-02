@@ -9,24 +9,27 @@ import deepmerge from 'deepmerge'
 import { PartialDeep } from 'type-fest'
 import { ConfOptions } from 'App/Lib/Conf/ConfOptions'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
-import { readConfigFileJson } from 'App/Lib/Conf/ReadConfigFile'
+import { canReadConfigFile, readConfigFileJson } from 'App/Lib/Conf/ReadConfigFile'
 import { writeConfigFile } from 'App/Lib/Conf/WriteConfigFile'
-import { pipe, TE } from 'App/Lib/FpTs'
+import { pipe, TE, T, TO } from 'App/Lib/FpTs'
 
 const suffixExt = (suffix: string) => (text: string) => `${text}.${suffix}`
-const writeDefaultConfig = (options: ConfOptions<Conf>) =>
-  pipe(
-    options.defaults,
-    writeConfigFile(pipe(options.configName, suffixExt('json'))),
-    TE.map(() => options.defaults),
+const writeDefaultConfig = (options: ConfOptions<Conf>) => {
+  return pipe(
+    T.of({ configName: pipe(options.configName, suffixExt('json')) }),
+    T.bind('canReadConfig', ({ configName }) => canReadConfigFile(configName)),
+    TE.fromTask,
+    TE.filterOrElse(
+      ({ canReadConfig }) => !canReadConfig,
+      () => new Error('Config file already exists'),
+    ),
+    TE.chain(({ configName }) => writeConfigFile(configName)(options.defaults)),
+    TO.fromTaskEither,
   )
+}
 
 const readConfigOrUseDefaultConfig = (options: ConfOptions<Conf>) =>
-  pipe(
-    TE.of(pipe(options.configName, suffixExt('json'))),
-    TE.chain(readConfigFileJson),
-    TE.alt(() => writeDefaultConfig(options)),
-  )
+  pipe(TE.of(pipe(options.configName, suffixExt('json'))), TE.chain(readConfigFileJson))
 
 const defaultOptions: ConfOptions<Conf> = {
   projectVersion: '7.0.0',
@@ -58,6 +61,12 @@ const defaultOptions: ConfOptions<Conf> = {
     },
     theme: 'system',
     locale: 'fr',
+    misc: {
+      documentation: {
+        reminder: true,
+      },
+      drawerOpen: false,
+    },
   },
 }
 
@@ -69,3 +78,5 @@ export const writeConfig = (partialConfig: PartialDeep<Conf>) =>
     TE.map((currentConfig) => deepmerge(currentConfig as Partial<Conf>, partialConfig)),
     TE.chain(writeConfigFile(pipe(defaultOptions.configName, suffixExt('json')))),
   )
+
+await writeDefaultConfig(defaultOptions)()

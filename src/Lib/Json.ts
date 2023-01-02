@@ -6,10 +6,10 @@
  */
 
 import { E, flow, pipe } from 'App/Lib/FpTs'
-import * as DE from 'io-ts/Decoder'
+import { D } from 'App/Lib/IoTs'
 
 export const parseJson =
-  <T>(decoder: DE.Decoder<unknown, T>) =>
+  <T>(decoder: D.Decoder<unknown, T>) =>
   (text: string) =>
     pipe(
       E.tryCatch(
@@ -19,7 +19,7 @@ export const parseJson =
       E.chainW(
         flow(
           decoder.decode,
-          E.mapLeft((errors) => new Error(`Cannot decode json, error given: ${DE.draw(errors)}`)),
+          E.mapLeft((errors: D.DecodeError) => new Error(`Cannot decode json, error given: ${D.draw(errors)}`)),
         ),
       ),
     )

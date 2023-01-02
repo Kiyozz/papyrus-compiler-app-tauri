@@ -6,7 +6,7 @@
  */
 
 import { open } from '@tauri-apps/api/shell'
-import { Console } from 'App/Console/Console'
+import { Console } from 'App/Lib/Console'
 import { documentationUrl } from 'App/Constant/Documentation'
 import { useProduction } from 'App/Hook/UseProduction'
 import { useTelemetry } from 'App/Hook/UseTelemetry'
