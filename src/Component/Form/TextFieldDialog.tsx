@@ -25,7 +25,7 @@ function TextFieldDialog({
   type,
   placeholder,
   ...props
-}: FormControlProps & {
+}: Omit<FormControlProps, 'onChange'> & {
   label: ReactNode
   defaultValue: string
   outlinedInputProps?: OutlinedInputProps

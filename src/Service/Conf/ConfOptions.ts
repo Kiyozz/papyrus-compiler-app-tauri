@@ -6,21 +6,12 @@
  */
 
 import type { ConfMigrations } from 'App/Service/Conf/ConfMigrations'
-import type { ConfSchema } from 'App/Service/Conf/ConfSchema'
 
-export type ConfOptions<T extends Record<string, any>> = {
+export type ConfRecord<T extends Record<string, any>> = Record<string, unknown>
+
+export type ConfOptions<T = unknown> = {
   readonly projectVersion: string
   readonly configName: string
-  readonly defaults?: Readonly<T>
-  readonly schema?: ConfSchema<T>
-  readonly migrations?: ConfMigrations<T>
-
-  /**
-   * @default value => JSON.stringify(value, null, '\t')
-   */
-  readonly serialize?: (data: T) => string
-  /**
-   * @default JSON.parse
-   */
-  readonly deserialize?: (data: string) => T
+  readonly defaults: T
+  readonly migrations?: ConfMigrations<any>
 }

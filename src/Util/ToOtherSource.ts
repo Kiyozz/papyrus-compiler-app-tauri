@@ -6,15 +6,15 @@
  */
 
 import { GameSource } from 'App/Enum/GameSource'
-import { GameType } from 'App/Enum/GameType'
+import { GameType } from 'App/Service/Conf/ConfDecoder'
 
 export const toOtherSource = (game: GameType): GameSource => {
   switch (game) {
-    case GameType.le:
-    case GameType.fo4:
+    case 'Skyrim LE':
+    case 'Fallout 4':
       return GameSource.sourceFirst
-    case GameType.se:
-    case GameType.vr:
+    case 'Skyrim SE':
+    case 'Skyrim VR':
       return GameSource.scriptsFirst
     default:
       throw new Error('RuntimeError: unsupported GameType')

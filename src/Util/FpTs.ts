@@ -5,7 +5,7 @@
  *
  */
 
-export * from 'fp-ts/function'
+export { pipe, flow, constant, identity } from 'fp-ts/function'
 export * as T from 'fp-ts/Task'
 export * as TE from 'fp-ts/TaskEither'
 export * as O from 'fp-ts/Option'

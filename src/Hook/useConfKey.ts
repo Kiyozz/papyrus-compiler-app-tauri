@@ -5,7 +5,7 @@
  *
  */
 
-import { useConf } from 'App/Hook/UseConf'
+import { useConf } from 'App/Hook/Conf/UseConf'
 import { Settings } from 'App/Type/Settings/Settings'
 import { useQuery } from '@tanstack/react-query'
 

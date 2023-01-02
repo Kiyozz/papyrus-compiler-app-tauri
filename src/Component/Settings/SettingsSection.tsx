@@ -19,7 +19,7 @@ function SettingsSection({
   titleProps,
   children,
   ...props
-}: PaperProps & {
+}: Omit<PaperProps, 'title'> & {
   title: ReactNode
   gutterTop?: boolean
   titleProps?: TypographyProps<'h3'>

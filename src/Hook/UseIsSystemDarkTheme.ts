@@ -5,14 +5,19 @@
  *
  */
 
-import { useApp } from 'App/Hook/UseApp'
+import { useConf } from 'App/Hook/Conf/UseConf'
 import { useSystemDarkPreference } from 'App/Hook/UseSystemDarkPreference'
+import { O, pipe } from 'App/Util/FpTs'
 
 export const useIsSystemDarkTheme = () => {
   const isDark = useSystemDarkPreference()
-  const {
-    dark: [theme],
-  } = useApp()
+  const conf = useConf()
 
-  return theme === 'system' ? isDark : theme === 'dark'
+  return pipe(
+    conf.data,
+    O.fromNullable,
+    O.bind('isSystem', ({ theme }) => O.some(theme === 'system')),
+    O.map(({ isSystem, theme }) => (isSystem ? isDark : theme === 'dark')),
+    O.getOrElse(() => isDark),
+  )
 }

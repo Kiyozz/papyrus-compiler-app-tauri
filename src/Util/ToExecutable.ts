@@ -6,17 +6,17 @@
  */
 
 import { GameExecutable } from 'App/Enum/GameExecutable'
-import { GameType } from 'App/Enum/GameType'
+import { GameType } from 'App/Service/Conf/ConfDecoder'
 
 export function toExecutable(game: GameType): GameExecutable {
   switch (game) {
-    case GameType.le:
+    case 'Skyrim LE':
       return GameExecutable.le
-    case GameType.se:
+    case 'Skyrim SE':
       return GameExecutable.se
-    case GameType.vr:
+    case 'Skyrim VR':
       return GameExecutable.vr
-    case GameType.fo4:
+    case 'Fallout 4':
       return GameExecutable.fo4
     default:
       throw new TypeError('RuntimeError: unsupported GameType')

@@ -14,16 +14,16 @@ import Tooltip from '@mui/material/Tooltip'
 import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import { GameType } from 'App/Enum/GameType'
-import { useConf } from 'App/Hook/UseConf'
-import { useConfKey } from 'App/Hook/useConfKey'
+import { useConf } from 'App/Hook/Conf/UseConf'
+import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { toExecutable } from 'App/Util/ToExecutable'
 import { useTranslation } from 'react-i18next'
+import { Navigate } from 'react-router-dom'
 
 function SettingsGameSection() {
   const { t } = useTranslation()
   const conf = useConf()
-  const gameConf = useConfKey('game')
-  const compilerConf = useConfKey('compilation')
+  const updateConf = useUpdateConf()
 
   const games = [
     {
@@ -44,13 +44,13 @@ function SettingsGameSection() {
     },
   ]
 
-  if (gameConf.isLoading || compilerConf.isLoading) return <>Loading</>
+  if (conf.isLoading) return <>Loading</>
 
-  if (!gameConf.data || !compilerConf.data) return <>Unknown error</>
+  if (!conf.isSuccess) return <Navigate to="/" />
 
-  const gameType = gameConf.data.type
-  const gamePath = gameConf.data.path
-  const gameCompilerPath = compilerConf.data.compilerPath
+  const gameType = conf.data.game.type
+  const gamePath = conf.data.game.path
+  const gameCompilerPath = conf.data.compilation.compilerPath
 
   return (
     <SettingsSection id="game-section" title={t<string>('page.settings.sections.game.title')} gutterTop={false}>
@@ -59,13 +59,13 @@ function SettingsGameSection() {
           classes={{ row: 'justify-between' }}
           row
           onChange={(evt, value) => {
-            conf.set({
+            updateConf.mutate({
               game: {
                 type: value as GameType,
               },
             })
           }}
-          value={gameConf.data.type}
+          value={gameType}
         >
           {games.map((game) => {
             return (
@@ -99,7 +99,12 @@ function SettingsGameSection() {
           id="settings-game-game-folder-text-field"
           defaultValue={gamePath}
           onChange={(newValue) => {
-            conf.set('game.path', newValue)
+            // update the game path in config
+            updateConf.mutate({
+              game: {
+                path: newValue,
+              },
+            })
           }}
           type="folder"
         />
@@ -119,7 +124,12 @@ function SettingsGameSection() {
           defaultValue={gameCompilerPath}
           type="file"
           onChange={(newValue) => {
-            conf.set('compilation.compilerPath', newValue)
+            // update the compiler path in config
+            updateConf.mutate({
+              compilation: {
+                compilerPath: newValue,
+              },
+            })
           }}
           placeholder={t<string>('common.select.file')}
         />
