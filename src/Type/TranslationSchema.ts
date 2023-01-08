@@ -11,9 +11,14 @@ export type TranslationSchema = {
     cancel: string
     clear: string
     confirm: string
+    start: string
+    remove: string
     select: {
       file: string
       folder: string
+    }
+    papyrusFileSelectDialog: {
+      title: string
     }
   }
   nav: {

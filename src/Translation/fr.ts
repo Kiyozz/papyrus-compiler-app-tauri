@@ -13,9 +13,14 @@ const fr: TranslationSchema = {
     cancel: 'Annuler',
     clear: 'Vider',
     confirm: 'Confirmer',
+    start: 'Démarrer',
+    remove: 'Supprimer',
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',
+    },
+    papyrusFileSelectDialog: {
+      title: 'Sélectionner un script Papyrus',
     },
   },
   nav: {

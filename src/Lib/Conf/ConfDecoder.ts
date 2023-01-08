@@ -16,8 +16,13 @@ export const MiscDecoder = D.struct({
 })
 export type Misc = D.TypeOf<typeof MiscDecoder>
 
-export const GroupDecoder = D.boolean
-export type Group = D.TypeOf<typeof GroupDecoder>
+export const GroupsDecoder = D.record(
+  D.struct({
+    name: D.string,
+  }),
+)
+
+export type Groups = D.TypeOf<typeof GroupsDecoder>
 
 export const FlagDecoder = D.union(D.literal('TESV_Papyrus_Flags.flg'), D.literal('Institute_Papyrus_Flags.flg'))
 export type Flag = D.TypeOf<typeof FlagDecoder>
@@ -80,7 +85,7 @@ export const ConfDecoder = D.struct({
   compilation: CompilationDecoder,
   tutorial: TutorialDecoder,
   mo2: Mo2Decoder,
-  groups: D.array(GroupDecoder),
+  groups: D.array(GroupsDecoder),
   telemetry: TelemetryDecoder,
   theme: ThemeDecoder,
   locale: LocaleDecoder,

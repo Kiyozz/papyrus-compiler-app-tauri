@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "PCA",
-    "version": "0.0.1"
+    "version": "2023.1.0-next"
   },
   "tauri": {
     "allowlist": {
@@ -19,7 +19,7 @@
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
-      "copyright": "",
+      "copyright": "WushuLate@NexusMods-Kiyozz@GitHub",
       "deb": {
         "depends": []
       },
@@ -32,7 +32,7 @@
         "icons/icon.ico"
       ],
       "identifier": "io.wk.pca",
-      "longDescription": "",
+      "longDescription": "Use Papyrus Compiler without Creation Kit App. Internally, PCA uses Official Papyrus Compiler from Bethesda",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -41,7 +41,7 @@
         "signingIdentity": null
       },
       "resources": [],
-      "shortDescription": "",
+      "shortDescription": "Papyrus compiler app (PCA) by WushuLate",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
@@ -59,9 +59,9 @@
       {
         "fullscreen": false,
         "height": 820,
-        "width": 1000,
+        "width": 800,
         "resizable": true,
-        "title": "PCA",
+        "title": "PCA 2023.1-NEXT",
         "minWidth": 650,
         "minHeight": 800
       }
