@@ -7,16 +7,16 @@
 
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query'
 import { E } from 'App/Lib/FpTs'
-import { writeDefaultGroups } from 'App/Lib/Group/Group'
+import { removeDefaultGroup } from 'App/Lib/Group/Group'
 
-export const useUpdateGroups = (
-  options: UseMutationOptions<void, Error, Parameters<typeof writeDefaultGroups>[0]> = {},
+export const useRemoveGroup = (
+  options: UseMutationOptions<void, Error, Parameters<typeof removeDefaultGroup>[0]> = {},
 ) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (partialGroups) => {
-      const res = await writeDefaultGroups(partialGroups)()
+    mutationFn: async (groupId) => {
+      const res = await removeDefaultGroup(groupId)()
 
       if (E.isLeft(res)) {
         throw res.left

@@ -11,8 +11,12 @@ export type TranslationSchema = {
     cancel: string
     clear: string
     confirm: string
+    create: string
     start: string
     remove: string
+    searchScripts: string
+    moreDetails: string
+    edit: string
     select: {
       file: string
       folder: string
@@ -47,10 +51,9 @@ export type TranslationSchema = {
       name: {
         label: string
       }
-      actions: {
-        edit: string
-        create: string
-        searchScripts: string
+      removing: {
+        title: string
+        content: string
       }
     }
     openDocumentation: {
@@ -69,7 +72,6 @@ export type TranslationSchema = {
         title: string
         actions: {
           recentFiles: string
-          searchScripts: string
           group: string
         }
       }
@@ -79,9 +81,6 @@ export type TranslationSchema = {
       whatIsAGroup: string
       appBar: {
         title: string
-        actions: {
-          create: string
-        }
       }
     }
     settings: {

@@ -6,14 +6,15 @@
  */
 
 import { Groups } from 'App/Lib/Conf/ConfDecoder'
-import { pipe, TE, TO } from 'App/Lib/FpTs'
+import { A, flow, pipe, TE, TO } from 'App/Lib/FpTs'
 import { GroupOptions } from 'App/Lib/Group/GroupOptions'
 import { canReadGroupsFile, readGroupsFileJson } from 'App/Lib/Group/ReadGroupsFile'
 import { writeGroupsFile } from 'App/Lib/Group/WriteGroupsFile'
+import { Id } from 'App/Type/Id'
 import deepmerge from 'deepmerge'
 import { PartialDeep } from 'type-fest'
 
-const writeDefaultGroups = (options: GroupOptions) => {
+const writeGroupsIfNotExists = (options: GroupOptions) => {
   return pipe(
     canReadGroupsFile(options.fileName),
     TE.fromTask,
@@ -35,11 +36,29 @@ const defaultOptions: GroupOptions = {
 
 export const readGroups = readGroupsOrUseDefaultGroups(defaultOptions)
 
-export const writeGroups = (partialConfig: PartialDeep<Groups>) =>
+export const writeGroups = (options: GroupOptions) => (partialConfig: PartialDeep<Groups>) =>
   pipe(
     readGroups,
     TE.map((currentConfig) => deepmerge(currentConfig, partialConfig) as Groups),
-    TE.chain(writeGroupsFile(defaultOptions.fileName)),
+    TE.chain(writeGroupsFile(options.fileName)),
   )
 
-await writeDefaultGroups(defaultOptions)()
+export const writeDefaultGroups = writeGroups(defaultOptions)
+
+export const removeGroup = (options: GroupOptions) => (groupId: Id) =>
+  pipe(
+    readGroups,
+    TE.map((groups) =>
+      pipe(
+        groups,
+        Object.entries,
+        A.filter(([id]) => id !== groupId),
+        flow(Object.fromEntries),
+      ),
+    ),
+    TE.chain((groups: Groups) => pipe(groups, writeGroupsFile(options.fileName))),
+  )
+
+export const removeDefaultGroup = removeGroup(defaultOptions)
+
+await writeGroupsIfNotExists(defaultOptions)()

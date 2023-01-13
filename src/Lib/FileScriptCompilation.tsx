@@ -8,10 +8,13 @@
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
-import { FileScriptCompilation } from 'App/Type/FileScriptCompilation'
+import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 
 export const isRunning = (fileScriptCompilation: FileScriptCompilation): boolean =>
   fileScriptCompilation.status === 'running'
+
+export const isFileScriptCompilation = (script: FileScript): script is FileScriptCompilation => 'status' in script
 
 const classNameFromStatus = (script: FileScriptCompilation): string => {
   switch (script.status) {

@@ -6,7 +6,6 @@
  */
 
 import { open } from '@tauri-apps/api/shell'
-import { Console } from 'App/Lib/Console'
 import { documentationUrl } from 'App/Constant/Documentation'
 import { useProduction } from 'App/Hook/UseProduction'
 import { useTelemetry } from 'App/Hook/UseTelemetry'
@@ -27,7 +26,7 @@ export function useDocumentation() {
     )()
 
     if (E.isLeft(res)) {
-      Console.error(res.left)
+      console.error(res.left)
     }
   }
 

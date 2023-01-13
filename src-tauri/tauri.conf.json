@@ -31,7 +31,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "io.wk.pca",
+      "identifier": "com.kiyozz.pca",
       "longDescription": "Use Papyrus Compiler without Creation Kit App. Internally, PCA uses Official Papyrus Compiler from Bethesda",
       "macOS": {
         "entitlements": null,

@@ -11,7 +11,7 @@ import Button, { ButtonProps } from '@mui/material/Button'
 import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
 import { O, pipe } from 'App/Lib/FpTs'
 import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
-import { FileScriptCompilation } from 'App/Type/FileScriptCompilation'
+import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 

@@ -7,6 +7,8 @@
 
 import { pipe } from 'App/Lib/FpTs'
 import { D } from 'App/Lib/IoTs'
+import { Id } from 'App/Type/Id'
+import { Decoder } from 'io-ts/Decoder'
 
 export const MiscDecoder = D.struct({
   drawerOpen: D.boolean,
@@ -16,11 +18,23 @@ export const MiscDecoder = D.struct({
 })
 export type Misc = D.TypeOf<typeof MiscDecoder>
 
-export const GroupsDecoder = D.record(
-  D.struct({
-    name: D.string,
-  }),
-)
+export const FileScriptDecoder = D.struct({
+  id: D.string,
+  name: D.string,
+  path: D.string,
+})
+
+export type FileScript = D.TypeOf<typeof FileScriptDecoder>
+
+export const GroupDecoder = D.struct({
+  name: D.string,
+  scripts: D.array(FileScriptDecoder),
+})
+
+export type Group = D.TypeOf<typeof GroupDecoder>
+
+// Record key is the group id uuid
+export const GroupsDecoder = D.record(GroupDecoder) satisfies Decoder<unknown, Record<Id, Group>>
 
 export type Groups = D.TypeOf<typeof GroupsDecoder>
 

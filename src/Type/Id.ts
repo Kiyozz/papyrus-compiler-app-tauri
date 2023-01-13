@@ -5,4 +5,4 @@
  *
  */
 
-export type DarkMode = 'dark' | 'light' | 'system'
+export type Id = string

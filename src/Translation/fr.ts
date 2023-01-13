@@ -13,8 +13,12 @@ const fr: TranslationSchema = {
     cancel: 'Annuler',
     clear: 'Vider',
     confirm: 'Confirmer',
+    create: 'Créer',
     start: 'Démarrer',
     remove: 'Supprimer',
+    searchScripts: 'Rechercher',
+    moreDetails: 'Plus de détails',
+    edit: 'Modifier',
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',
@@ -49,10 +53,9 @@ const fr: TranslationSchema = {
       name: {
         label: 'Nom',
       },
-      actions: {
-        edit: 'Editer',
-        create: 'Créer',
-        searchScripts: 'Rechercher',
+      removing: {
+        title: 'Suppression du groupe',
+        content: 'Vous allez supprimer le groupe "{{name}}".',
       },
     },
     openDocumentation: {
@@ -72,18 +75,14 @@ const fr: TranslationSchema = {
         actions: {
           recentFiles: 'Fichiers récents',
           group: 'Groupe',
-          searchScripts: 'Rechercher',
         },
       },
     },
     groups: {
-      createGroupText: 'Vous pouvez créer un groupe avec le bouton $t(page.groups.appBar.actions.create).',
+      createGroupText: 'Vous pouvez créer un groupe avec le bouton $t(common.create).',
       whatIsAGroup: 'Un groupe est un ensemble de scripts qui peut être ajoutés rapidement à la compilation.',
       appBar: {
         title: 'Groupes',
-        actions: {
-          create: 'Créer',
-        },
       },
     },
     settings: {

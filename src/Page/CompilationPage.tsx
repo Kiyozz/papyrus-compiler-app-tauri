@@ -20,6 +20,7 @@ import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
+import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -29,8 +30,6 @@ function CompilationPage() {
   const { scripts, add: addScripts, clear: clearScripts, remove: removeScripts, running } = useCompilation()
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
   const groups = useGroups()
-
-  if (!isQueryNonNullable(groups)) return <>Waiting...</>
 
   return (
     <div>
@@ -50,9 +49,9 @@ function CompilationPage() {
           {t('page.compilation.appBar.actions.recentFiles')}
         </Button>
         <SearchScriptButton className="px-3 py-2" color="inherit" onFileSelect={addScripts}>
-          {t('page.compilation.appBar.actions.searchScripts')}
+          {t('common.searchScripts')}
         </SearchScriptButton>
-        {Object.keys(groups.data).length > 0 ? (
+        {isQueryNonNullable(groups) && Object.keys(groups.data).length > 0 ? (
           <GroupChooseButton className="px-3 py-2" color="inherit">
             {t('page.compilation.appBar.actions.group')}
           </GroupChooseButton>
@@ -79,7 +78,7 @@ function CompilationPage() {
                 {t('common.clear')}
               </Button>
             </div>
-            <FileScriptsList
+            <FileScriptsList<FileScriptCompilation>
               scripts={scripts}
               onRemove={(scriptToRemove) => {
                 removeScripts([scriptToRemove])

@@ -1,7 +1,12 @@
 {
-  "name": "tauri-app",
+  "name": "@kiyozz/tauri-app",
   "private": true,
   "version": "2023.1",
+  "author": {
+    "email": "kevinturmel@gmail.com",
+    "name": "Kiyozz",
+    "url": "pca.kiyozz.com"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,6 +20,7 @@
     "@emotion/styled": "^11.10.5",
     "@fontsource/inter": "^4.5.14",
     "@fontsource/roboto": "^4.5.8",
+    "@hookform/resolvers": "^2.9.10",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.2",
     "@sindresorhus/is": "^5.3.0",
@@ -35,10 +41,12 @@
     "ky": "^0.33.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.41.5",
     "react-i18next": "^12.1.1",
     "react-router-dom": "^6.6.1",
     "semver": "^7.3.8",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^4.20.4",
