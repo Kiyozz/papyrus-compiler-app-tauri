@@ -55,7 +55,6 @@ const defaultOptions: ConfOptions<Conf> = {
       output: await join('overwrite', 'Scripts'),
       mods: 'mods',
     },
-    groups: [],
     telemetry: {
       use: true,
     },

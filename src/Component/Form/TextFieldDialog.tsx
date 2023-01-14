@@ -6,7 +6,7 @@
  */
 
 import is from '@sindresorhus/is'
-import { dialog } from '@tauri-apps/api'
+import { open as openDialog } from '@tauri-apps/api/dialog'
 import FormControl, { FormControlProps } from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -41,7 +41,7 @@ function TextFieldDialog({
     evt.currentTarget.blur()
     setHover(false)
 
-    const result = await dialog.open({
+    const result = await openDialog({
       directory: type === 'folder',
       filters: [
         {

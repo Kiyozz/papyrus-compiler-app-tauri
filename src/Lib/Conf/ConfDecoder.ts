@@ -110,7 +110,6 @@ export const ConfDecoder = D.struct({
   compilation: CompilationDecoder,
   tutorial: TutorialDecoder,
   mo2: Mo2Decoder,
-  groups: D.array(GroupsDecoder),
   telemetry: TelemetryDecoder,
   theme: ThemeDecoder,
   locale: LocaleDecoder,
