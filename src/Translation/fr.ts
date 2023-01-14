@@ -19,6 +19,7 @@ const fr: TranslationSchema = {
     searchScripts: 'Rechercher',
     moreDetails: 'Plus de détails',
     edit: 'Modifier',
+    noScripts: 'Aucun script',
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',

@@ -157,6 +157,7 @@ function GroupsPage() {
                         </Toolbar>
                         <GroupsList
                           groups={groups}
+                          isMoreDetails={isMoreDetails}
                           onTryRemove={(group) => setGroupToRemove(O.some(group))}
                           onClickEdit={(group) => {
                             setGroupToEdit(O.some(group))

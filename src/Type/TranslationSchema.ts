@@ -17,6 +17,7 @@ export type TranslationSchema = {
     searchScripts: string
     moreDetails: string
     edit: string
+    noScripts: string
     select: {
       file: string
       folder: string
