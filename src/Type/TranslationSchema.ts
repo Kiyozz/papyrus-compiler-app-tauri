@@ -18,6 +18,8 @@ export type TranslationSchema = {
     moreDetails: string
     edit: string
     noScripts: string
+    group: string
+    recentFiles: string
     select: {
       file: string
       folder: string
@@ -71,10 +73,6 @@ export type TranslationSchema = {
       dragAndDropAdmin: string
       appBar: {
         title: string
-        actions: {
-          recentFiles: string
-          group: string
-        }
       }
     }
     groups: {

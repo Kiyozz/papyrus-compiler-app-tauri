@@ -21,7 +21,9 @@ import SearchScriptButton from 'App/Component/SearchScriptButton'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { flow } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
+import { pathsToFileScriptCompilation } from 'App/Lib/PathsToFileScriptCompilation'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -46,14 +48,22 @@ function CompilationPage() {
           color="inherit"
           startIcon={<HistoryIcon />}
         >
-          {t('page.compilation.appBar.actions.recentFiles')}
+          {t('common.recentFiles')}
         </Button>
         <SearchScriptButton className="px-3 py-2" color="inherit" onFileSelect={addScripts}>
           {t('common.searchScripts')}
         </SearchScriptButton>
         {isQueryNonNullable(groups) && Object.keys(groups.data).length > 0 ? (
-          <GroupChooseButton className="px-3 py-2" color="inherit">
-            {t('page.compilation.appBar.actions.group')}
+          <GroupChooseButton
+            className="px-3 py-2"
+            color="inherit"
+            onGroupClick={flow(
+              (group) => group.scripts.map((script) => script.path),
+              pathsToFileScriptCompilation,
+              addScripts,
+            )}
+          >
+            {t('common.group')}
           </GroupChooseButton>
         ) : null}
       </PageAppBar>

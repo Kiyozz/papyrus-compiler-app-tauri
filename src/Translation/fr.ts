@@ -20,6 +20,8 @@ const fr: TranslationSchema = {
     moreDetails: 'Plus de détails',
     edit: 'Modifier',
     noScripts: 'Aucun script',
+    recentFiles: 'Fichiers récents',
+    group: 'Groupe',
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',
@@ -73,10 +75,6 @@ const fr: TranslationSchema = {
       dragAndDropAdmin: "Cette fonctionnalité n'est pas disponible si PCA est lancé en mode administrateur.",
       appBar: {
         title: 'Compilation',
-        actions: {
-          recentFiles: 'Fichiers récents',
-          group: 'Groupe',
-        },
       },
     },
     groups: {
