@@ -39,17 +39,15 @@ function FileScriptsList<T extends FileScript>({
             key={script.id}
             component={Paper}
             secondaryAction={
-              isFileScriptCompilation(script) ? (
-                <IconButton
-                  aria-disabled={isRunning(script)}
-                  aria-label={t<string>('common.remove')}
-                  color="error"
-                  disabled={isRunning(script)}
-                  onClick={() => onRemove(script)}
-                >
-                  <DeleteOutlinedIcon />
-                </IconButton>
-              ) : undefined
+              <IconButton
+                aria-disabled={isFileScriptCompilation(script) ? isRunning(script) : false}
+                aria-label={t<string>('common.remove')}
+                color="error"
+                disabled={isFileScriptCompilation(script) ? isRunning(script) : false}
+                onClick={() => onRemove(script)}
+              >
+                <DeleteOutlinedIcon />
+              </IconButton>
             }
             variant="outlined"
           >

@@ -6,8 +6,8 @@
  */
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { LoadingButton } from '@mui/lab'
 import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
 import Dialog, { DialogProps } from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -20,23 +20,24 @@ import SearchScriptButton from 'App/Component/SearchScriptButton'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { GroupZod } from 'App/Lib/Form/GroupForm'
 import { O, pipe } from 'App/Lib/FpTs'
-import { FileScript, Group } from 'App/Lib/Conf/ConfDecoder'
+import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { GroupWithId } from 'App/Type/GroupWithId'
 import cx from 'classnames'
-import React from 'react'
+import { useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 
-function AddOrEditGroupDialog({
-  initialGroup = O.none,
+function EditGroupDialog({
+  group = O.none,
   onClose,
   onSubmit,
   actionsDisabled = false,
   actionsIsLoading = false,
   ...props
-}: Omit<DialogProps, 'onSubmit'> & {
-  initialGroup: O.Option<Group>
+}: Omit<DialogProps, 'onSubmit' | 'open'> & {
+  group: O.Option<GroupWithId>
   onClose: () => void
-  onSubmit: (scripts: FileScript[], name: string) => void
+  onSubmit: (scripts: FileScript[], name: string) => Promise<void>
   actionsDisabled?: boolean
   actionsIsLoading?: boolean
 }) {
@@ -47,7 +48,7 @@ function AddOrEditGroupDialog({
     clear: clearScripts,
   } = useScriptsList({
     initialScripts: pipe(
-      initialGroup,
+      group,
       O.map((group) => group.scripts),
       O.getOrElse(() => [] as FileScript[]),
     ),
@@ -56,7 +57,7 @@ function AddOrEditGroupDialog({
   const { t } = useTranslation()
   const { register, reset, handleSubmit, formState } = useForm({
     defaultValues: pipe(
-      initialGroup,
+      group,
       O.map((group) => ({
         name: group.name,
       })),
@@ -64,6 +65,19 @@ function AddOrEditGroupDialog({
     ),
     resolver: zodResolver(GroupZod),
   })
+
+  useLayoutEffect(() => {
+    pipe(
+      group,
+      O.map((group) => {
+        reset({
+          name: group.name,
+        })
+        clearScripts()
+        addScripts(group.scripts)
+      }),
+    )
+  }, [group])
 
   const resetDialog = () => {
     reset()
@@ -75,14 +89,13 @@ function AddOrEditGroupDialog({
     onClose()
   }
 
-  const isEdit = false
-
   return (
     <Dialog
       aria-describedby="group-content"
       aria-labelledby="group-title"
       fullScreen
       onClose={handleDialogClose}
+      open={O.isSome(group)}
       {...props}
     >
       <form
@@ -96,8 +109,8 @@ function AddOrEditGroupDialog({
                 O.fromPredicate((name) => name.length > 0),
               )
             }),
-            O.map(({ name }) => {
-              onSubmit(scripts, name)
+            O.map(async ({ name }) => {
+              await onSubmit(scripts, name)
               resetDialog()
             }),
           )
@@ -132,17 +145,21 @@ function AddOrEditGroupDialog({
           >
             {t('common.searchScripts')}
           </SearchScriptButton>
-          <Button disabled={actionsDisabled} onClick={() => handleDialogClose()} color="inherit">
+          <Button disabled={actionsDisabled} onClick={handleDialogClose} color="inherit">
             {t('common.cancel')}
           </Button>
-          <Button type="submit" disabled={actionsDisabled || !formState.isValid} color="inherit">
-            {actionsIsLoading && <CircularProgress size="inherit" variant="indeterminate" />}
-            {isEdit ? t('common.edit') : t('common.create')}
-          </Button>
+          <LoadingButton
+            type="submit"
+            disabled={actionsDisabled || !formState.isValid}
+            color="inherit"
+            loading={actionsIsLoading}
+          >
+            {t('common.edit')}
+          </LoadingButton>
         </DialogActions>
       </form>
     </Dialog>
   )
 }
 
-export default AddOrEditGroupDialog
+export default EditGroupDialog

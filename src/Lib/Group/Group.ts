@@ -11,8 +11,6 @@ import { GroupOptions } from 'App/Lib/Group/GroupOptions'
 import { canReadGroupsFile, readGroupsFileJson } from 'App/Lib/Group/ReadGroupsFile'
 import { writeGroupsFile } from 'App/Lib/Group/WriteGroupsFile'
 import { Id } from 'App/Type/Id'
-import deepmerge from 'deepmerge'
-import { PartialDeep } from 'type-fest'
 
 const writeGroupsIfNotExists = (options: GroupOptions) => {
   return pipe(
@@ -36,10 +34,10 @@ const defaultOptions: GroupOptions = {
 
 export const readGroups = readGroupsOrUseDefaultGroups(defaultOptions)
 
-export const writeGroups = (options: GroupOptions) => (partialConfig: PartialDeep<Groups>) =>
+export const writeGroups = (options: GroupOptions) => (groups: Groups) =>
   pipe(
     readGroups,
-    TE.map((currentConfig) => deepmerge(currentConfig, partialConfig) as Groups),
+    TE.map((currentGroups) => ({ ...currentGroups, ...groups })),
     TE.chain(writeGroupsFile(options.fileName)),
   )
 

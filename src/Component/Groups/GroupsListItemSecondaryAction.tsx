@@ -16,6 +16,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import { O } from 'App/Lib/FpTs'
 
 // TODO: group menu remove/edit
 
@@ -23,27 +24,27 @@ const GroupsListItemSecondaryAction = ({
   groupId,
   className,
   onTryRemove,
-  onEdit,
+  onClickEdit,
 }: {
   groupId: string
   className?: string
   onTryRemove: () => void
-  onEdit: () => void
+  onClickEdit: () => void
 }) => {
   const { t } = useTranslation()
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null)
+  const [anchor, setAnchor] = useState<O.Option<HTMLElement>>(O.none)
 
   const onOpen = (e: React.MouseEvent<HTMLElement>) => {
-    setAnchor(e.currentTarget)
+    setAnchor(O.some(e.currentTarget))
   }
 
-  const onClickEdit = () => {
-    setAnchor(null)
-    onEdit()
+  const handleClickEdit = () => {
+    setAnchor(O.none)
+    onClickEdit()
   }
 
   const onClickRemove = () => {
-    setAnchor(null)
+    setAnchor(O.none)
     onTryRemove()
   }
 
@@ -62,11 +63,12 @@ const GroupsListItemSecondaryAction = ({
         MenuListProps={{
           'aria-labelledby': `${groupId}-group-opener`,
         }}
-        anchorEl={anchor}
+        anchorEl={O.toNullable(anchor)}
         id={`${groupId}-group-button-menu`}
-        open={Boolean(anchor)}
+        onClose={() => setAnchor(O.none)}
+        open={O.isSome(anchor)}
       >
-        <MenuItem aria-label={t<string>('common.edit')} onClick={onClickEdit}>
+        <MenuItem aria-label={t<string>('common.edit')} onClick={handleClickEdit}>
           <ListItemIcon>
             <CreateIcon />
           </ListItemIcon>

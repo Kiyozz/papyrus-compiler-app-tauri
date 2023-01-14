@@ -16,12 +16,12 @@ import cx from 'classnames'
 function GroupsList({
   groups,
   onTryRemove,
-  onEdit,
+  onClickEdit,
   className,
 }: {
   groups: GroupWithId[]
   onTryRemove: (group: GroupWithId) => void
-  onEdit: (group: GroupWithId) => void
+  onClickEdit: (group: GroupWithId) => void
   className?: string
 }) {
   return (
@@ -36,7 +36,7 @@ function GroupsList({
               <GroupsListItemSecondaryAction
                 groupId={group.id}
                 onTryRemove={() => onTryRemove(group)}
-                onEdit={() => onEdit(group)}
+                onClickEdit={() => onClickEdit(group)}
               />
             }
             variant="outlined"

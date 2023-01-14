@@ -6,6 +6,7 @@
  */
 
 import { A, pipe } from 'App/Lib/FpTs'
+import { uniqObjectArrayByKeys } from 'App/Lib/UniqObjectArrayByKeys'
 import { useReducer } from 'react'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 
@@ -14,10 +15,7 @@ type Action<T extends FileScript> = { type: 'add'; payload: T[] } | { type: 'rem
 function reducer<T extends FileScript>(state: T[], action: Action<T>): T[] {
   switch (action.type) {
     case 'add':
-      return pipe(
-        [...state, ...action.payload],
-        A.filter((file) => !state.some((f) => f.path === file.path)),
-      )
+      return uniqObjectArrayByKeys([...state, ...action.payload])(['name'])
     case 'remove':
       return pipe(
         state,

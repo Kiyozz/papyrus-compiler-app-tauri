@@ -11,7 +11,8 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Fade from '@mui/material/Fade'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import AddOrEditGroupDialog from 'App/Component/Dialog/AddOrEditGroupDialog'
+import AddGroupDialog from 'App/Component/Dialog/AddGroupDialog'
+import EditGroupDialog from 'App/Component/Dialog/EditGroupDialog'
 import RemovingGroupDialog from 'App/Component/Dialog/RemovingGroupDialog'
 import GroupMoreDetailsCheckbox from 'App/Component/Groups/GroupMoreDetailsCheckbox'
 import GroupsList from 'App/Component/Groups/GroupsList'
@@ -20,11 +21,9 @@ import PageAppBar from 'App/Component/Page/PageAppBar'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
-import { Group } from 'App/Lib/Conf/ConfDecoder'
 import { O, pipe, TO } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { GroupWithId } from 'App/Type/GroupWithId'
-import { Id } from 'App/Type/Id'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { v4 } from 'uuid'
@@ -34,53 +33,87 @@ function GroupsPage() {
   const updateGroups = useUpdateGroups()
   const removeGroup = useRemoveGroup()
   const groups = useGroups()
-  const [groupIdToEdit, setGroupIdToEdit] = useState<O.Option<Id>>(O.none)
+  const [groupToEdit, setGroupToEdit] = useState<O.Option<GroupWithId>>(O.none)
   const [isGroupDialogOpen, setGroupDialogOpen] = useState(false)
 
   const [isMoreDetails, setMoreDetails] = useState(false)
   const [groupToRemove, setGroupToRemove] = useState<O.Option<GroupWithId>>(O.none)
+
+  const closeDialogs = () => {
+    setGroupDialogOpen(false)
+    setGroupToRemove(O.none)
+    setGroupToEdit(O.none)
+  }
 
   return (
     <>
       <RemovingGroupDialog
         groupToRemove={groupToRemove}
         onConfirm={async () => {
-          console.log('remove group', groupToRemove)
-
           await pipe(
             groupToRemove,
             O.map((group) => removeGroup.mutateAsync(group.id)),
             TO.fromOption,
           )()
 
-          setGroupToRemove(O.none)
+          closeDialogs()
         }}
         onCancel={() => {
-          setGroupToRemove(O.none)
+          closeDialogs()
         }}
       />
 
       {groups.isSuccess ? (
-        <AddOrEditGroupDialog
-          open={isGroupDialogOpen}
-          initialGroup={pipe(
-            groupIdToEdit,
-            O.map((group) => groups.data[group]),
-          )}
-          onClose={() => setGroupDialogOpen(false)}
-          onSubmit={async (scripts, name) => {
-            const group: Group = {
-              name,
-              scripts,
-            }
-            await updateGroups.mutateAsync({
-              [O.isSome(groupIdToEdit) ? groupIdToEdit.value : v4()]: group,
-            })
-            setGroupDialogOpen(false)
-          }}
-          actionsDisabled={updateGroups.isLoading}
-          actionsIsLoading={updateGroups.isLoading}
-        />
+        <>
+          <AddGroupDialog
+            open={isGroupDialogOpen}
+            onClose={closeDialogs}
+            onSubmit={async (scripts, name) => {
+              await updateGroups.mutateAsync({
+                [v4()]: {
+                  name,
+                  scripts: scripts.map(({ id, name, path }) => ({
+                    id,
+                    name,
+                    path,
+                  })),
+                },
+              })
+
+              closeDialogs()
+            }}
+            actionsDisabled={updateGroups.isLoading}
+            actionsIsLoading={updateGroups.isLoading}
+          />
+          <EditGroupDialog
+            group={groupToEdit}
+            onClose={closeDialogs}
+            onSubmit={async (scripts, name) => {
+              await pipe(
+                groupToEdit,
+                TO.fromOption,
+                TO.chain((group) => {
+                  return TO.tryCatch(() =>
+                    updateGroups.mutateAsync({
+                      [group.id]: {
+                        name,
+                        scripts: scripts.map(({ id, name, path }) => ({
+                          id,
+                          name,
+                          path,
+                        })),
+                      },
+                    }),
+                  )
+                }),
+              )()
+
+              closeDialogs()
+            }}
+            actionsDisabled={updateGroups.isLoading}
+            actionsIsLoading={updateGroups.isLoading}
+          />
+        </>
       ) : null}
 
       <PageAppBar title={t('page.groups.appBar.title')}>
@@ -125,10 +158,8 @@ function GroupsPage() {
                         <GroupsList
                           groups={groups}
                           onTryRemove={(group) => setGroupToRemove(O.some(group))}
-                          onEdit={(group) => {
-                            // TODO: edit group
-                            setGroupIdToEdit(O.some(group.id))
-                            setGroupDialogOpen(true)
+                          onClickEdit={(group) => {
+                            setGroupToEdit(O.some(group))
                           }}
                         />
                       </>

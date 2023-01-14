@@ -12,7 +12,7 @@ import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation
 import { v4 } from 'uuid'
 import { D } from './IoTs'
 
-export const pathsToFileScript = (paths: string[]): FileScriptCompilation[] =>
+export const pathsToFileScriptCompilation = (paths: string[]): FileScriptCompilation[] =>
   pipe(
     D.array(D.string).decode(paths),
     E.map((path) => pipe(path, A.filter(isPscFile))),

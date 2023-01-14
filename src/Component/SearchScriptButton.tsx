@@ -5,23 +5,24 @@
  *
  */
 
-import { open } from '@tauri-apps/api/dialog'
+import { open as openFileDialog } from '@tauri-apps/api/dialog'
 import SearchIcon from '@mui/icons-material/Search'
 import Button, { ButtonProps } from '@mui/material/Button'
 import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
 import { O, pipe } from 'App/Lib/FpTs'
-import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
+import { pathsToFileScriptCompilation } from 'App/Lib/PathsToFileScriptCompilation'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function SearchScriptButton({
   onFileSelect,
+  disabled,
   ...props
 }: { onFileSelect: (files: FileScriptCompilation[]) => void } & ButtonProps) {
   const { t } = useTranslation()
   useListenFileDrop({
-    onDrop: (evt) => pipe(evt.payload, pathsToFileScript, onFileSelect),
+    onDrop: (evt) => pipe(evt.payload, pathsToFileScriptCompilation, onFileSelect),
   })
 
   const [isDialogOpen, setDialogOpen] = useState(false)
@@ -29,10 +30,10 @@ function SearchScriptButton({
   return (
     <Button
       startIcon={<SearchIcon />}
-      disabled={isDialogOpen}
+      disabled={disabled || isDialogOpen}
       onClick={() => {
         setDialogOpen(true)
-        open({
+        openFileDialog({
           title: t<string>('common.papyrusFileSelectDialog.title'),
           filters: [
             {
@@ -47,7 +48,7 @@ function SearchScriptButton({
             pipe(
               files as string[] | null,
               O.fromNullable,
-              O.map(pathsToFileScript),
+              O.map(pathsToFileScriptCompilation),
               O.filter((files) => files.length > 0),
               O.map(onFileSelect),
             )
