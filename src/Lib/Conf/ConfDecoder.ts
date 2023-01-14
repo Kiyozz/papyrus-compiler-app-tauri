@@ -38,6 +38,17 @@ export const GroupsDecoder = D.record(GroupDecoder) satisfies Decoder<unknown, R
 
 export type Groups = D.TypeOf<typeof GroupsDecoder>
 
+export const RecentScriptDecoder = D.struct({
+  path: D.string,
+  id: D.string,
+})
+
+export type RecentScript = D.TypeOf<typeof RecentScriptDecoder>
+
+export const RecentScriptsDecoder = D.array(RecentScriptDecoder)
+
+export type RecentScripts = D.TypeOf<typeof RecentScriptsDecoder>
+
 export const FlagDecoder = D.union(D.literal('TESV_Papyrus_Flags.flg'), D.literal('Institute_Papyrus_Flags.flg'))
 export type Flag = D.TypeOf<typeof FlagDecoder>
 

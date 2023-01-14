@@ -12,7 +12,7 @@ import { flow, TE, T } from 'App/Lib/FpTs'
 export const readGroupsFile = (path: string): TE.TaskEither<Error, string> =>
   TE.tryCatch(
     () => readTextFile(path, { dir: BaseDirectory.App }),
-    (reason) => new Error(`Cannot read config file, error given: ${reason}`),
+    (reason) => new Error(`Cannot read groups file, error given: ${reason}`),
   )
 
 export const canReadGroupsFile =

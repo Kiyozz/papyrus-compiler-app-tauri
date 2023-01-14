@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import Button, { ButtonProps } from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { useGroups } from 'App/Hook/Group/UseGroups'
+import { Groups } from 'App/Lib/Conf/ConfDecoder'
 import { A, O, pipe } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { GroupWithId } from 'App/Type/GroupWithId'
@@ -17,15 +17,13 @@ import { useState } from 'react'
 
 function GroupChooseButton({
   onGroupClick,
+  groups,
   ...props
-}: Omit<ButtonProps, 'onClick'> & { onGroupClick: (group: GroupWithId) => void }) {
-  const groups = useGroups()
+}: Omit<ButtonProps, 'onClick'> & { groups: Groups; onGroupClick: (group: GroupWithId) => void }) {
   const [anchor, setAnchor] = useState<O.Option<HTMLElement>>(O.none)
 
-  if (!groups.data) return null
-
   const nonEmptyGroups = pipe(
-    groupRecordToArray(groups.data),
+    groupRecordToArray(groups),
     A.filter((group) => A.isNonEmpty(group.scripts)),
   )
 

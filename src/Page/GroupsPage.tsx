@@ -21,7 +21,7 @@ import PageAppBar from 'App/Component/Page/PageAppBar'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
-import { O, pipe, TO } from 'App/Lib/FpTs'
+import { A, O, pipe, TO } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
@@ -143,7 +143,7 @@ function GroupsPage() {
               ? pipe(
                   groups.data,
                   groupRecordToArray,
-                  O.fromPredicate((groups) => groups.length > 0),
+                  O.fromPredicate(A.isNonEmpty),
                   O.match(
                     () => <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>,
                     (groups) => (

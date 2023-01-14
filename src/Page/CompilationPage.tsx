@@ -13,7 +13,7 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
-import RecentFilesDialog from 'App/Component/Dialog/RecentFilesDialog'
+import RecentScriptsDialog from 'App/Component/Dialog/RecentScriptsDialog'
 import GroupChooseButton from 'App/Component/GroupChooseButton'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
@@ -35,10 +35,12 @@ function CompilationPage() {
 
   return (
     <div>
-      <RecentFilesDialog
+      <RecentScriptsDialog
         open={isRecentFilesDialogOpen}
         onClose={() => setRecentFilesDialogOpen(false)}
         onSubmit={() => setRecentFilesDialogOpen(false)}
+        currentScripts={scripts}
+        onClickLoad={flow(pathsToFileScriptCompilation, addScripts, () => setRecentFilesDialogOpen(false))}
       />
 
       <PageAppBar title={t('page.compilation.appBar.title')}>
@@ -57,6 +59,7 @@ function CompilationPage() {
           <GroupChooseButton
             className="px-3 py-2"
             color="inherit"
+            groups={groups.data}
             onGroupClick={flow(
               (group) => group.scripts.map((script) => script.path),
               pathsToFileScriptCompilation,

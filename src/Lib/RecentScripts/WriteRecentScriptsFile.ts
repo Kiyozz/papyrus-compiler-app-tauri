@@ -6,11 +6,11 @@
  */
 
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
-import { Groups } from 'App/Lib/Conf/ConfDecoder'
+import { RecentScripts } from 'App/Lib/Conf/ConfDecoder'
 import { stringJson } from 'App/Lib/Json'
 import { TE, pipe } from 'App/Lib/FpTs'
 
-export const writeGroupsFile = (path: string) => (contents: Groups) =>
+export const writeRecentScriptsFile = (path: string) => (contents: RecentScripts) =>
   pipe(
     contents,
     stringJson,
@@ -18,7 +18,7 @@ export const writeGroupsFile = (path: string) => (contents: Groups) =>
     TE.chainW((json) =>
       TE.tryCatch(
         () => writeTextFile({ path, contents: json }, { dir: BaseDirectory.App }),
-        (reason) => new Error(`Cannot write groups file, error given: ${reason}`),
+        (reason) => new Error(`Cannot write recent scripts file, error given: ${reason}`),
       ),
     ),
   )
