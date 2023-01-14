@@ -55,22 +55,20 @@ function EditGroupDialog({
     ),
   })
 
-  const onDialogEnter = useKey('Enter', {
-    onEnter: () => {
-      if (actionsDisabled || actionsIsLoading || !formState.isValid) {
-        return
-      }
+  const onDialogEnter = useKey('Enter', () => {
+    if (actionsDisabled || actionsIsLoading || !formState.isValid) {
+      return
+    }
 
-      const name = getValues('name')
+    const name = getValues('name')
 
-      pipe(
-        name,
-        O.fromPredicate((name) => !S.isEmpty(name)),
-        TO.fromOption,
-        TO.chain((name) => TO.tryCatch(() => onSubmit(scripts, name))),
-        TO.map(resetDialog),
-      )
-    },
+    pipe(
+      name,
+      O.fromPredicate((name) => !S.isEmpty(name)),
+      TO.fromOption,
+      TO.chain((name) => TO.tryCatch(() => onSubmit(scripts, name))),
+      TO.map(resetDialog),
+    )
   })
 
   const { t } = useTranslation()

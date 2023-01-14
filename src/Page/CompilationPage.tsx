@@ -38,9 +38,8 @@ function CompilationPage() {
       <RecentScriptsDialog
         open={isRecentFilesDialogOpen}
         onClose={() => setRecentFilesDialogOpen(false)}
-        onSubmit={() => setRecentFilesDialogOpen(false)}
         currentScripts={scripts}
-        onClickLoad={flow(pathsToFileScriptCompilation, addScripts, () => setRecentFilesDialogOpen(false))}
+        onScriptsLoad={flow(pathsToFileScriptCompilation, addScripts, () => setRecentFilesDialogOpen(false))}
       />
 
       <PageAppBar title={t('page.compilation.appBar.title')}>

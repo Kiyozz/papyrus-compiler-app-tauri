@@ -23,8 +23,9 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 import { useRecentScripts } from 'App/Hook/RecentScripts/UseRecentScripts'
+import { useKey } from 'App/Hook/UseKey'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
-import { FileScript, RecentScripts } from 'App/Lib/Conf/ConfDecoder'
+import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { pipe, A, O, flow, B } from 'App/Lib/FpTs'
 import { isFileScriptInArray } from 'App/Lib/IsFileScriptInArray'
 import cx from 'classnames'
@@ -32,16 +33,14 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function RecentScriptsDialog({
-  onSubmit,
   currentScripts,
-  onClickLoad,
+  onScriptsLoad,
   onClose,
   ...props
 }: Omit<DialogProps, 'onClose' | 'onKeyDown'> & {
   onClose: () => void
-  onSubmit: (recentScripts: RecentScripts) => void
   currentScripts: FileScript[]
-  onClickLoad: (scripts: FileScript[]) => void
+  onScriptsLoad: (scripts: FileScript[]) => void
 }) {
   const { t } = useTranslation()
   const recentScripts = useRecentScripts()
@@ -61,9 +60,16 @@ function RecentScriptsDialog({
   }
 
   const handleOnLoad = () => {
-    onClickLoad(scriptsToLoad)
+    onScriptsLoad(scriptsToLoad)
     clearScriptsToLoad()
   }
+
+  const onDialogEnter = useKey('Enter', () => {
+    if (A.isEmpty(scriptsToLoad)) return
+
+    onScriptsLoad(scriptsToLoad)
+    clearScriptsToLoad()
+  })
 
   return (
     <Dialog
@@ -71,6 +77,7 @@ function RecentScriptsDialog({
       aria-labelledby="recent-scripts-title"
       fullScreen
       onClose={handleOnClose}
+      onKeyDown={onDialogEnter}
       {...props}
     >
       <Toolbar className="p-0">

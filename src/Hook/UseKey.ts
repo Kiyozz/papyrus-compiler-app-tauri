@@ -9,10 +9,13 @@ import { KeyboardEvent } from 'react'
 
 type SupportedKeys = 'Enter'
 
-export const useKey = (key: SupportedKeys, { onEnter }: { onEnter: () => void }) => {
+export const useKey = <T extends SupportedKeys>(
+  key: T,
+  onKey: (evt: Omit<KeyboardEvent, 'key'> & { key: T }) => void,
+) => {
   return (evt: KeyboardEvent) => {
     if (evt.key === key) {
-      onEnter()
+      onKey(evt as Omit<KeyboardEvent, 'key'> & { key: T })
     }
   }
 }
