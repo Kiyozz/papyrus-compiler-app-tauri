@@ -17,9 +17,10 @@ import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
+import { useKey } from 'App/Hook/UseKey'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { GroupZod } from 'App/Lib/Form/GroupForm'
-import { O, pipe } from 'App/Lib/FpTs'
+import { O, pipe, S, TO } from 'App/Lib/FpTs'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { GroupWithId } from 'App/Type/GroupWithId'
 import cx from 'classnames'
@@ -34,7 +35,7 @@ function EditGroupDialog({
   actionsDisabled = false,
   actionsIsLoading = false,
   ...props
-}: Omit<DialogProps, 'onSubmit' | 'open'> & {
+}: Omit<DialogProps, 'onSubmit' | 'open' | 'onKeyDown'> & {
   group: O.Option<GroupWithId>
   onClose: () => void
   onSubmit: (scripts: FileScript[], name: string) => Promise<void>
@@ -54,8 +55,26 @@ function EditGroupDialog({
     ),
   })
 
+  const onDialogEnter = useKey('Enter', {
+    onEnter: () => {
+      if (actionsDisabled || actionsIsLoading || !formState.isValid) {
+        return
+      }
+
+      const name = getValues('name')
+
+      pipe(
+        name,
+        O.fromPredicate((name) => !S.isEmpty(name)),
+        TO.fromOption,
+        TO.chain((name) => TO.tryCatch(() => onSubmit(scripts, name))),
+        TO.map(resetDialog),
+      )
+    },
+  })
+
   const { t } = useTranslation()
-  const { register, reset, handleSubmit, formState } = useForm({
+  const { register, reset, handleSubmit, formState, getValues } = useForm({
     defaultValues: pipe(
       group,
       O.map((group) => ({
@@ -96,6 +115,7 @@ function EditGroupDialog({
       fullScreen
       onClose={handleDialogClose}
       open={O.isSome(group)}
+      onKeyDown={onDialogEnter}
       {...props}
     >
       <form

@@ -17,9 +17,10 @@ import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
+import { useKey } from 'App/Hook/UseKey'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { GroupZod } from 'App/Lib/Form/GroupForm'
-import { O, pipe } from 'App/Lib/FpTs'
+import { O, pipe, S, TO } from 'App/Lib/FpTs'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
@@ -31,9 +32,9 @@ function AddGroupDialog({
   actionsDisabled = false,
   actionsIsLoading = false,
   ...props
-}: Omit<DialogProps, 'onSubmit'> & {
+}: Omit<DialogProps, 'onSubmit' | 'onKeyDown'> & {
   onClose: () => void
-  onSubmit: (scripts: FileScript[], name: string) => void
+  onSubmit: (scripts: FileScript[], name: string) => Promise<void>
   actionsDisabled?: boolean
   actionsIsLoading?: boolean
 }) {
@@ -46,8 +47,26 @@ function AddGroupDialog({
     initialScripts: [] as FileScript[],
   })
 
+  const onDialogEnter = useKey('Enter', {
+    onEnter: () => {
+      if (actionsDisabled || actionsIsLoading || !formState.isValid) {
+        return
+      }
+
+      const name = getValues('name')
+
+      pipe(
+        name,
+        O.fromPredicate((name) => !S.isEmpty(name)),
+        TO.fromOption,
+        TO.chain((name) => TO.tryCatch(() => onSubmit(scripts, name))),
+        TO.map(resetDialog),
+      )
+    },
+  })
+
   const { t } = useTranslation()
-  const { register, reset, handleSubmit, formState } = useForm({
+  const { register, reset, handleSubmit, formState, getValues } = useForm({
     defaultValues: {
       name: '',
     },
@@ -70,20 +89,18 @@ function AddGroupDialog({
       aria-labelledby="group-title"
       fullScreen
       onClose={handleDialogClose}
+      onKeyDown={onDialogEnter}
       {...props}
     >
       <form
         className="flex h-full flex-col"
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit((data, evt) => {
+          evt?.stopPropagation()
+
           pipe(
-            O.Do,
-            O.bind('name', () => {
-              return pipe(
-                data.name,
-                O.fromPredicate((name) => name.length > 0),
-              )
-            }),
-            O.map(({ name }) => {
+            data.name,
+            O.fromPredicate((name) => name.length > 0),
+            O.map((name) => {
               onSubmit(scripts, name)
               resetDialog()
             }),

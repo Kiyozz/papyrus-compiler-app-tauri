@@ -8,5 +8,5 @@
 import { z } from 'zod'
 
 export const GroupZod = z.object({
-  name: z.string(),
+  name: z.string().min(1),
 })
