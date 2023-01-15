@@ -31,7 +31,7 @@
       },
       "http": {
         "request": true,
-        "scope": ["https://api.github.com/repos/Kiyozz/papyrus-compiler-app/*"]
+        "scope": ["https://api.github.com/repos/Kiyozz/papyrus-compiler-app/*", "https://telemetry.pca.kiyozz.com/*"]
       },
       "clipboard": {
         "writeText": true

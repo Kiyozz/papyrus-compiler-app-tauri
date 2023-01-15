@@ -9,11 +9,12 @@ import { A, pipe } from 'App/Lib/FpTs'
 import { uniqObjectArrayByKeys } from 'App/Lib/UniqObjectArrayByKeys'
 import { useReducer } from 'react'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { match } from 'ts-pattern'
 
 type Action<T extends FileScript> =
   | { type: 'add'; payload: T[] }
   | { type: 'remove'; payload: T[] }
-  | { type: 'removeById'; payload: T[] }
+  | { type: 'replace'; payload: T }
   | { type: 'clear' }
 
 function reducer<T extends FileScript>(state: T[], action: Action<T>): T[] {
@@ -25,10 +26,14 @@ function reducer<T extends FileScript>(state: T[], action: Action<T>): T[] {
         state,
         A.filter((fileInState) => !action.payload.includes(fileInState)),
       )
-    case 'removeById':
+    case 'replace':
       return pipe(
         state,
-        A.filter((fileInState) => !action.payload.map((f) => f.id).includes(fileInState.id)),
+        A.map((fileInState) =>
+          match(fileInState.name === action.payload.name)
+            .with(true, () => action.payload)
+            .otherwise(() => fileInState),
+        ),
       )
     case 'clear':
       return []
@@ -44,7 +49,7 @@ export function useScriptsList<T extends FileScript>({ initialScripts = [] }: { 
     scripts,
     add: (files: T[]) => dispatch({ type: 'add', payload: files }),
     remove: (files: T[]) => dispatch({ type: 'remove', payload: files }),
-    removeById: (files: T[]) => dispatch({ type: 'removeById', payload: files }),
+    replace: (file: T) => dispatch({ type: 'replace', payload: file }),
     clear: () => dispatch({ type: 'clear' }),
   }
 }

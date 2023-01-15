@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
 /*
- * Copyright (c) 2021 Kiyozz|WK.
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
  *
  * All rights reserved.
  */
 
 /* eslint-disable no-undef */
 
-console.log('Batch compile of 1 files finished. 1 succeeded, 0 failed.')
+// random fail
+if (Math.random() > 0.5) {
+  console.log('Batch compile of 1 files finished. 1 succeeded, 0 failed.')
+  process.exit(0)
+}
+
+console.log('Batch compile of 1 files finished. 2 succeeded, 0 failed.')

@@ -8,11 +8,11 @@
 import ClearIcon from '@mui/icons-material/Clear'
 import HelpIcon from '@mui/icons-material/Help'
 import HistoryIcon from '@mui/icons-material/History'
-import PlayIcon from '@mui/icons-material/PlayCircleFilled'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
+import StartCompilationButton from 'App/Component/Compilation/StartCompilationButton'
 import RecentScriptsDialog from 'App/Component/Dialog/RecentScriptsDialog'
 import GroupChooseButton from 'App/Component/GroupChooseButton'
 import Page from 'App/Component/Page/Page'
@@ -21,17 +21,20 @@ import SearchScriptButton from 'App/Component/SearchScriptButton'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
-import { flow } from 'App/Lib/FpTs'
+import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
+import { A, flow, pipe } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
-import { pathsToFileScriptCompilation } from 'App/Lib/PathsToFileScriptCompilation'
+import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function CompilationPage() {
   const { t } = useTranslation()
-  const { scripts, add: addScripts, clear: clearScripts, remove: removeScripts, running } = useCompilation()
+  const { scripts, add: addScripts, clear: clearScripts, remove: removeScripts, compile } = useCompilation()
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
   const groups = useGroups()
+
+  const isAllScriptsRunning = scripts.every((script) => script.status === 'running')
 
   return (
     <div>
@@ -39,7 +42,9 @@ function CompilationPage() {
         open={isRecentFilesDialogOpen}
         onClose={() => setRecentFilesDialogOpen(false)}
         currentScripts={scripts}
-        onScriptsLoad={flow(pathsToFileScriptCompilation, addScripts, () => setRecentFilesDialogOpen(false))}
+        onScriptsLoad={flow(pathsToFileScript, fileScriptsToFileScriptCompilation, addScripts, () =>
+          setRecentFilesDialogOpen(false),
+        )}
       />
 
       <PageAppBar title={t('page.compilation.appBar.title')}>
@@ -51,7 +56,11 @@ function CompilationPage() {
         >
           {t('common.recentFiles')}
         </Button>
-        <SearchScriptButton className="px-3 py-2" color="inherit" onFileSelect={addScripts}>
+        <SearchScriptButton
+          className="px-3 py-2"
+          color="inherit"
+          onFileSelect={flow(fileScriptsToFileScriptCompilation, addScripts)}
+        >
           {t('common.searchScripts')}
         </SearchScriptButton>
         {isQueryNonNullable(groups) && Object.keys(groups.data).length > 0 ? (
@@ -61,7 +70,8 @@ function CompilationPage() {
             groups={groups.data}
             onGroupClick={flow(
               (group) => group.scripts.map((script) => script.path),
-              pathsToFileScriptCompilation,
+              pathsToFileScript,
+              fileScriptsToFileScriptCompilation,
               addScripts,
             )}
           >
@@ -74,19 +84,18 @@ function CompilationPage() {
         {scripts.length > 0 ? (
           <>
             <div className="mb-4 flex gap-2">
-              <Button
-                color="primary"
-                disabled={/*Boolean(configError) || */ running}
-                onClick={() => {
-                  console.log('start compilation')
+              <StartCompilationButton
+                onCompilationStart={() => {
+                  pipe(
+                    scripts,
+                    A.filter((script) => script.status !== 'running'),
+                    A.map(compile),
+                  )
                 }}
-                startIcon={<PlayIcon />}
-                variant="contained"
-              >
-                {t('common.start')}
-              </Button>
+                disabled={isAllScriptsRunning}
+              />
 
-              <Button disabled={running} onClick={clearScripts} startIcon={<ClearIcon />} color="inherit">
+              <Button disabled={isAllScriptsRunning} onClick={clearScripts} startIcon={<ClearIcon />} color="inherit">
                 {t('common.clear')}
               </Button>
             </div>
@@ -95,8 +104,9 @@ function CompilationPage() {
               onRemove={(scriptToRemove) => {
                 removeScripts([scriptToRemove])
               }}
-              onStart={(scriptToStart) => {
+              onStart={async (scriptToStart) => {
                 console.log('start compilation', scriptToStart)
+                await compile(scriptToStart)
               }}
             />
           </>

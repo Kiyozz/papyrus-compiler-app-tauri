@@ -8,7 +8,9 @@
 import { GameType } from 'App/Lib/Conf/ConfDecoder'
 // import { SettingsDefaultScript } from 'App/Type/Settings/SettingsDefaultScript'
 
-export const toDefaultScript = (game: GameType): string => {
+export type DefaultScript = 'Base/Actor.psc' | 'Actor.psc'
+
+export const toDefaultScript = (game: GameType): DefaultScript => {
   switch (game) {
     case 'Fallout 4':
       return 'Base/Actor.psc'

@@ -70,7 +70,7 @@ export const Mo2Decoder = pipe(
   D.struct({
     use: D.boolean,
     output: D.string,
-    mods: D.string,
+    modsFolderRelativeToInstance: D.string,
   }),
   D.intersect(
     D.partial({

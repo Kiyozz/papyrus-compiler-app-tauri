@@ -9,9 +9,9 @@ import { open as openFileDialog } from '@tauri-apps/api/dialog'
 import SearchIcon from '@mui/icons-material/Search'
 import Button, { ButtonProps } from '@mui/material/Button'
 import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
+import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { O, pipe } from 'App/Lib/FpTs'
-import { pathsToFileScriptCompilation } from 'App/Lib/PathsToFileScriptCompilation'
-import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -19,10 +19,10 @@ function SearchScriptButton({
   onFileSelect,
   disabled,
   ...props
-}: { onFileSelect: (files: FileScriptCompilation[]) => void } & ButtonProps) {
+}: { onFileSelect: (files: FileScript[]) => void } & ButtonProps) {
   const { t } = useTranslation()
   useListenFileDrop({
-    onDrop: (evt) => pipe(evt.payload, pathsToFileScriptCompilation, onFileSelect),
+    onDrop: (evt) => pipe(evt.payload, pathsToFileScript, onFileSelect),
   })
 
   const [isDialogOpen, setDialogOpen] = useState(false)
@@ -48,7 +48,7 @@ function SearchScriptButton({
             pipe(
               files as string[] | null,
               O.fromNullable,
-              O.map(pathsToFileScriptCompilation),
+              O.map(pathsToFileScript),
               O.filter((files) => files.length > 0),
               O.map(onFileSelect),
             )

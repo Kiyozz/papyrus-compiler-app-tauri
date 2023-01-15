@@ -53,7 +53,7 @@ const defaultOptions: ConfOptions<Conf> = {
       use: false,
       instance: undefined,
       output: await join('overwrite', 'Scripts'),
-      mods: 'mods',
+      modsFolderRelativeToInstance: 'mods',
     },
     telemetry: {
       use: true,
