@@ -23,7 +23,7 @@ export const useUpdateConf = (options: UseMutationOptions<void, Error, Parameter
       return res.right
     },
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['conf'], type: 'all' })
+      await queryClient.cancelQueries({ queryKey: ['conf'], type: 'all', exact: true })
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['conf'], type: 'all' })

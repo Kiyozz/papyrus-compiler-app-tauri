@@ -5,23 +5,52 @@
  *
  */
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
+import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query'
+import { checkConf, CheckConfError } from 'App/Lib/Conf/CheckConf'
+import { CheckConfErrorTypes, isCheckConfError } from 'App/Lib/Conf/CheckConfTypes'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
-import { readConfig } from 'App/Lib/Conf/Conf'
-import { E } from 'App/Lib/FpTs'
+import { E, isNone, O } from 'App/Lib/FpTs'
+import invariant from 'tiny-invariant'
 
-export const useCheckConf = (options: UseQueryOptions<Conf> = {}) => {
+/**
+ * If the Query contains a check error.
+ *
+ * @param query
+ * @param type
+ */
+export const isCheckConfQueryError = <T extends CheckConfErrorTypes>(
+  query: UseQueryResult<O.Option<CheckConfError>>,
+  type: O.Option<T> = O.none,
+): query is UseQueryResult<O.Some<CheckConfError<T>>> & { isSuccess: true } => {
+  if (!query.data || isNone(query.data)) {
+    return false
+  }
+
+  if (isNone(type)) {
+    return isCheckConfError(query.data.value)
+  }
+
+  return isCheckConfError(query.data.value) && query.data.value.type === type.value
+}
+
+export const useCheckConf = (conf: O.Option<Conf>, options: UseQueryOptions<O.Option<CheckConfError>> = {}) => {
   return useQuery({
-    queryKey: ['conf'],
+    queryKey: ['conf-check', conf],
     queryFn: async () => {
-      const config = await readConfig()
+      invariant(O.isSome(conf), 'Conf is None') // should never occur
+      console.log({ type: conf.value.game.type })
+      const configChecked = await checkConf(conf.value)()
 
-      if (E.isLeft(config)) {
-        throw config.left
+      if (E.isLeft(configChecked)) {
+        return O.some(configChecked.left)
       }
 
-      return config.right
+      return O.none
     },
+    enabled: O.isSome(conf),
+    retry: false,
+    cacheTime: 0,
+    staleTime: 60 * 1000 * 5, // 5 minutes
     ...options,
   })
 }

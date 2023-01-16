@@ -5,29 +5,17 @@
  *
  */
 
-import { join } from '@tauri-apps/api/path'
-import { exists } from 'App/Lib/Path'
+import { join, normalize } from '@tauri-apps/api/path'
+import { allExists, exists, glob } from 'App/Lib/Path'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
 import { toDefaultScript } from 'App/Util/ToDefaultScript'
 import { toExecutable } from 'App/Util/ToExecutable'
 import { toOtherSource } from 'App/Util/ToOtherSource'
 import { toSource } from 'App/Util/ToSource'
-import { E, O, pipe, TE } from '../FpTs'
+import { E, O, pipe, T, TE } from '../FpTs'
+import { CheckConfErrorTypes, isCheckConfError } from './CheckConfTypes'
 
-export type CheckConfErrorTypes =
-  | 'gamePathDoesNotExist'
-  | 'gameSourceDoesNotExist'
-  | 'gameExeDoesNotExist'
-  | 'compilerPathDoesNotExist'
-  | 'mo2InstanceIsNotSet'
-  | 'mo2InstanceDoesNotExist'
-  | 'mo2InstanceNoModsFolder'
-  | 'creationKitScriptDoesNotExist'
-  | 'fatalError'
-export type CheckConfError = { type: CheckConfErrorTypes; message: string }
-
-const isCheckConfError = (value: unknown): value is CheckConfError =>
-  typeof value === 'object' && value !== null && 'type' in value && 'message' in value
+export type CheckConfError<T extends CheckConfErrorTypes = CheckConfErrorTypes> = { type: T; message: string }
 
 const onRejected = (reason: unknown): CheckConfError => {
   if (isCheckConfError(reason)) {
@@ -40,9 +28,17 @@ const onRejected = (reason: unknown): CheckConfError => {
   }
 }
 
-const check = (value: string, type: CheckConfErrorTypes, message: string): TE.TaskEither<CheckConfError, void> =>
+const check = (
+  value: string | string[],
+  type: CheckConfErrorTypes,
+  message: string,
+): TE.TaskEither<CheckConfError, void> =>
   TE.tryCatch(async () => {
-    if (!(await exists(value, { from: 'checkConf' }))) {
+    const isPathsOrPathExists = Array.isArray(value)
+      ? await allExists(value, { from: 'checkConf' })
+      : await exists(value, { from: 'checkConf' })
+
+    if (!isPathsOrPathExists) {
       throw {
         type,
         message,
@@ -56,10 +52,16 @@ const check = (value: string, type: CheckConfErrorTypes, message: string): TE.Ta
  */
 const checkGameExe = (conf: Conf) =>
   pipe(
-    toExecutable(conf.game.type),
-    (gameExe) => () => join(conf.game.path, gameExe),
+    T.of({
+      exe: toExecutable(conf.game.type),
+    }),
+    T.bind('exeAbsolute', ({ exe }) => {
+      return () => join(conf.game.path, exe)
+    }),
     TE.fromTask,
-    TE.chain((exeAbsolute) => check(exeAbsolute, 'gameExeDoesNotExist', `game exe does not exist: ${conf.game.path}`)),
+    TE.chain(({ exeAbsolute, exe }) =>
+      check(exeAbsolute, 'gameExeDoesNotExist', `game exe "${exe}" does not exist in: ${conf.game.path}`),
+    ),
   )
 
 /**
@@ -118,20 +120,20 @@ const checkCreationKitScriptExistsInGameDataFolder = (conf: Conf) => {
   return pipe(
     () => join(conf.game.path, 'Data', toSource(conf.game.type), defaultScript),
     TE.fromTask,
-    TE.chain((script) =>
-      pipe(
+    TE.chain((script) => {
+      return pipe(
         check(script, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${script}`),
-        TE.alt(() =>
-          pipe(
+        TE.alt(() => {
+          return pipe(
             () => join(conf.game.path, 'Data', toOtherSource(conf.game.type), defaultScript),
             TE.fromTask,
             TE.chain((script) =>
               check(script, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${script}`),
             ),
-          ),
-        ),
-      ),
-    ),
+          )
+        }),
+      )
+    }),
   )
 }
 
@@ -145,24 +147,34 @@ const checkCreationKitScriptExistsInGameDataFolder = (conf: Conf) => {
  */
 const checkCreationKitScriptExistsInMo2 = (conf: Conf) => {
   const defaultScript = toDefaultScript(conf.game.type)
+  const mo2Instance = O.fromNullable(conf.mo2.instance)
+
+  if (O.isNone(mo2Instance)) {
+    return checkCreationKitScriptExistsInGameDataFolder(conf)
+  }
 
   return pipe(
-    () => join(conf.game.path, 'Data', toSource(conf.game.type), defaultScript),
-    TE.fromTask,
-    TE.chain((script) =>
-      pipe(
-        check(script, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${script}`),
-        TE.alt(() =>
-          pipe(
-            () => join(conf.game.path, 'Data', toOtherSource(conf.game.type), defaultScript),
-            TE.fromTask,
-            TE.chain((script) =>
-              check(script, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${script}`),
-            ),
+    T.of({
+      sources: toSource(conf.game.type),
+      otherSources: toOtherSource(conf.game.type),
+    }),
+    T.bind('modsFolder', () => () => join(mo2Instance.value, conf.mo2.modsFolderRelativeToInstance)),
+    T.bind(
+      'pathsToCheck',
+      ({ modsFolder, sources, otherSources }) =>
+        async () =>
+          Promise.all(
+            [
+              await join(modsFolder, '**', sources, defaultScript),
+              await join(modsFolder, '**', otherSources, defaultScript),
+              await join(mo2Instance.value, 'overwrite', sources, defaultScript),
+              await join(mo2Instance.value, 'overwrite', otherSources, defaultScript),
+            ].map(normalize),
           ),
-        ),
-      ),
     ),
+    TE.fromTask,
+    TE.chain(({ pathsToCheck }) => TE.tryCatch(() => glob(pathsToCheck, O.none, { from: 'checkConf' }), onRejected)),
+    TE.chain((paths) => check(paths, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${paths}`)),
   )
 }
 

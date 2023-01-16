@@ -14,9 +14,46 @@ use tauri::Manager;
 use std::path::Path;
 use std::process::{Command, Stdio};
 use std::thread::sleep;
+use glob::{glob_with, MatchOptions};
+use serde::Deserialize;
+
+#[derive(Deserialize, Default, Copy, Clone)]
+struct MatchOptionsWrapper {
+    case_sensitive: bool,
+    require_literal_separator: bool,
+    require_literal_leading_dot: bool,
+}
+
+impl From<MatchOptionsWrapper> for MatchOptions {
+    fn from(wrapper: MatchOptionsWrapper) -> Self {
+        MatchOptions {
+            case_sensitive: wrapper.case_sensitive,
+            require_literal_separator: wrapper.require_literal_separator,
+            require_literal_leading_dot: wrapper.require_literal_leading_dot,
+        }
+    }
+}
 
 fn insert_brand(text: Option<&str>) -> String {
-    format!("PCA::{}", text.unwrap_or_else(|| "unknown"))
+    format!("PCA::{}", text.unwrap_or("unknown"))
+}
+
+#[tauri::command]
+fn get_scripts_in_path(patterns: Vec<&str>, options: Option<MatchOptionsWrapper>, from: Option<&str>) -> Vec<String> {
+    println!("[{}] get_scripts_in_path: {:?}", insert_brand(from), patterns);
+
+    let glob_res = patterns.iter().map(move |pattern| {
+        glob_with(pattern, MatchOptions::from(match options {
+            Some(options) => options,
+            None => Default::default(),
+        }))
+    });
+        // .map(|path| path.to_str().unwrap().to_string())
+        // .collect();
+
+    println!("glob_res: {:?}", glob_res);
+
+    vec![]
 }
 
 #[tauri::command]
@@ -46,6 +83,13 @@ fn path_exists(path: &str, from: Option<&str>) -> bool {
     Path::new(path).exists()
 }
 
+#[tauri::command]
+fn paths_exists(paths: Vec<&str>, from: Option<&str>) -> bool {
+    println!("[{}] path_exists: {:?}", insert_brand(from), paths);
+
+    paths.iter().map(|path| Path::new(path).exists()).all(|x| x)
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
@@ -53,7 +97,7 @@ fn main() {
             app.get_window("main").unwrap().open_devtools();
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![path_exists, compile_script])
+        .invoke_handler(tauri::generate_handler![path_exists, compile_script, get_scripts_in_path, paths_exists])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -29,6 +29,22 @@ const fr: TranslationSchema = {
     papyrusFileSelectDialog: {
       title: 'Sélectionner un script Papyrus',
     },
+    confCheckError_gamePathDoesNotExist: 'Configuration invalide : vérifiez le chemin du jeu.',
+    confCheckError_gameExeDoesNotExist:
+      "Configuration invalide : vérifiez le chemin du jeu ({{gameExe}} n'a pas été trouvé).",
+    confCheckError_compilerPathDoesNotExist: 'Configuration invalide : vérifiez le chemin du compilateur Papyrus.',
+    confCheckError_mo2InstanceIsNotSet:
+      "Configuration invalide : Vous avez choisi d'utiliser l'intégration MO2, mais vous n'avez pas spécifié le chemin de l'instance.",
+    confCheckError_mo2InstanceDoesNotExist: "Configuration invalide : Vérifiez le chemin de l'instance MO2.",
+    confCheckError_mo2InstanceNoModsFolder:
+      "Configuration invalide : Vérifiez le chemin de l'instance MO2 (le dossier 'mods' n'a pas été trouvé).",
+    confCheckError_creationKitScriptDoesNotExist:
+      "Configuration invalide : Vérifiez le chemin du jeu (les scripts provenant de CreationKit n'existe pas). Avez-vous décompressé le fichier Scripts.zip ?",
+    confCheckError_fatalError:
+      "Vérification de la configuration. Une erreur inconnue est survenue. Si vous pensez que cela est un bug provenant de PCA, vérifiez les fichiers de logs et obtenez un support sur le forum PCA sur NexusMods. Vous pouvez avoir de l'aide sur la documentation.",
+    confCheckError_unknown: '$t(common.confCheckError_fatalError)',
+    refresh: 'Rafraîchir',
+    documentation: 'Documentation',
   },
   nav: {
     compilation: 'Compilation',
@@ -87,10 +103,6 @@ const fr: TranslationSchema = {
     settings: {
       appBar: {
         title: 'Paramètres',
-        actions: {
-          documentation: 'Documentation',
-          refresh: 'Rafraîchir',
-        },
       },
       sections: {
         game: {

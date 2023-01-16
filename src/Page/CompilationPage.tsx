@@ -18,13 +18,16 @@ import GroupChooseButton from 'App/Component/GroupChooseButton'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
+import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
+import { useConf } from 'App/Hook/Conf/UseConf'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
-import { A, flow, pipe } from 'App/Lib/FpTs'
+import { A, flow, O, pipe } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
+import { toExecutable } from 'App/Util/ToExecutable'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -33,11 +36,22 @@ function CompilationPage() {
   const { scripts, add: addScripts, clear: clearScripts, remove: removeScripts, compile } = useCompilation()
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
   const groups = useGroups()
+  const conf = useConf()
+  const checkConf = useCheckConf(O.fromNullable(conf.data))
 
   const isAllScriptsRunning = scripts.every((script) => script.status === 'running')
 
   return (
     <div>
+      {conf.isSuccess && isCheckConfQueryError(checkConf) && (
+        <div>
+          {t('common.confCheckError', {
+            context: checkConf.data.value.type,
+            gameExe: toExecutable(conf.data.game.type),
+          })}
+        </div>
+      )}
+
       <RecentScriptsDialog
         open={isRecentFilesDialogOpen}
         onClose={() => setRecentFilesDialogOpen(false)}

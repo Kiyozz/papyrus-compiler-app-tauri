@@ -4,6 +4,7 @@
  * All rights reserved.
  *
  */
+
 export {
   pipe,
   flow,
@@ -32,3 +33,5 @@ export * as ORD from 'fp-ts/Ord'
 export * as RE from 'fp-ts/ReadonlyArray'
 export * as RTE from 'fp-ts/ReaderTaskEither'
 export * as C from 'fp-ts/Console'
+export { some, none, isSome, isNone } from 'fp-ts/Option'
+export { right, left, isRight, isLeft } from 'fp-ts/Either'

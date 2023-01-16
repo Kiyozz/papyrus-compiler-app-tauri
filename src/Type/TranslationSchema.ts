@@ -27,6 +27,17 @@ export type TranslationSchema = {
     papyrusFileSelectDialog: {
       title: string
     }
+    confCheckError_gamePathDoesNotExist: string
+    confCheckError_gameExeDoesNotExist: string
+    confCheckError_compilerPathDoesNotExist: string
+    confCheckError_mo2InstanceIsNotSet: string
+    confCheckError_mo2InstanceDoesNotExist: string
+    confCheckError_mo2InstanceNoModsFolder: string
+    confCheckError_creationKitScriptDoesNotExist: string
+    confCheckError_fatalError: string
+    confCheckError_unknown: string
+    refresh: string
+    documentation: string
   }
   nav: {
     compilation: string
@@ -85,10 +96,6 @@ export type TranslationSchema = {
     settings: {
       appBar: {
         title: string
-        actions: {
-          documentation: string
-          refresh: string
-        }
       }
       sections: {
         game: {

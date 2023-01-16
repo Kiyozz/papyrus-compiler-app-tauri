@@ -6,6 +6,7 @@
  */
 
 import HelpIcon from '@mui/icons-material/Help'
+import Alert from '@mui/material/Alert'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
@@ -13,17 +14,20 @@ import RadioGroup from '@mui/material/RadioGroup'
 import Tooltip from '@mui/material/Tooltip'
 import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
+import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { GameType } from 'App/Lib/Conf/ConfDecoder'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { toExecutable } from 'App/Util/ToExecutable'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
+import { O, some } from 'App/Lib/FpTs'
 
 function SettingsGameSection() {
   const { t } = useTranslation()
   const conf = useConf()
   const updateConf = useUpdateConf()
+  const checkConf = useCheckConf(O.fromNullable(conf.data))
 
   const games: { value: GameType; label: string }[] = [
     {
@@ -52,9 +56,11 @@ function SettingsGameSection() {
   const gamePath = conf.data.game.path
   const gameCompilerPath = conf.data.compilation.compilerPath
 
+  const isGameExeError = isCheckConfQueryError(checkConf, some('gameExeDoesNotExist'))
+
   return (
     <SettingsSection id="game-section" title={t<string>('page.settings.sections.game.title')} gutterTop={false}>
-      <FormControl component="fieldset" fullWidth>
+      <FormControl component="fieldset" fullWidth error={isGameExeError}>
         <RadioGroup
           classes={{ row: 'justify-between' }}
           row
@@ -72,7 +78,7 @@ function SettingsGameSection() {
               <FormControlLabel
                 key={game.value}
                 classes={{
-                  label: 'dark:text-white',
+                  label: gameType === game.value && isGameExeError ? 'text-red-400' : '',
                 }}
                 control={<Radio />}
                 label={game.label}
@@ -107,6 +113,7 @@ function SettingsGameSection() {
             })
           }}
           type="folder"
+          error={isCheckConfQueryError(checkConf, some('gamePathDoesNotExist'))}
         />
       </div>
 
@@ -132,8 +139,17 @@ function SettingsGameSection() {
             })
           }}
           placeholder={t<string>('common.select.file')}
+          error={isCheckConfQueryError(checkConf, some('compilerPathDoesNotExist'))}
         />
       </div>
+      {isCheckConfQueryError(checkConf) && (
+        <Alert severity="error" className="mt-3 dark:bg-red-400/10">
+          {t('common.confCheckError', {
+            context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.value.type,
+            gameExe: toExecutable(conf.data.game.type),
+          })}
+        </Alert>
+      )}
     </SettingsSection>
   )
 }
