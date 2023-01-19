@@ -7,7 +7,7 @@
 
 import { BaseDirectory, readTextFile, exists } from '@tauri-apps/api/fs'
 import { flow, TE, T } from 'App/Lib/FpTs'
-import { parseJsonRecentScripts } from 'App/Lib/RecentScripts/Json'
+import { parseAndDecodeRecentScripts } from 'App/Lib/RecentScripts/Json'
 
 export const readRecentScriptsFile = (path: string): TE.TaskEither<Error, string> =>
   TE.tryCatch(
@@ -20,4 +20,4 @@ export const canReadRecentScriptsFile =
   () =>
     exists(path, { dir: BaseDirectory.App })
 
-export const readRecentScriptsFileJson = flow(readRecentScriptsFile, TE.chainEitherKW(parseJsonRecentScripts))
+export const readRecentScriptsFileJson = flow(readRecentScriptsFile, TE.chainEitherKW(parseAndDecodeRecentScripts))

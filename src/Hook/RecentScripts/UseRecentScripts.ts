@@ -10,6 +10,7 @@ import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { E } from 'App/Lib/FpTs'
 import { getLastPartOfPath } from 'App/Lib/Path'
 import { readRecentScripts } from 'App/Lib/RecentScripts/RecentScripts'
+import { v4 } from 'uuid'
 
 export const useRecentScripts = (options: UseQueryOptions<FileScript[]> = {}) => {
   return useQuery({
@@ -22,8 +23,9 @@ export const useRecentScripts = (options: UseQueryOptions<FileScript[]> = {}) =>
       }
 
       return res.right.map((script) => ({
-        ...script,
-        name: getLastPartOfPath(script.path),
+        id: v4(),
+        path: script,
+        name: getLastPartOfPath(script),
       }))
     },
     ...options,

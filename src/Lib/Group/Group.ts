@@ -6,7 +6,7 @@
  */
 
 import { Groups } from 'App/Lib/Conf/ConfDecoder'
-import { A, flow, pipe, TE, TO } from 'App/Lib/FpTs'
+import { A, pipe, R, TE, TO } from 'App/Lib/FpTs'
 import { GroupOptions } from 'App/Lib/Group/GroupOptions'
 import { canReadGroupsFile, readGroupsFileJson } from 'App/Lib/Group/ReadGroupsFile'
 import { writeGroupsFile } from 'App/Lib/Group/WriteGroupsFile'
@@ -49,9 +49,9 @@ export const removeGroup = (options: GroupOptions) => (groupId: Id) =>
     TE.map((groups) =>
       pipe(
         groups,
-        Object.entries,
+        R.toEntries,
         A.filter(([id]) => id !== groupId),
-        flow(Object.fromEntries),
+        R.fromEntries,
       ),
     ),
     TE.chain((groups: Groups) => pipe(groups, writeGroupsFile(options.fileName))),

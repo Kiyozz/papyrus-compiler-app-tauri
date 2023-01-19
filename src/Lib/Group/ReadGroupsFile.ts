@@ -6,7 +6,7 @@
  */
 
 import { BaseDirectory, readTextFile, exists } from '@tauri-apps/api/fs'
-import { parseJsonGroups } from 'App/Lib/Group/Json'
+import { parseAndDecodeGroups } from 'App/Lib/Group/Json'
 import { flow, TE, T } from 'App/Lib/FpTs'
 
 export const readGroupsFile = (path: string): TE.TaskEither<Error, string> =>
@@ -20,4 +20,4 @@ export const canReadGroupsFile =
   () =>
     exists(path, { dir: BaseDirectory.App })
 
-export const readGroupsFileJson = flow(readGroupsFile, TE.chainEitherKW(parseJsonGroups))
+export const readGroupsFileJson = flow(readGroupsFile, TE.chainEitherKW(parseAndDecodeGroups))

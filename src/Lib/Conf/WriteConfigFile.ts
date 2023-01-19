@@ -7,13 +7,13 @@
 
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
-import { stringJson } from 'App/Lib/Json'
+import { stringify } from 'App/Lib/Json'
 import { TE, pipe } from 'App/Lib/FpTs'
 
 export const writeConfigFile = (path: string) => (contents: Conf) =>
   pipe(
     contents,
-    stringJson,
+    stringify,
     TE.fromEither,
     TE.chainW((json) =>
       TE.tryCatch(

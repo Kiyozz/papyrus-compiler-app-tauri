@@ -38,14 +38,11 @@ export const GroupsDecoder = D.record(GroupDecoder) satisfies Decoder<unknown, R
 
 export type Groups = D.TypeOf<typeof GroupsDecoder>
 
-export const RecentScriptDecoder = D.struct({
-  path: D.string,
-  id: D.string,
-})
+export const RecentScriptDecoder = D.string
 
 export type RecentScript = D.TypeOf<typeof RecentScriptDecoder>
 
-export const RecentScriptsDecoder = D.array(RecentScriptDecoder)
+export const RecentScriptsDecoder = D.array(D.string)
 
 export type RecentScripts = D.TypeOf<typeof RecentScriptsDecoder>
 

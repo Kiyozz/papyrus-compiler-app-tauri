@@ -21,7 +21,7 @@ import PageAppBar from 'App/Component/Page/PageAppBar'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
-import { A, O, pipe, TO } from 'App/Lib/FpTs'
+import { A, O, pipe, R, TO } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
@@ -134,7 +134,7 @@ function GroupsPage() {
         </Fade>
         <Fade in={groups.isSuccess}>
           <div className="h-full w-full justify-center gap-4 text-lg">
-            {!groups.isLoading && Object.keys(groups.data ?? {}).length === 0 && (
+            {!groups.isLoading && R.size(groups.data ?? {}) === 0 && (
               <Typography gutterBottom variant="h6" className="pt-6">
                 {t('page.groups.createGroupText')}
               </Typography>

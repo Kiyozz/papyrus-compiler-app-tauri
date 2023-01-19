@@ -24,7 +24,7 @@ import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
-import { A, flow, O, pipe } from 'App/Lib/FpTs'
+import { A, flow, O, pipe, R } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
 import { toExecutable } from 'App/Util/ToExecutable'
@@ -77,7 +77,7 @@ function CompilationPage() {
         >
           {t('common.searchScripts')}
         </SearchScriptButton>
-        {isQueryNonNullable(groups) && Object.keys(groups.data).length > 0 ? (
+        {isQueryNonNullable(groups) && R.size(groups.data) > 0 ? (
           <GroupChooseButton
             className="px-3 py-2"
             color="inherit"
@@ -103,7 +103,7 @@ function CompilationPage() {
                   pipe(
                     scripts,
                     A.filter((script) => script.status !== 'running'),
-                    A.map(compile),
+                    compile,
                   )
                 }}
                 disabled={isAllScriptsRunning}
@@ -120,7 +120,7 @@ function CompilationPage() {
               }}
               onStart={async (scriptToStart) => {
                 console.log('start compilation', scriptToStart)
-                await compile(scriptToStart)
+                await compile([scriptToStart])
               }}
             />
           </>

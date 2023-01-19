@@ -10,7 +10,6 @@ import { A, pipe, TE, TO } from 'App/Lib/FpTs'
 import { canReadRecentScriptsFile, readRecentScriptsFileJson } from 'App/Lib/RecentScripts/ReadRecentScriptsFile'
 import { RecentScriptsOptions } from 'App/Lib/RecentScripts/RecentScriptsOptions'
 import { writeRecentScriptsFile } from 'App/Lib/RecentScripts/WriteRecentScriptsFile'
-import { uniqObjectArrayByKeys } from 'App/Lib/UniqObjectArrayByKeys'
 
 const writeRecentScriptsIfNotExists = (options: RecentScriptsOptions) =>
   pipe(
@@ -27,6 +26,7 @@ const writeRecentScriptsIfNotExists = (options: RecentScriptsOptions) =>
 const defaultOptions: RecentScriptsOptions = {
   fileName: 'recent_scripts.json',
   defaults: [],
+  maxItems: 20,
 }
 
 const readRecentScriptsOrUseDefaultRecentScripts = (options: RecentScriptsOptions) =>
@@ -37,15 +37,9 @@ export const readRecentScripts = readRecentScriptsOrUseDefaultRecentScripts(defa
 export const writeRecentScripts = (options: RecentScriptsOptions) => (recentScripts: RecentScripts) =>
   pipe(
     readRecentScripts,
-    TE.map((currentRecentScripts) =>
-      uniqObjectArrayByKeys([
-        ...currentRecentScripts,
-        ...recentScripts.map((s) => ({
-          id: s.id,
-          path: s.path,
-        })),
-      ])(['path']),
-    ),
+    TE.map((currentRecentScripts) => [
+      ...new Set([...recentScripts, ...currentRecentScripts.slice(0, options.maxItems)]),
+    ]),
     TE.chain(writeRecentScriptsFile(options.fileName)),
   )
 
@@ -55,7 +49,7 @@ export const removeRecentScript = (options: RecentScriptsOptions) => (recentScri
     TE.map((currentRecentScripts) =>
       pipe(
         currentRecentScripts,
-        A.filter((currentRecentScript) => currentRecentScript.path !== recentScript.path),
+        A.filter((currentRecentScript) => currentRecentScript !== recentScript),
       ),
     ),
     TE.chain(writeRecentScriptsFile(options.fileName)),

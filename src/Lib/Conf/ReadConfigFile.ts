@@ -6,7 +6,7 @@
  */
 
 import { BaseDirectory, readTextFile, exists } from '@tauri-apps/api/fs'
-import { parseJsonConf } from 'App/Lib/Conf/Json'
+import { parseAndDecodeConf } from 'App/Lib/Conf/Json'
 import { flow, TE, T } from 'App/Lib/FpTs'
 
 export const readConfigFile = (path: string): TE.TaskEither<Error, string> =>
@@ -20,4 +20,4 @@ export const canReadConfigFile =
   () =>
     exists(path, { dir: BaseDirectory.App })
 
-export const readConfigFileJson = flow(readConfigFile, TE.chainEitherKW(parseJsonConf))
+export const readConfigFileJson = flow(readConfigFile, TE.chainEitherKW(parseAndDecodeConf))

@@ -6,6 +6,6 @@
  */
 
 import { ConfDecoder } from 'App/Lib/Conf/ConfDecoder'
-import { parseJson } from 'App/Lib/Json'
+import { parseAndDecode } from 'App/Lib/Json'
 
-export const parseJsonConf = parseJson(ConfDecoder)
+export const parseAndDecodeConf = parseAndDecode(ConfDecoder)

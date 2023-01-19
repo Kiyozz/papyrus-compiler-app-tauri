@@ -9,9 +9,9 @@
 /* eslint-disable no-undef */
 
 // random fail
-if (Math.random() > 0.5) {
+if (Math.random() > 0.8) {
   console.log('Batch compile of 1 files finished. 1 succeeded, 0 failed.')
   process.exit(0)
 }
 
-console.log('Batch compile of 1 files finished. 2 succeeded, 0 failed.')
+console.log('Batch compile of 1 files finished. 1 succeeded, 0 failed.')

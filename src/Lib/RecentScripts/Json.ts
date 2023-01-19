@@ -6,6 +6,6 @@
  */
 
 import { RecentScriptsDecoder } from 'App/Lib/Conf/ConfDecoder'
-import { parseJson } from 'App/Lib/Json'
+import { parseAndDecode } from 'App/Lib/Json'
 
-export const parseJsonRecentScripts = parseJson(RecentScriptsDecoder)
+export const parseAndDecodeRecentScripts = parseAndDecode(RecentScriptsDecoder)

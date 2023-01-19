@@ -10,4 +10,5 @@ import { RecentScripts } from 'App/Lib/Conf/ConfDecoder'
 export type RecentScriptsOptions = {
   fileName: string
   defaults: RecentScripts
+  maxItems: number
 }

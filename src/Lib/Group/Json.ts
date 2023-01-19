@@ -6,6 +6,6 @@
  */
 
 import { GroupsDecoder } from 'App/Lib/Conf/ConfDecoder'
-import { parseJson } from 'App/Lib/Json'
+import { parseAndDecode } from 'App/Lib/Json'
 
-export const parseJsonGroups = parseJson(GroupsDecoder)
+export const parseAndDecodeGroups = parseAndDecode(GroupsDecoder)
