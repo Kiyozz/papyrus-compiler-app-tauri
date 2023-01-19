@@ -12,8 +12,11 @@ export const parseAndDecode =
   <T>(decoder: D.Decoder<unknown, T>) =>
   (text: string) =>
     pipe(
-      J.parse(text),
-      E.chainW(
+      pipe(
+        J.parse(text),
+        E.mapLeft((reason) => new Error(`Cannot parse json, error given: ${reason}`)),
+      ),
+      E.chain(
         flow(
           decoder.decode,
           E.mapLeft((errors: D.DecodeError) => new Error(`Cannot decode json, error given: ${D.draw(errors)}`)),

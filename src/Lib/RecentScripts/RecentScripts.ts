@@ -6,7 +6,7 @@
  */
 
 import { RecentScript, RecentScripts } from 'App/Lib/Conf/ConfDecoder'
-import { A, pipe, TE, TO } from 'App/Lib/FpTs'
+import { A, pipe, S, TE, TO } from 'App/Lib/FpTs'
 import { canReadRecentScriptsFile, readRecentScriptsFileJson } from 'App/Lib/RecentScripts/ReadRecentScriptsFile'
 import { RecentScriptsOptions } from 'App/Lib/RecentScripts/RecentScriptsOptions'
 import { writeRecentScriptsFile } from 'App/Lib/RecentScripts/WriteRecentScriptsFile'
@@ -37,9 +37,9 @@ export const readRecentScripts = readRecentScriptsOrUseDefaultRecentScripts(defa
 export const writeRecentScripts = (options: RecentScriptsOptions) => (recentScripts: RecentScripts) =>
   pipe(
     readRecentScripts,
-    TE.map((currentRecentScripts) => [
-      ...new Set([...recentScripts, ...currentRecentScripts.slice(0, options.maxItems)]),
-    ]),
+    TE.map((currentRecentScripts) => {
+      return pipe(recentScripts, A.concat(A.takeLeft(options.maxItems)(currentRecentScripts)), A.uniq(S.Eq))
+    }),
     TE.chain(writeRecentScriptsFile(options.fileName)),
   )
 
