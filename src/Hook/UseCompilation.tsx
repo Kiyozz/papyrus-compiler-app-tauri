@@ -7,8 +7,8 @@
 
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentScripts'
+import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
 import { useCompile } from 'App/Hook/useCompile'
-import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { A, E, isLeft, O, pipe, RA, TE } from 'App/Lib/FpTs'
 import { useCallback } from 'react'
@@ -16,9 +16,7 @@ import { useCallback } from 'react'
 export function useCompilation() {
   const updateRecentScripts = useUpdateRecentScripts()
 
-  const { add, scripts, remove, clear, replace } = useScriptsList<FileScriptCompilation>({
-    initialScripts: [],
-  })
+  const { add, scripts, remove, clear, replace } = useCompilationScripts()
   const { add: addLog } = useCompilationLogs()
   const compileMutation = useCompile()
   const compile = useCallback(async (scripts: FileScriptCompilation[]) => {
