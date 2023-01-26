@@ -23,6 +23,7 @@ import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
+import { useDialogs } from 'App/Hook/UseDialogs'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
 import { A, flow, O, pipe, R } from 'App/Lib/FpTs'
@@ -34,6 +35,9 @@ import { useTranslation } from 'react-i18next'
 
 function CompilationPage() {
   const { t } = useTranslation()
+  const {
+    compilationLogs: [, setCompilationLogsDialogOpen],
+  } = useDialogs()
   const { scripts, add: addScripts, clear: clearScripts, remove: removeScripts, compile } = useCompilation()
   const { remove: removeLog, clear: clearLogs } = useCompilationLogs()
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
@@ -133,6 +137,9 @@ function CompilationPage() {
               onStart={async (scriptToStart) => {
                 removeLog(scriptToStart)
                 await compile([scriptToStart])
+              }}
+              onClickOnError={() => {
+                setCompilationLogsDialogOpen(true)
               }}
             />
           </>

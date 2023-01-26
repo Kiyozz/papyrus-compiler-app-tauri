@@ -13,8 +13,9 @@ import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
+import { CompilationIcon } from 'App/Component/CompilationIcon'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
-import { IconFromStatus, isRunning, isFileScriptCompilation } from 'App/Lib/FileScriptCompilation'
+import { isDone, isFileScriptCompilation, isRunning } from 'App/Lib/FileScriptCompilation'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -22,11 +23,13 @@ function FileScriptsList<T extends FileScript>({
   scripts,
   onStart,
   onRemove,
+  onClickOnError,
   className,
 }: {
   scripts: T[]
   onRemove: (script: T) => void
   onStart?: (script: T) => Promise<void>
+  onClickOnError?: (script: T) => void
   className?: string
 }) {
   const { t } = useTranslation()
@@ -40,10 +43,10 @@ function FileScriptsList<T extends FileScript>({
             component={Paper}
             secondaryAction={
               <IconButton
-                aria-disabled={isFileScriptCompilation(script) ? isRunning(script) : false}
+                aria-disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
                 aria-label={t<string>('common.remove')}
                 color="error"
-                disabled={isFileScriptCompilation(script) ? isRunning(script) : false}
+                disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
                 onClick={() => onRemove(script)}
               >
                 <DeleteOutlinedIcon />
@@ -54,7 +57,7 @@ function FileScriptsList<T extends FileScript>({
             {isFileScriptCompilation(script) ? (
               <ListItemIcon>
                 <IconButton
-                  disabled={script.status === 'running'}
+                  disabled={isRunning(script)}
                   onClick={() => onStart?.(script)}
                   className="text-primary-400"
                   edge="end"
@@ -67,7 +70,13 @@ function FileScriptsList<T extends FileScript>({
             <ListItemText aria-label={script.name} primary={script.name} />
             {isFileScriptCompilation(script) ? (
               <ListItemIcon>
-                <IconFromStatus script={script} />
+                <IconButton
+                  onClick={() => onClickOnError?.(script)}
+                  size="small"
+                  disabled={isRunning(script) || isDone(script)}
+                >
+                  <CompilationIcon script={script} />
+                </IconButton>
               </ListItemIcon>
             ) : null}
           </ListItem>
