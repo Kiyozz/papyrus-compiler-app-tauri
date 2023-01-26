@@ -24,12 +24,14 @@ function FileScriptsList<T extends FileScript>({
   onStart,
   onRemove,
   onClickOnError,
+  disabled,
   className,
 }: {
   scripts: T[]
   onRemove: (script: T) => void
   onStart?: (script: T) => Promise<void>
   onClickOnError?: (script: T) => void
+  disabled?: boolean
   className?: string
 }) {
   const { t } = useTranslation()
@@ -57,7 +59,7 @@ function FileScriptsList<T extends FileScript>({
             {isFileScriptCompilation(script) ? (
               <ListItemIcon>
                 <IconButton
-                  disabled={isRunning(script)}
+                  disabled={disabled || isRunning(script)}
                   onClick={() => onStart?.(script)}
                   className="text-primary-400"
                   edge="end"

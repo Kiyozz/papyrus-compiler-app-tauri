@@ -8,7 +8,9 @@
 import ClearIcon from '@mui/icons-material/Clear'
 import HelpIcon from '@mui/icons-material/Help'
 import HistoryIcon from '@mui/icons-material/History'
+import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
+import Snackbar from '@mui/material/Snackbar'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
@@ -29,7 +31,7 @@ import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScr
 import { A, flow, O, pipe, R } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
-import { toExecutable } from 'App/Util/ToExecutable'
+import { toExecutable } from 'App/Lib/ToExecutable'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -49,15 +51,6 @@ function CompilationPage() {
 
   return (
     <div>
-      {conf.isSuccess && isCheckConfQueryError(checkConf) && (
-        <div>
-          {t('common.confCheckError', {
-            context: checkConf.data.value.type,
-            gameExe: toExecutable(conf.data.game.type),
-          })}
-        </div>
-      )}
-
       <RecentScriptsDialog
         open={isRecentFilesDialogOpen}
         onClose={() => setRecentFilesDialogOpen(false)}
@@ -116,7 +109,7 @@ function CompilationPage() {
                     },
                   )
                 }}
-                disabled={isAllScriptsRunning}
+                disabled={isAllScriptsRunning || isCheckConfQueryError(checkConf)}
               />
 
               <Button
@@ -141,6 +134,7 @@ function CompilationPage() {
               onClickOnError={() => {
                 setCompilationLogsDialogOpen(true)
               }}
+              disabled={isCheckConfQueryError(checkConf)}
             />
           </>
         ) : (
@@ -154,6 +148,17 @@ function CompilationPage() {
           </div>
         )}
       </Page>
+
+      <Snackbar open={isCheckConfQueryError(checkConf)} sx={{ zIndex: 30 }}>
+        <Alert severity="error">
+          {conf.isSuccess &&
+            isCheckConfQueryError(checkConf) &&
+            t('common.confCheckError', {
+              context: checkConf.data.value.type,
+              gameExe: toExecutable(conf.data.game.type),
+            })}
+        </Alert>
+      </Snackbar>
     </div>
   )
 }

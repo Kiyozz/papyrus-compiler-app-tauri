@@ -6,7 +6,6 @@
  */
 
 import { GameType } from 'App/Lib/Conf/ConfDecoder'
-// import { SettingsDefaultScript } from 'App/Type/Settings/SettingsDefaultScript'
 
 export type DefaultScript = 'Base/Actor.psc' | 'Actor.psc'
 

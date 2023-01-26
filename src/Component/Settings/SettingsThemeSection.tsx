@@ -10,7 +10,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
-import { Theme } from 'App/Enum/Theme'
+import { Theme } from 'App/Lib/ThemeDecoder'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useTranslation } from 'react-i18next'
@@ -25,7 +25,7 @@ function SettingsThemeSection() {
   if (!conf.isSuccess) return <Navigate to="/" />
 
   const theme = conf.data.theme
-  const themes = [Theme.system, Theme.light, Theme.dark]
+  const themes = ['system', 'light', 'dark'] as [Theme, Theme, Theme]
 
   return (
     <SettingsSection id="theme-section" title={t<string>('page.settings.sections.theme.title')}>
