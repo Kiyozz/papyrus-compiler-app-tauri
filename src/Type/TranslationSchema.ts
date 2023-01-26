@@ -38,6 +38,9 @@ export type TranslationSchema = {
     confCheckError_unknown: string
     refresh: string
     documentation: string
+    copy: string
+    copySuccess: string
+    copyError: string
   }
   nav: {
     compilation: string

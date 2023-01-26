@@ -5,6 +5,7 @@
  *
  */
 
+import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentScripts'
 import { useCompile } from 'App/Hook/useCompile'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
@@ -18,6 +19,7 @@ export function useCompilation() {
   const { add, scripts, remove, clear, replace } = useScriptsList<FileScriptCompilation>({
     initialScripts: [],
   })
+  const { add: addLog } = useCompilationLogs()
   const compileMutation = useCompile()
   const compile = useCallback(async (scripts: FileScriptCompilation[]) => {
     const res = await pipe(
@@ -62,6 +64,8 @@ export function useCompilation() {
                       })
                     }
 
+                    addLog(log)
+
                     return O.some(log)
                   },
                 ),
@@ -77,15 +81,15 @@ export function useCompilation() {
       E.fold(
         async (err) => console.error(err),
         async (logs) => {
-          const res = await TE.tryCatch(
+          const logsRes = await TE.tryCatch(
             () => {
               return updateRecentScripts.mutateAsync(A.compact(pipe(logs, RA.toArray)).map((log) => log.script.path))
             },
             (reason) => new Error(`failed to update recent scripts: ${reason}`),
           )()
 
-          if (isLeft(res)) {
-            console.error(res.left)
+          if (isLeft(logsRes)) {
+            console.error(logsRes.left)
           }
         },
       ),

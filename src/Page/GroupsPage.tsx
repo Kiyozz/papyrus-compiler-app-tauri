@@ -34,13 +34,13 @@ function GroupsPage() {
   const removeGroup = useRemoveGroup()
   const groups = useGroups()
   const [groupToEdit, setGroupToEdit] = useState<O.Option<GroupWithId>>(O.none)
-  const [isGroupDialogOpen, setGroupDialogOpen] = useState(false)
+  const [isAddGroupDialogOpen, setAddGroupDialogOpen] = useState(false)
 
   const [isMoreDetails, setMoreDetails] = useState(false)
   const [groupToRemove, setGroupToRemove] = useState<O.Option<GroupWithId>>(O.none)
 
   const closeDialogs = () => {
-    setGroupDialogOpen(false)
+    setAddGroupDialogOpen(false)
     setGroupToRemove(O.none)
     setGroupToEdit(O.none)
   }
@@ -66,7 +66,7 @@ function GroupsPage() {
       {groups.isSuccess ? (
         <>
           <AddGroupDialog
-            open={isGroupDialogOpen}
+            open={isAddGroupDialogOpen}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
               await updateGroups.mutateAsync({
@@ -122,7 +122,7 @@ function GroupsPage() {
           color="inherit"
           disabled={updateGroups.isLoading}
           startIcon={<CreateIcon />}
-          onClick={() => setGroupDialogOpen(true)}
+          onClick={() => setAddGroupDialogOpen(true)}
         >
           {t('common.create')}
         </Button>

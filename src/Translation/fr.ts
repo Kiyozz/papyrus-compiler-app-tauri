@@ -45,6 +45,9 @@ const fr: TranslationSchema = {
     confCheckError_unknown: '$t(common.confCheckError_fatalError)',
     refresh: 'Rafraîchir',
     documentation: 'Documentation',
+    copy: 'Copier',
+    copySuccess: 'Copié avec succès',
+    copyError: 'Erreur lors de la copie: {{error}}',
   },
   nav: {
     compilation: 'Compilation',

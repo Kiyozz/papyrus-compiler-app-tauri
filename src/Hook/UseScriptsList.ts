@@ -18,31 +18,31 @@ type Action<T extends FileScript> =
   | { type: 'clear' }
 
 function reducer<T extends FileScript>(state: T[], action: Action<T>): T[] {
-  switch (action.type) {
-    case 'add':
-      return uniqObjectArrayByKeys([...state, ...action.payload])(['name'])
-    case 'remove': // check in compilation page, dispatch is called twice
-      return pipe(
+  return match(action)
+    .with({ type: 'add' }, (action) => uniqObjectArrayByKeys([...state, ...action.payload])(['name']))
+    .with({ type: 'remove' }, (action) =>
+      pipe(
         state,
         A.filter((fileInState) => !action.payload.includes(fileInState)),
-      )
-    case 'replace':
-      return pipe(
+      ),
+    )
+    .with({ type: 'replace' }, (action) =>
+      pipe(
         state,
         A.map((fileInState) =>
           match(fileInState.name === action.payload.name)
             .with(true, () => action.payload)
             .otherwise(() => fileInState),
         ),
-      )
-    case 'clear':
-      return []
-  }
+      ),
+    )
+    .with({ type: 'clear' }, () => [])
+    .exhaustive()
 }
 
 type ScriptsReducer<T extends FileScript> = (state: T[], action: Action<T>) => T[]
 
-export function useScriptsList<T extends FileScript>({ initialScripts = [] }: { initialScripts: T[] }) {
+export const useScriptsList = <T extends FileScript>({ initialScripts = [] }: { initialScripts: T[] }) => {
   const [scripts, dispatch] = useReducer<ScriptsReducer<T>>(reducer, initialScripts)
 
   return {

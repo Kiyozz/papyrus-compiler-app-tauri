@@ -30,7 +30,7 @@ export const compileScript =
 
         return {
           script,
-          status: compileCommand.right.includes('0 failed') ? 'success' : 'error',
+          status: compileCommand.right.includes('Succeeded') ? 'success' : 'error',
           output: compileCommand.right.replace(/Batch compile of \d+ files finished\. \d+ failed\./, ''),
         }
       },

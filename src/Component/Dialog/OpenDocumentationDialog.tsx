@@ -25,9 +25,7 @@ import { useTranslation } from 'react-i18next'
 function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose' | 'open'>) {
   const { t } = useTranslation()
   const {
-    openDocumentation: {
-      show: [isOpen, setOpen],
-    },
+    openDocumentation: [isOpen, setOpen],
   } = useDialogs()
   const conf = useConf()
   const updateConf = useUpdateConf()

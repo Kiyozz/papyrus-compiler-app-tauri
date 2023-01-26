@@ -8,25 +8,21 @@
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
 
 type ContextType = {
-  logs: [boolean, Dispatch<SetStateAction<boolean>>]
-  openDocumentation: {
-    show: [boolean, Dispatch<SetStateAction<boolean>>]
-  }
+  compilationLogs: [boolean, Dispatch<SetStateAction<boolean>>]
+  openDocumentation: [boolean, Dispatch<SetStateAction<boolean>>]
 }
 
 const Context = createContext<ContextType>({} as ContextType)
 
 function DialogsProvider({ children }: PropsWithChildren) {
-  const logs = useState(false)
+  const compilationLogs = useState(false)
   const openDocumentation = useState(false)
 
   return (
     <Context.Provider
       value={{
-        logs,
-        openDocumentation: {
-          show: openDocumentation,
-        },
+        compilationLogs,
+        openDocumentation,
       }}
     >
       {children}

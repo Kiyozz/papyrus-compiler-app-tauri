@@ -10,17 +10,17 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ActiveLink from 'App/Component/ActiveLink'
-import React from 'react'
+import { ReactNode } from 'react'
 
 type AppDrawerLinkProps = {
-  Icon: React.ComponentType
+  icon: ReactNode
   id: string
   label: string
   path?: string
   onClick?: () => void
 }
 
-function AppDrawerLink({ Icon, id, label, path, onClick }: AppDrawerLinkProps) {
+function AppDrawerLink({ icon, id, label, path, onClick }: AppDrawerLinkProps) {
   if (path) {
     return (
       <ListItem aria-label={label} key={id} disablePadding>
@@ -29,9 +29,7 @@ function AppDrawerLink({ Icon, id, label, path, onClick }: AppDrawerLinkProps) {
           to={path}
           activeClassName="bg-light-800 hover:bg-light-800 dark:bg-black-400 dark:text-white dark:hover:bg-black-400 dark:hover:text-white"
         >
-          <ListItemIcon>
-            <Icon />
-          </ListItemIcon>
+          <ListItemIcon>{icon}</ListItemIcon>
           <ListItemText primary={label} primaryTypographyProps={{ noWrap: true }} />
         </ListItemButton>
       </ListItem>
@@ -41,9 +39,7 @@ function AppDrawerLink({ Icon, id, label, path, onClick }: AppDrawerLinkProps) {
   return (
     <ListItem key={id} disablePadding>
       <ListItemButton onClick={onClick}>
-        <ListItemIcon>
-          <Icon />
-        </ListItemIcon>
+        <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={label} primaryTypographyProps={{ noWrap: true }} />
       </ListItemButton>
     </ListItem>

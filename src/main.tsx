@@ -6,6 +6,7 @@
  */
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import CompilationLogsProvider from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { pipe } from 'App/Lib/FpTs'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -36,17 +37,19 @@ pipe(document.getElementById('root') as HTMLElement, ReactDOM.createRoot, (root)
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools position="bottom-right" />
         <DialogsProvider>
-          <MuiTheme>
-            <MemoryRouter>
-              <Routes>
-                <Route path="/" element={<App />}>
-                  <Route index element={<CompilationPage />} />
-                  <Route path="/groups" element={<GroupsPage />} />
-                  <Route path="/settings" element={<SettingsPage />} />
-                </Route>
-              </Routes>
-            </MemoryRouter>
-          </MuiTheme>
+          <CompilationLogsProvider>
+            <MuiTheme>
+              <MemoryRouter>
+                <Routes>
+                  <Route path="/" element={<App />}>
+                    <Route index element={<CompilationPage />} />
+                    <Route path="/groups" element={<GroupsPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                  </Route>
+                </Routes>
+              </MemoryRouter>
+            </MuiTheme>
+          </CompilationLogsProvider>
         </DialogsProvider>
       </QueryClientProvider>
     </React.StrictMode>,

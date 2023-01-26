@@ -6,6 +6,7 @@
  */
 
 use super::insert_brand;
+use regex::Regex;
 use std::process::{Command, Stdio};
 use std::thread::sleep;
 use std::time::Duration;
@@ -21,7 +22,7 @@ pub async fn compile_script(
     #[cfg(debug_assertions)] // only include this code on debug builds
     sleep(Duration::from_secs(match script_name {
         s if s.contains("Data.psc") => 2,
-        _ => 1,
+        _ => 0.25 as u64,
     }));
 
     let output = Command::new(compiler_path)
@@ -34,7 +35,7 @@ pub async fn compile_script(
 
     println!("output: {}", output_err);
 
-    let output = get_final_output(&output_err, &output);
+    let output = get_final_output(&output_err, &output, script_name);
 
     println!(
         "———\n[{}] compile_script: [FINISHED] \n\t->{}\n{}———",
@@ -46,9 +47,41 @@ pub async fn compile_script(
     Ok(output)
 }
 
-fn get_final_output(output_err: &str, output: &str) -> String {
+fn get_final_output(output_err: &str, output: &str, script_name: &str) -> String {
     match output_err.len() {
-        0 => output.to_string(),
+        0 => clean_output(output, script_name),
         _ => output_err.to_string(),
     }
+}
+
+fn clean_output(output: &str, script_name: &str) -> String {
+    let papyrus_compiler_version_regex =
+        Regex::new(r"Papyrus Compiler Version .* for (Fallout 4|Skyrim)").unwrap();
+    let copyright_regex = Regex::new(r"Copyright .*. All rights reserved\.?").unwrap();
+    let batch_compile_regex =
+        Regex::new(r"Batch compile of \d+ files finished\. \d+ succeeded, \d+ failed\.").unwrap();
+    let script_name_no_psc = script_name.replace(".psc", "");
+
+    let result = output
+        .replace("Starting 1 compile threads for 1 files...", "")
+        .replace(
+            format!("Compiling \"{}\"...", script_name_no_psc).as_str(),
+            "",
+        )
+        .replace(format!("Compiling \"{}\"...", script_name).as_str(), "")
+        .replace("Assembly succeeded.", "")
+        .replace("Compilation succeeded.", "")
+        .replace("0 error(s), 0 warning(s)", "");
+
+    let result = batch_compile_regex
+        .replace_all(result.as_str(), "Succeeded")
+        .to_string();
+
+    let result = papyrus_compiler_version_regex
+        .replace_all(result.as_str(), "")
+        .to_string();
+
+    let result = copyright_regex.replace_all(result.as_str(), "").to_string();
+
+    result.trim().to_string()
 }

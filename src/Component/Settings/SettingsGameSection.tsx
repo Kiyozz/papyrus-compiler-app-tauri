@@ -56,7 +56,7 @@ function SettingsGameSection() {
   const gamePath = conf.data.game.path
   const gameCompilerPath = conf.data.compilation.compilerPath
 
-  const isGameExeError = isCheckConfQueryError(checkConf, some('gameExeDoesNotExist'))
+  const isGameExeError = isCheckConfQueryError(checkConf, some(['gameExeDoesNotExist']))
 
   return (
     <SettingsSection id="game-section" title={t<string>('page.settings.sections.game.title')} gutterTop={false}>
@@ -113,7 +113,7 @@ function SettingsGameSection() {
             })
           }}
           type="folder"
-          error={isCheckConfQueryError(checkConf, some('gamePathDoesNotExist'))}
+          error={isCheckConfQueryError(checkConf, some(['gamePathDoesNotExist']))}
         />
       </div>
 
@@ -139,10 +139,13 @@ function SettingsGameSection() {
             })
           }}
           placeholder={t<string>('common.select.file')}
-          error={isCheckConfQueryError(checkConf, some('compilerPathDoesNotExist'))}
+          error={isCheckConfQueryError(checkConf, some(['compilerPathDoesNotExist']))}
         />
       </div>
-      {isCheckConfQueryError(checkConf) && (
+      {isCheckConfQueryError(
+        checkConf,
+        some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist']),
+      ) && (
         <Alert severity="error" className="mt-3 dark:bg-red-400/10">
           {t('common.confCheckError', {
             context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.value.type,

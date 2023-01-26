@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@emotion/react': ^11.10.5
   '@emotion/styled': ^11.10.5
+  '@fontsource/ibm-plex-mono': ^4.5.13
   '@fontsource/inter': ^4.5.14
   '@fontsource/roboto': ^4.5.8
   '@hookform/resolvers': ^2.9.10
@@ -58,6 +59,7 @@ specifiers:
 dependencies:
   '@emotion/react': 11.10.5_kzbn2opkn2327fwg5yzwzya5o4
   '@emotion/styled': 11.10.5_qvatmowesywn4ye42qoh247szu
+  '@fontsource/ibm-plex-mono': 4.5.13
   '@fontsource/inter': 4.5.14
   '@fontsource/roboto': 4.5.8
   '@hookform/resolvers': 2.9.10_react-hook-form@7.41.5
@@ -687,6 +689,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@fontsource/ibm-plex-mono/4.5.13:
+    resolution: {integrity: sha512-KAE7X2LgCV4X6p7vj1h2phRnhPX4YUa8FBAB0Jj9xW7Q+p+k2ce4HEAMJJ2RFHI075ClgQx+KZuDBNuiKgp5yw==}
+    dev: false
 
   /@fontsource/inter/4.5.14:
     resolution: {integrity: sha512-JDC9AocdPLuGsASkvWw9hS5gtHE7K9dOwL98XLrk5yjYqxy4uVnScG58NUvFMJDVJRl/7c8Wnap6PEs+7Zvj1Q==}

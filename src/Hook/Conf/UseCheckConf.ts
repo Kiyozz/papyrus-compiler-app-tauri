@@ -20,7 +20,7 @@ import invariant from 'tiny-invariant'
  */
 export const isCheckConfQueryError = <T extends CheckConfErrorTypes>(
   query: UseQueryResult<O.Option<CheckConfError>>,
-  type: O.Option<T> = O.none,
+  type: O.Option<T[]> = O.none,
 ): query is UseQueryResult<O.Some<CheckConfError<T>>> & { isSuccess: true } => {
   if (!query.data || isNone(query.data)) {
     return false
@@ -30,7 +30,7 @@ export const isCheckConfQueryError = <T extends CheckConfErrorTypes>(
     return isCheckConfError(query.data.value)
   }
 
-  return isCheckConfError(query.data.value) && query.data.value.type === type.value
+  return isCheckConfError(query.data.value) && (type.value as CheckConfErrorTypes[]).includes(query.data.value.type)
 }
 
 export const useCheckConf = (conf: O.Option<Conf>, options: UseQueryOptions<O.Option<CheckConfError>> = {}) => {

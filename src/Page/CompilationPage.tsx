@@ -18,6 +18,7 @@ import GroupChooseButton from 'App/Component/GroupChooseButton'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
+import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useGroups } from 'App/Hook/Group/UseGroups'
@@ -34,6 +35,7 @@ import { useTranslation } from 'react-i18next'
 function CompilationPage() {
   const { t } = useTranslation()
   const { scripts, add: addScripts, clear: clearScripts, remove: removeScripts, compile } = useCompilation()
+  const { remove: removeLog, clear: clearLogs } = useCompilationLogs()
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
   const groups = useGroups()
   const conf = useConf()
@@ -103,23 +105,33 @@ function CompilationPage() {
                   pipe(
                     scripts,
                     A.filter((script) => script.status !== 'running'),
-                    compile,
+                    (scripts) => {
+                      scripts.forEach(removeLog)
+
+                      return compile(scripts)
+                    },
                   )
                 }}
                 disabled={isAllScriptsRunning}
               />
 
-              <Button disabled={isAllScriptsRunning} onClick={clearScripts} startIcon={<ClearIcon />} color="inherit">
+              <Button
+                disabled={isAllScriptsRunning}
+                onClick={flow(clearScripts, clearLogs)}
+                startIcon={<ClearIcon />}
+                color="inherit"
+              >
                 {t('common.clear')}
               </Button>
             </div>
             <FileScriptsList<FileScriptCompilation>
               scripts={scripts}
               onRemove={(scriptToRemove) => {
+                removeLog(scriptToRemove)
                 removeScripts([scriptToRemove])
               }}
               onStart={async (scriptToStart) => {
-                console.log('start compilation', scriptToStart)
+                removeLog(scriptToStart)
                 await compile([scriptToStart])
               }}
             />

@@ -5,7 +5,7 @@
  *
  */
 
-import LogsDialog from 'App/Component/Dialog/LogsDialog'
+import CompilationLogsDialog from 'App/Component/Dialog/CompilationLogsDialog'
 import OpenDocumentationDialog from 'App/Component/Dialog/OpenDocumentationDialog'
 import AppDrawer from 'App/Component/Drawer/AppDrawer'
 import { useConf } from 'App/Hook/Conf/UseConf'
@@ -23,7 +23,7 @@ function App() {
       ) : (
         <>
           <AppDrawer />
-          <LogsDialog />
+          <CompilationLogsDialog />
           <OpenDocumentationDialog />
 
           <Outlet />

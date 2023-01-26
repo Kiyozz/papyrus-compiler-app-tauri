@@ -54,6 +54,10 @@
   --tw-backdrop-sepia: '';
 }
 
+html {
+  font-size: 16px;
+}
+
 @tailwind components;
 @tailwind utilities;
 

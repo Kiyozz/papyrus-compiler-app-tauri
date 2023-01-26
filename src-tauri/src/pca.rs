@@ -10,5 +10,5 @@ pub mod glob;
 pub mod path;
 
 pub fn insert_brand(text: Option<&str>) -> String {
-    format!("PCAd::{}", text.unwrap_or("unknown"))
+    format!("PCA::{}", text.unwrap_or("unknown"))
 }

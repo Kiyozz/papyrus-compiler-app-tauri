@@ -11,13 +11,13 @@ module.exports = {
     './index.html',
     './src/**/*.{ts,tsx}'
   ],
-  important: '#app',
   darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
         sans: ['Roboto', '-apple-system', 'sans-serif'],
         body: ['Roboto', '-apple-system', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
         b: '0 1px 0 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',

@@ -82,6 +82,7 @@ function TextFieldDialog({
               onClick={onClickInput}
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
+              color={props.error ? 'error' : 'inherit'}
             >
               {isHover ? <FolderOpenIcon /> : <FolderIcon />}
             </IconButton>

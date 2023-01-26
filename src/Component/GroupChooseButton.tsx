@@ -31,7 +31,7 @@ function GroupChooseButton({
 
   return (
     <>
-      {nonEmptyGroups.length > 0 && (
+      {A.isNonEmpty(nonEmptyGroups) && (
         <Button
           aria-controls={isOpen ? 'group-loader-menu' : undefined}
           aria-expanded={isOpen ? 'true' : undefined}
