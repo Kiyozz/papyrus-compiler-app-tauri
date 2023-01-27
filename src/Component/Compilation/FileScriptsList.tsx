@@ -47,7 +47,7 @@ function FileScriptsList<T extends FileScript>({
             secondaryAction={
               <IconButton
                 aria-disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
-                aria-label={t<string>('common.remove')}
+                aria-label={t('common.remove')}
                 color="error"
                 disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
                 onClick={() => onRemove(script)}

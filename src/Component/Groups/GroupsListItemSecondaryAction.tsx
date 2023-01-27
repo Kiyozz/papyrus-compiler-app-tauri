@@ -68,13 +68,13 @@ const GroupsListItemSecondaryAction = ({
         onClose={() => setAnchor(O.none)}
         open={O.isSome(anchor)}
       >
-        <MenuItem aria-label={t<string>('common.edit')} onClick={handleClickEdit}>
+        <MenuItem aria-label={t('common.edit')} onClick={handleClickEdit}>
           <ListItemIcon>
             <CreateIcon />
           </ListItemIcon>
           <ListItemText primary={t('common.edit')} />
         </MenuItem>
-        <MenuItem aria-label={t<string>('common.remove')} onClick={onClickRemove}>
+        <MenuItem aria-label={t('common.remove')} onClick={onClickRemove}>
           <ListItemIcon>
             <DeleteIcon color="error" />
           </ListItemIcon>

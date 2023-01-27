@@ -34,7 +34,7 @@ function SearchScriptButton({
       onClick={() => {
         setDialogOpen(true)
         openFileDialog({
-          title: t<string>('common.papyrusFileSelectDialog.title'),
+          title: t('common.papyrusFileSelectDialog.title'),
           filters: [
             {
               name: 'Papyrus Script',

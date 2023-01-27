@@ -36,8 +36,8 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
     success: successCopy,
     close: closeCopy,
   } = useSnackbar({
-    errorMessage: (error) => t<string>('common.copyError', { error }),
-    successMessage: () => t<string>('common.copySuccess'),
+    errorMessage: (error) => t('common.copyError', { error }),
+    successMessage: () => t('common.copySuccess'),
   })
 
   const hasNoLogs = A.isEmpty(logs)

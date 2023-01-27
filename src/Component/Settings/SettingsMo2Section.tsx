@@ -78,7 +78,7 @@ function SettingsMo2Section() {
 
       {hasAnyMo2Error && (
         <Alert severity="error" className="mt-3 dark:bg-red-400/10">
-          {t('common.confCheckError', {
+          {t<string>('common.confCheckError', {
             context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.value.type,
             gameExe: toExecutable(conf.data.game.type),
           })}

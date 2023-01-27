@@ -107,7 +107,7 @@ function AddGroupDialog({
       >
         <Toolbar className="p-0">
           <DialogTitle className="grow" id="group-title">
-            <TextField autoFocus fullWidth placeholder={t<string>('dialog.group.name.label')} {...register('name')} />
+            <TextField autoFocus fullWidth placeholder={t('dialog.group.name.label')} {...register('name')} />
           </DialogTitle>
         </Toolbar>
         <DialogContent

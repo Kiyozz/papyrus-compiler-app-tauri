@@ -28,7 +28,7 @@ function SettingsThemeSection() {
   const themes = ['system', 'light', 'dark'] as [Theme, Theme, Theme]
 
   return (
-    <SettingsSection id="theme-section" title={t<string>('page.settings.sections.theme.title')}>
+    <SettingsSection id="theme-section" title={t('page.settings.sections.theme.title')}>
       <FormControl component="fieldset" fullWidth>
         <RadioGroup
           onChange={(evt) => {

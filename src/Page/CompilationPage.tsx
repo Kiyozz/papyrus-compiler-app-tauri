@@ -153,7 +153,7 @@ function CompilationPage() {
         <Alert severity="error">
           {conf.isSuccess &&
             isCheckConfQueryError(checkConf) &&
-            t('common.confCheckError', {
+            t<string>('common.confCheckError', {
               context: checkConf.data.value.type,
               gameExe: toExecutable(conf.data.game.type),
             })}

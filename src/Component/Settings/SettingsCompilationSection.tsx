@@ -34,7 +34,7 @@ function SettingsCompilationSection() {
   const concurrentScripts = conf.data.compilation.concurrentScripts
 
   return (
-    <SettingsSection id="compilation-section" title={t<string>('page.settings.sections.compilation.title')}>
+    <SettingsSection id="compilation-section" title={t('page.settings.sections.compilation.title')}>
       <TextField
         fullWidth
         helperText={t('page.settings.sections.compilation.concurrentScripts.helperText')}

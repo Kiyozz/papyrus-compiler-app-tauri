@@ -4,11 +4,21 @@
  * All rights reserved.
  *
  */
+import { TranslationSchema } from 'App/Type/TranslationSchema'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 
 import fr from './fr'
+
+declare module 'i18next' {
+  interface CustomTypeOptions {
+    resources: {
+      fr: TranslationSchema
+      en: TranslationSchema
+    }
+  }
+}
 
 export function configureTranslations() {
   return i18next

@@ -24,7 +24,7 @@ function SettingsTelemetrySection() {
   const telemetryUse = conf.data.telemetry.use
 
   return (
-    <SettingsSection id="telemetry-section" title={t<string>('page.settings.sections.telemetry.title')}>
+    <SettingsSection id="telemetry-section" title={t('page.settings.sections.telemetry.title')}>
       <FormControlLabel
         control={
           <Checkbox

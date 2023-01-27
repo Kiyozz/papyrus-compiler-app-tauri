@@ -59,7 +59,7 @@ function SettingsGameSection() {
   const isGameExeError = isCheckConfQueryError(checkConf, some(['gameExeDoesNotExist']))
 
   return (
-    <SettingsSection id="game-section" title={t<string>('page.settings.sections.game.title')} gutterTop={false}>
+    <SettingsSection id="game-section" title={t('page.settings.sections.game.title')} gutterTop={false}>
       <FormControl component="fieldset" fullWidth error={isGameExeError}>
         <RadioGroup
           classes={{ row: 'justify-between' }}
@@ -138,7 +138,7 @@ function SettingsGameSection() {
               },
             })
           }}
-          placeholder={t<string>('common.select.file')}
+          placeholder={t('common.select.file')}
           error={isCheckConfQueryError(checkConf, some(['compilerPathDoesNotExist']))}
         />
       </div>
@@ -147,7 +147,7 @@ function SettingsGameSection() {
         some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist']),
       ) && (
         <Alert severity="error" className="mt-3 dark:bg-red-400/10">
-          {t('common.confCheckError', {
+          {t<string>('common.confCheckError', {
             context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.value.type,
             gameExe: toExecutable(conf.data.game.type),
           })}
