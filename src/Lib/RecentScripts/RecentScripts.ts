@@ -34,14 +34,20 @@ const readRecentScriptsOrUseDefaultRecentScripts = (options: RecentScriptsOption
 
 export const readRecentScripts = readRecentScriptsOrUseDefaultRecentScripts(defaultOptions)
 
-export const writeRecentScripts = (options: RecentScriptsOptions) => (recentScripts: RecentScripts) =>
-  pipe(
-    readRecentScripts,
-    TE.map((currentRecentScripts) => {
-      return pipe(recentScripts, A.concat(A.takeLeft(options.maxItems)(currentRecentScripts)), A.uniq(S.Eq))
-    }),
-    TE.chain(writeRecentScriptsFile(options.fileName)),
-  )
+export const writeRecentScripts =
+  (options: RecentScriptsOptions) =>
+  ({ recentScripts, override = false }: { recentScripts: RecentScripts; override?: boolean }) =>
+    pipe(
+      readRecentScripts,
+      TE.map((currentRecentScripts) => {
+        if (override) {
+          return A.takeLeft(options.maxItems)(recentScripts)
+        }
+
+        return pipe(recentScripts, A.concat(A.takeLeft(options.maxItems)(currentRecentScripts)), A.uniq(S.Eq))
+      }),
+      TE.chain(writeRecentScriptsFile(options.fileName)),
+    )
 
 export const removeRecentScript = (options: RecentScriptsOptions) => (recentScript: RecentScript) =>
   pipe(

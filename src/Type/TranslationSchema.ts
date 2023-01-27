@@ -16,6 +16,7 @@ export type TranslationSchema = {
     remove: string
     searchScripts: string
     moreDetails: string
+    lessDetails: string
     edit: string
     noScripts: string
     group: string
@@ -23,6 +24,9 @@ export type TranslationSchema = {
     select: {
       file: string
       folder: string
+      all: string
+      none: string
+      invert: string
     }
     papyrusFileSelectDialog: {
       title: string

@@ -18,6 +18,7 @@ const fr: TranslationSchema = {
     remove: 'Supprimer',
     searchScripts: 'Rechercher',
     moreDetails: 'Plus de détails',
+    lessDetails: 'Moins de détails',
     edit: 'Modifier',
     noScripts: 'Aucun script',
     recentFiles: 'Fichiers récents',
@@ -25,6 +26,9 @@ const fr: TranslationSchema = {
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',
+      all: 'Tout sélectionner',
+      none: 'Tout désélectionner',
+      invert: 'Inverser la sélection',
     },
     papyrusFileSelectDialog: {
       title: 'Sélectionner un script Papyrus',

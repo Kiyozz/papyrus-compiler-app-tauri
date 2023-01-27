@@ -15,8 +15,8 @@ export const useUpdateRecentScripts = (
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (recentScripts) => {
-      const res = await writeDefaultRecentScripts(recentScripts)()
+    mutationFn: async (params) => {
+      const res = await writeDefaultRecentScripts(params)()
 
       if (E.isLeft(res)) {
         throw res.left

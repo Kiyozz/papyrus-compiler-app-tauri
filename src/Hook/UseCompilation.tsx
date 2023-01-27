@@ -10,13 +10,14 @@ import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentSc
 import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
 import { useCompile } from 'App/Hook/useCompile'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { A, E, isLeft, O, pipe, RA, TE } from 'App/Lib/FpTs'
 import { useCallback } from 'react'
 
 export function useCompilation() {
   const updateRecentScripts = useUpdateRecentScripts()
 
-  const { add, scripts, remove, clear, replace } = useCompilationScripts()
+  const { add, scripts, remove, replace } = useCompilationScripts()
   const { add: addLog } = useCompilationLogs()
   const compileMutation = useCompile()
   const compile = useCallback(async (scripts: FileScriptCompilation[]) => {
@@ -81,7 +82,9 @@ export function useCompilation() {
         async (logs) => {
           const logsRes = await TE.tryCatch(
             () => {
-              return updateRecentScripts.mutateAsync(A.compact(pipe(logs, RA.toArray)).map((log) => log.script.path))
+              return updateRecentScripts.mutateAsync({
+                recentScripts: A.compact(pipe(logs, RA.toArray)).map((log) => log.script.path),
+              })
             },
             (reason) => new Error(`failed to update recent scripts: ${reason}`),
           )()
@@ -100,7 +103,13 @@ export function useCompilation() {
     scripts,
     add,
     remove,
-    clear,
+    clear: () => {
+      pipe(
+        scripts,
+        A.filter((script) => !isRunning(script)),
+        remove,
+      )
+    },
     compile,
   }
 }
