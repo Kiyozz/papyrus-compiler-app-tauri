@@ -52,6 +52,7 @@ const fr: TranslationSchema = {
     copy: 'Copier',
     copySuccess: 'Copié avec succès',
     copyError: 'Erreur lors de la copie: {{error}}',
+    createGroup: 'Créer un groupe',
   },
   nav: {
     compilation: 'Compilation',

@@ -23,29 +23,40 @@ import { GroupZod } from 'App/Lib/Form/GroupForm'
 import { O, pipe, S, TO } from 'App/Lib/FpTs'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import cx from 'classnames'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 
-function AddGroupDialog({
+const AddGroupDialog = ({
   onClose,
   onSubmit,
   actionsDisabled = false,
   actionsIsLoading = false,
+  defaultScripts,
+  TransitionProps,
   ...props
 }: Omit<DialogProps, 'onSubmit' | 'onKeyDown'> & {
   onClose: () => void
   onSubmit: (scripts: FileScript[], name: string) => Promise<void>
   actionsDisabled?: boolean
   actionsIsLoading?: boolean
-}) {
+  defaultScripts: O.Option<FileScript[]>
+}) => {
   const {
     scripts,
     add: addScripts,
     remove: removeScripts,
     clear: clearScripts,
+    reset: resetScripts,
   } = useScriptsList({
     initialScripts: [] as FileScript[],
   })
+
+  useEffect(() => {
+    if (O.isSome(defaultScripts)) {
+      resetScripts(defaultScripts.value)
+    }
+  }, [defaultScripts])
 
   const onDialogEnter = useKey('Enter', () => {
     if (actionsDisabled || actionsIsLoading || !formState.isValid) {
@@ -77,7 +88,6 @@ function AddGroupDialog({
   }
 
   const handleDialogClose = () => {
-    resetDialog()
     onClose()
   }
 
@@ -88,6 +98,13 @@ function AddGroupDialog({
       fullScreen
       onClose={handleDialogClose}
       onKeyDown={onDialogEnter}
+      TransitionProps={{
+        ...TransitionProps,
+        onExited: (node) => {
+          resetDialog()
+          TransitionProps?.onExited?.(node)
+        },
+      }}
       {...props}
     >
       <form
@@ -107,7 +124,13 @@ function AddGroupDialog({
       >
         <Toolbar className="p-0">
           <DialogTitle className="grow" id="group-title">
-            <TextField autoFocus fullWidth placeholder={t('dialog.group.name.label')} {...register('name')} />
+            <TextField
+              autoFocus
+              autoComplete="off"
+              fullWidth
+              placeholder={t('dialog.group.name.label')}
+              {...register('name')}
+            />
           </DialogTitle>
         </Toolbar>
         <DialogContent

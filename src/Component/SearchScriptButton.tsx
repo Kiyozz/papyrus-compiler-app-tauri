@@ -12,14 +12,13 @@ import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { O, pipe } from 'App/Lib/FpTs'
 import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
-import { useState } from 'react'
+import { forwardRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-function SearchScriptButton({
-  onFileSelect,
-  disabled,
-  ...props
-}: { onFileSelect: (files: FileScript[]) => void } & ButtonProps) {
+const SearchScriptButton = forwardRef<
+  HTMLButtonElement,
+  { onFileSelect: (files: FileScript[]) => void } & Omit<ButtonProps, 'ref'>
+>(({ onFileSelect, disabled, ...props }, ref) => {
   const { t } = useTranslation()
   useListenFileDrop({
     onDrop: (evt) => pipe(evt.payload, pathsToFileScript, onFileSelect),
@@ -57,9 +56,10 @@ function SearchScriptButton({
             setDialogOpen(false)
           })
       }}
+      ref={ref}
       {...props}
     />
   )
-}
+})
 
 export default SearchScriptButton

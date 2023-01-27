@@ -6,7 +6,7 @@
  */
 
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
+import Dialog, { DialogProps } from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
@@ -20,7 +20,8 @@ const RemovingGroupDialog = ({
   groupToRemove,
   onConfirm,
   onCancel,
-}: {
+  ...props
+}: Omit<DialogProps, 'onClose'> & {
   groupToRemove: O.Option<GroupWithId>
   onConfirm: () => void
   onCancel: () => void
@@ -28,12 +29,7 @@ const RemovingGroupDialog = ({
   const { t } = useTranslation()
 
   return (
-    <Dialog
-      open={O.isSome(groupToRemove)}
-      onClose={onCancel}
-      aria-describedby="group-content"
-      aria-labelledby="group-title"
-    >
+    <Dialog onClose={onCancel} aria-describedby="group-content" aria-labelledby="group-title" {...props}>
       <DialogTitle className="grow" id="group-title">
         {t('dialog.group.removing.title')}
       </DialogTitle>

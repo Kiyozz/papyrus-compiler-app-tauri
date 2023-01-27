@@ -21,33 +21,77 @@ import PageAppBar from 'App/Component/Page/PageAppBar'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
-import { A, O, pipe, R, TO } from 'App/Lib/FpTs'
+import { useDialogOpen } from 'App/Hook/UseDialogOpen'
+import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { A, none, O, pipe, R, TO } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
+import { useEffectOnce } from 'usehooks-ts'
 import { v4 } from 'uuid'
 
 function GroupsPage() {
+  const location = useLocation()
   const { t } = useTranslation()
   const updateGroups = useUpdateGroups()
   const removeGroup = useRemoveGroup()
   const groups = useGroups()
-  const [groupToEdit, setGroupToEdit] = useState<O.Option<GroupWithId>>(O.none)
-  const [isAddGroupDialogOpen, setAddGroupDialogOpen] = useState(false)
 
   const [isMoreDetails, setMoreDetails] = useState(false)
-  const [groupToRemove, setGroupToRemove] = useState<O.Option<GroupWithId>>(O.none)
+
+  const {
+    isOpen: isRemoveGroupDialogOpen,
+    open: openRemoveGroupDialog,
+    state: groupToRemove,
+    close: closeRemoveGroupDialog,
+    TransitionProps: removeDialogTransitionProps,
+  } = useDialogOpen({
+    defaultState: none as O.Option<GroupWithId>,
+  })
+  const {
+    isOpen: isEditGroupDialogOpen,
+    open: openEditGroupDialog,
+    state: groupToEdit,
+    close: closeEditGroupDialog,
+    TransitionProps: editDialogTransitionProps,
+  } = useDialogOpen({
+    defaultState: none as O.Option<GroupWithId>,
+  })
+  const {
+    isOpen: isAddGroupDialogOpen,
+    open: openAddGroupDialog,
+    state: addGroupDefaultScripts,
+    close: closeAddGroupDialog,
+    TransitionProps: addDialogTransitionProps,
+  } = useDialogOpen({
+    defaultState: none as O.Option<FileScript[]>,
+  })
+
+  useEffectOnce(() => {
+    pipe(
+      location.state as { scripts: FileScript[] },
+      O.fromNullable,
+      O.map(({ scripts }) => scripts),
+      (scripts) => {
+        if (O.isSome(scripts)) {
+          openAddGroupDialog(scripts.value)
+        }
+      },
+    )
+  })
 
   const closeDialogs = () => {
-    setAddGroupDialogOpen(false)
-    setGroupToRemove(O.none)
-    setGroupToEdit(O.none)
+    closeAddGroupDialog()
+    closeRemoveGroupDialog()
+    closeEditGroupDialog()
   }
 
   return (
     <>
       <RemovingGroupDialog
+        open={isRemoveGroupDialogOpen}
         groupToRemove={groupToRemove}
         onConfirm={async () => {
           await pipe(
@@ -58,15 +102,15 @@ function GroupsPage() {
 
           closeDialogs()
         }}
-        onCancel={() => {
-          closeDialogs()
-        }}
+        onCancel={closeDialogs}
+        TransitionProps={removeDialogTransitionProps}
       />
 
       {groups.isSuccess ? (
         <>
           <AddGroupDialog
             open={isAddGroupDialogOpen}
+            defaultScripts={addGroupDefaultScripts}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
               await updateGroups.mutateAsync({
@@ -84,8 +128,10 @@ function GroupsPage() {
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}
+            TransitionProps={addDialogTransitionProps}
           />
           <EditGroupDialog
+            open={isEditGroupDialogOpen}
             group={groupToEdit}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
@@ -112,6 +158,7 @@ function GroupsPage() {
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}
+            TransitionProps={editDialogTransitionProps}
           />
         </>
       ) : null}
@@ -122,7 +169,9 @@ function GroupsPage() {
           color="inherit"
           disabled={updateGroups.isLoading}
           startIcon={<CreateIcon />}
-          onClick={() => setAddGroupDialogOpen(true)}
+          onClick={() => {
+            openAddGroupDialog()
+          }}
         >
           {t('common.create')}
         </Button>
@@ -158,10 +207,8 @@ function GroupsPage() {
                         <GroupsList
                           groups={groups}
                           isMoreDetails={isMoreDetails}
-                          onTryRemove={(group) => setGroupToRemove(O.some(group))}
-                          onClickEdit={(group) => {
-                            setGroupToEdit(O.some(group))
-                          }}
+                          onTryRemove={openRemoveGroupDialog}
+                          onClickEdit={openEditGroupDialog}
                         />
                       </>
                     ),

@@ -24,24 +24,25 @@ import { O, pipe, S, TO } from 'App/Lib/FpTs'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { GroupWithId } from 'App/Type/GroupWithId'
 import cx from 'classnames'
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 
-function EditGroupDialog({
+const EditGroupDialog = ({
   group = O.none,
   onClose,
   onSubmit,
   actionsDisabled = false,
   actionsIsLoading = false,
+  TransitionProps,
   ...props
-}: Omit<DialogProps, 'onSubmit' | 'open' | 'onKeyDown'> & {
+}: Omit<DialogProps, 'onSubmit' | 'onKeyDown'> & {
   group: O.Option<GroupWithId>
   onClose: () => void
   onSubmit: (scripts: FileScript[], name: string) => Promise<void>
   actionsDisabled?: boolean
   actionsIsLoading?: boolean
-}) {
+}) => {
   const {
     scripts,
     add: addScripts,
@@ -55,7 +56,7 @@ function EditGroupDialog({
     ),
   })
 
-  const onDialogEnter = useKey('Enter', () => {
+  const onDialogPressEnter = useKey('Enter', () => {
     if (actionsDisabled || actionsIsLoading || !formState.isValid) {
       return
     }
@@ -82,6 +83,7 @@ function EditGroupDialog({
     ),
     resolver: zodResolver(GroupZod),
   })
+  const textFieldNameRef = useRef<HTMLInputElement>(null)
 
   useLayoutEffect(() => {
     pipe(
@@ -102,7 +104,6 @@ function EditGroupDialog({
   }
 
   const handleDialogClose = () => {
-    resetDialog()
     onClose()
   }
 
@@ -112,8 +113,18 @@ function EditGroupDialog({
       aria-labelledby="group-title"
       fullScreen
       onClose={handleDialogClose}
-      open={O.isSome(group)}
-      onKeyDown={onDialogEnter}
+      onKeyDown={onDialogPressEnter}
+      TransitionProps={{
+        ...TransitionProps,
+        onEnter: (...params) => {
+          TransitionProps?.onEnter?.(...params)
+          textFieldNameRef.current?.focus()
+        },
+        onExited: (...params) => {
+          TransitionProps?.onExited?.(...params)
+          resetDialog()
+        },
+      }}
       {...props}
     >
       <form
@@ -136,7 +147,14 @@ function EditGroupDialog({
       >
         <Toolbar className="p-0">
           <DialogTitle className="grow" id="group-title">
-            <TextField autoFocus fullWidth placeholder={t('dialog.group.name.label')} {...register('name')} />
+            <TextField
+              autoFocus
+              autoComplete="off"
+              fullWidth
+              placeholder={t('dialog.group.name.label')}
+              {...register('name')}
+              inputRef={textFieldNameRef}
+            />
           </DialogTitle>
         </Toolbar>
         <DialogContent

@@ -13,6 +13,7 @@ import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import CreateGroupFromScriptsButton from 'App/Component/Compilation/CreateGroupFromScriptsButton'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
 import StartCompilationButton from 'App/Component/Compilation/StartCompilationButton'
 import RecentScriptsDialog from 'App/Component/Dialog/RecentScriptsDialog'
@@ -98,8 +99,8 @@ function CompilationPage() {
           <>
             <div className="mb-4 flex gap-2">
               <StartCompilationButton
-                onCompilationStart={() => {
-                  pipe(
+                onCompilationStart={async () => {
+                  await pipe(
                     scripts,
                     A.filter((script) => script.status !== 'running'),
                     (scripts) => {
@@ -120,6 +121,8 @@ function CompilationPage() {
               >
                 {t('common.clear')}
               </Button>
+
+              <CreateGroupFromScriptsButton className="ml-auto" scripts={scripts} />
             </div>
             <FileScriptsList<FileScriptCompilation>
               scripts={scripts}

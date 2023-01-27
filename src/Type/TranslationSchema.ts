@@ -45,6 +45,7 @@ export type TranslationSchema = {
     copy: string
     copySuccess: string
     copyError: string
+    createGroup: string
   }
   nav: {
     compilation: string

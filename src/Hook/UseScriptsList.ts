@@ -15,6 +15,7 @@ type Action<T extends FileScript> =
   | { type: 'add'; payload: T[] }
   | { type: 'remove'; payload: T[] }
   | { type: 'replace'; payload: T }
+  | { type: 'reset'; payload: T[] }
   | { type: 'clear' }
 
 function reducer<T extends FileScript>(state: T[], action: Action<T>): T[] {
@@ -37,6 +38,7 @@ function reducer<T extends FileScript>(state: T[], action: Action<T>): T[] {
       ),
     )
     .with({ type: 'clear' }, () => [])
+    .with({ type: 'reset' }, ({ payload }) => payload)
     .exhaustive()
 }
 
@@ -51,5 +53,6 @@ export const useScriptsList = <T extends FileScript>({ initialScripts = [] }: { 
     remove: (files: T[]) => dispatch({ type: 'remove', payload: files }),
     replace: (file: T) => dispatch({ type: 'replace', payload: file }),
     clear: () => dispatch({ type: 'clear' }),
+    reset: (files: T[]) => dispatch({ type: 'reset', payload: files }),
   }
 }
