@@ -111,7 +111,7 @@ function AddGroupDialog({
           </DialogTitle>
         </Toolbar>
         <DialogContent
-          className={cx('flex px-5', scripts.length === 0 && 'items-center justify-center')}
+          className={cx('px-5', scripts.length === 0 && 'flex items-center justify-center')}
           dividers
           id="group-content"
         >

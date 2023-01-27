@@ -37,12 +37,13 @@ function FileScriptsList<T extends FileScript>({
   const { t } = useTranslation()
 
   return (
-    <List className={cx('flex flex-col gap-0.5', className)}>
+    <List className={cx('', className)} component="div">
       {scripts.map((script) => {
         return (
           <ListItem
             key={script.id}
             component={Paper}
+            className="mt-0.5 [&:first-child]:mt-0"
             secondaryAction={
               <IconButton
                 aria-disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
