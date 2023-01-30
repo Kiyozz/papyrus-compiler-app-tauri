@@ -112,120 +112,126 @@ function RecentScriptsDialog({
           O.map(
             A.match(
               () => <DialogContentText>{t('dialog.recentFiles.noRecentFiles')}</DialogContentText>,
-              flow((recentScripts) => (
-                <List className="overflow-x-hidden" onContextMenu={handleContextMenu}>
-                  <RecentScriptsDialogContextMenu
-                    open={isContextMenuOpen}
-                    anchorPosition={
-                      isSome(contextMenu)
-                        ? { top: contextMenu.value.mouseY, left: contextMenu.value.mouseX }
-                        : undefined
-                    }
-                    onClose={handleCloseContextMenu}
-                    onAll={() => {
-                      addScriptsToLoad(recentScripts)
-                    }}
-                    onNone={() => {
-                      clearScriptsToLoad()
-                    }}
-                    onInvert={() => {
-                      pipe(
-                        recentScripts,
-                        (scripts) => ({
-                          toAdd: scripts.filter((script) => !pipe(scriptsToLoad, isFileScriptInArray(script))),
-                          toRemove: scripts.filter((script) => pipe(scriptsToLoad, isFileScriptInArray(script))),
-                        }),
-                        ({ toAdd, toRemove }) => {
-                          addScriptsToLoad(toAdd)
-                          removeScriptToLoad(toRemove)
-                        },
-                      )
-                    }}
-                    onClear={async () => {
-                      await updateRecentScripts.mutateAsync({
-                        recentScripts: [],
-                        override: true,
-                      })
-                      handleCloseContextMenu()
-                    }}
-                    onDetails={() => {
-                      setMoreDetails((v) => !v)
-                      handleCloseContextMenu()
-                    }}
-                    onLoad={() => {
-                      handleCloseContextMenu()
-                      handleOnLoad()
-                    }}
-                    detailsText={t(isMoreDetails ? 'common.lessDetails' : 'common.moreDetails')}
-                    scriptsToLoad={scriptsToLoad}
-                    disabled={{
-                      all: A.size(scriptsToLoad) === A.size(recentScripts),
-                      none: A.isEmpty(scriptsToLoad),
-                      clear: A.isEmpty(recentScripts),
-                      load: A.isEmpty(scriptsToLoad),
-                      details: A.isEmpty(recentScripts),
-                    }}
-                  />
-                  {recentScripts.map((script) => {
-                    const isAlreadyAddedInCurrentScripts = pipe(currentScripts, isFileScriptInArray(script))
-                    const isAlreadyAddedInScriptsToLoad = scriptsToLoad.includes(script)
+              flow((recentScripts) => {
+                const notInCurrentScripts = recentScripts.filter(
+                  (script) => !isFileScriptInArray(script)(currentScripts),
+                )
 
-                    return (
-                      <ListItem
-                        disablePadding
-                        key={script.id}
-                        secondaryAction={
-                          <IconButton
-                            color="error"
-                            onClick={() => {
-                              console.log('remove this script in recent scripts file')
-                            }}
-                            tabIndex={2}
-                          >
-                            <DeleteOutlinedIcon />
-                          </IconButton>
-                        }
-                      >
-                        <ListItemButton
-                          classes={{ root: 'py-0' }}
-                          component="button"
-                          disableRipple
-                          disabled={isAlreadyAddedInCurrentScripts}
-                          onClick={() => {
-                            pipe(
-                              isAlreadyAddedInScriptsToLoad,
-                              B.fold(
-                                () => addScriptsToLoad([script]),
-                                () => removeScriptToLoad([script]),
-                              ),
-                            )
-                          }}
-                          role="checkbox"
-                          tabIndex={1}
-                        >
-                          <ListItemIcon>
-                            <Checkbox
-                              checked={isAlreadyAddedInScriptsToLoad}
-                              disableRipple
-                              edge="start"
-                              inputProps={{
-                                'aria-labelledby': script.name,
+                return (
+                  <List className="overflow-x-hidden" onContextMenu={handleContextMenu}>
+                    <RecentScriptsDialogContextMenu
+                      open={isContextMenuOpen}
+                      anchorPosition={
+                        isSome(contextMenu)
+                          ? { top: contextMenu.value.mouseY, left: contextMenu.value.mouseX }
+                          : undefined
+                      }
+                      onClose={handleCloseContextMenu}
+                      onAll={() => {
+                        addScriptsToLoad(notInCurrentScripts)
+                      }}
+                      onNone={() => {
+                        clearScriptsToLoad()
+                      }}
+                      onInvert={() => {
+                        pipe(
+                          notInCurrentScripts,
+                          (scripts) => ({
+                            toAdd: scripts.filter((script) => !pipe(scriptsToLoad, isFileScriptInArray(script))),
+                            toRemove: scripts.filter((script) => pipe(scriptsToLoad, isFileScriptInArray(script))),
+                          }),
+                          ({ toAdd, toRemove }) => {
+                            addScriptsToLoad(toAdd)
+                            removeScriptToLoad(toRemove)
+                          },
+                        )
+                      }}
+                      onClear={async () => {
+                        await updateRecentScripts.mutateAsync({
+                          recentScripts: [],
+                          override: true,
+                        })
+                        handleCloseContextMenu()
+                      }}
+                      onDetails={() => {
+                        setMoreDetails((v) => !v)
+                        handleCloseContextMenu()
+                      }}
+                      onLoad={() => {
+                        handleCloseContextMenu()
+                        handleOnLoad()
+                      }}
+                      detailsText={t(isMoreDetails ? 'common.lessDetails' : 'common.moreDetails')}
+                      scriptsToLoad={scriptsToLoad}
+                      disabled={{
+                        all: A.size(scriptsToLoad) === A.size(recentScripts),
+                        none: A.isEmpty(scriptsToLoad),
+                        clear: A.isEmpty(recentScripts),
+                        load: A.isEmpty(scriptsToLoad),
+                        details: A.isEmpty(recentScripts),
+                      }}
+                    />
+                    {recentScripts.map((script) => {
+                      const isAlreadyAddedInCurrentScripts = pipe(currentScripts, isFileScriptInArray(script))
+                      const isAlreadyAddedInScriptsToLoad = scriptsToLoad.includes(script)
+
+                      return (
+                        <ListItem
+                          disablePadding
+                          key={script.id}
+                          secondaryAction={
+                            <IconButton
+                              color="error"
+                              onClick={() => {
+                                console.log('remove this script in recent scripts file')
                               }}
-                              tabIndex={-1}
+                              tabIndex={2}
+                            >
+                              <DeleteOutlinedIcon />
+                            </IconButton>
+                          }
+                        >
+                          <ListItemButton
+                            classes={{ root: 'py-0' }}
+                            component="button"
+                            disableRipple
+                            disabled={isAlreadyAddedInCurrentScripts}
+                            onClick={() => {
+                              pipe(
+                                isAlreadyAddedInScriptsToLoad,
+                                B.fold(
+                                  () => addScriptsToLoad([script]),
+                                  () => removeScriptToLoad([script]),
+                                ),
+                              )
+                            }}
+                            role="checkbox"
+                            tabIndex={1}
+                          >
+                            <ListItemIcon>
+                              <Checkbox
+                                checked={isAlreadyAddedInScriptsToLoad}
+                                disableRipple
+                                edge="start"
+                                inputProps={{
+                                  'aria-labelledby': script.name,
+                                }}
+                                tabIndex={-1}
+                              />
+                            </ListItemIcon>
+                            <ListItemText
+                              id={script.name}
+                              primary={script.name}
+                              secondary={isMoreDetails ? script.path : undefined}
+                              secondaryTypographyProps={{ variant: 'caption' }}
                             />
-                          </ListItemIcon>
-                          <ListItemText
-                            id={script.name}
-                            primary={script.name}
-                            secondary={isMoreDetails ? script.path : undefined}
-                            secondaryTypographyProps={{ variant: 'caption' }}
-                          />
-                        </ListItemButton>
-                      </ListItem>
-                    )
-                  })}
-                </List>
-              )),
+                          </ListItemButton>
+                        </ListItem>
+                      )
+                    })}
+                  </List>
+                )
+              }),
             ),
           ),
           O.toNullable,

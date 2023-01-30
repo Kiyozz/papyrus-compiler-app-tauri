@@ -28,6 +28,7 @@ import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
 import { A, flow, O, pipe, R } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
@@ -48,7 +49,7 @@ function CompilationPage() {
   const conf = useConf()
   const checkConf = useCheckConf(O.fromNullable(conf.data))
 
-  const isAllScriptsRunning = scripts.every((script) => script.status === 'running')
+  const isAllScriptsRunning = scripts.every(isRunning)
 
   return (
     <div>
