@@ -46,7 +46,9 @@ function RecentScriptsDialog({
   onScriptsLoad: (scripts: FileScript[]) => void
 }) {
   const { t } = useTranslation()
-  const recentScripts = useRecentScripts()
+  const recentScripts = useRecentScripts({
+    refetchOnWindowFocus: false,
+  })
   const updateRecentScripts = useUpdateRecentScripts()
   const {
     handleClose: handleCloseContextMenu,
@@ -64,21 +66,22 @@ function RecentScriptsDialog({
     initialScripts: [] as FileScript[],
   })
 
+  const effectiveClearScriptsToLoad = flow(recentScripts.refetch, clearScriptsToLoad)
+
   const handleOnClose = () => {
     onClose()
-    clearScriptsToLoad()
+    effectiveClearScriptsToLoad()
   }
 
   const handleOnLoad = () => {
     onScriptsLoad(scriptsToLoad)
-    clearScriptsToLoad()
+    effectiveClearScriptsToLoad()
   }
 
   const onDialogEnter = useKey('Enter', () => {
     if (A.isEmpty(scriptsToLoad)) return
 
-    onScriptsLoad(scriptsToLoad)
-    clearScriptsToLoad()
+    handleOnLoad()
   })
 
   return (
