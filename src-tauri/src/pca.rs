@@ -6,9 +6,17 @@
  */
 
 pub mod compile;
+pub mod environment;
 pub mod glob;
 pub mod path;
 
-pub fn insert_brand(text: Option<&str>) -> String {
-    format!("PCA::{}", text.unwrap_or("unknown"))
+macro_rules! brand {
+    ($from:expr, $text:expr) => {
+        format!("[PCA::{}] {}:", $from.unwrap_or("unknown"), $text)
+    };
+    ($text:expr) => {
+        format!("[PCA] {}:", $text)
+    };
 }
+
+pub(crate) use brand;

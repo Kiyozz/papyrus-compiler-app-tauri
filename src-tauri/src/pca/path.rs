@@ -5,39 +5,38 @@
  *
  */
 
-use super::insert_brand;
 use glob::{glob_with, MatchOptions};
 use std::path::Path;
 
 #[tauri::command]
 pub fn path_exists(path: &str, from: Option<&str>) -> bool {
-    println!("[{}] path_exists: {}", insert_brand(from), path);
+    println!("{} {}", super::brand!(from, "path_exists"), path);
 
     Path::new(path).exists()
 }
 
 #[tauri::command]
 pub fn paths_exists(paths: Vec<&str>, from: Option<&str>) -> bool {
-    println!("[{}] path_exists: {:?}", insert_brand(from), paths);
+    println!("{} {:?}", super::brand!(from, "paths_exists"), paths);
 
     paths.iter().map(|path| Path::new(path).exists()).all(|x| x)
 }
 
 #[tauri::command]
-pub fn get_scripts_in_path(
+pub fn get_scripts_in_paths(
     patterns: Vec<&str>,
     options: Option<super::glob::GlobMatchOptions>,
     from: Option<&str>,
 ) -> Vec<String> {
     println!(
-        "[{}] get_scripts_in_path: {:?}",
-        insert_brand(from),
+        "{} {:?}",
+        super::brand!(from, "get_scripts_in_path"),
         patterns
     );
 
-    let glob_res: Vec<String> = patterns
+    let glob_res = patterns
         .iter()
-        .map(|pattern| {
+        .flat_map(|pattern| {
             glob_with(
                 pattern,
                 MatchOptions::from(match options {
@@ -54,11 +53,20 @@ pub fn get_scripts_in_path(
                     .expect("Failed to convert glob entry to string")
                     .to_string()
             })
-            .collect()
+            .collect::<Vec<_>>()
         })
-        .collect();
+        .filter(|path| {
+            println!("retrieved -> {:?}", path);
 
-    println!("glob_res: {:?}", glob_res);
+            !path.is_empty()
+        })
+        .collect::<Vec<_>>();
+
+    println!(
+        "{} {:?}",
+        super::brand!(from, "get_scripts_in_path"),
+        glob_res
+    );
 
     glob_res
 }

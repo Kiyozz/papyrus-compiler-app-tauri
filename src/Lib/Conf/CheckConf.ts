@@ -137,7 +137,6 @@ const checkCreationKitScriptExistsInGameDataFolder = (conf: Conf) => {
   )
 }
 
-// TODO: use glob to check if any mo2 mod has creation kit script
 /**
  * Check if creation kit is installed for the given conf
  *
@@ -153,29 +152,28 @@ const checkCreationKitScriptExistsInMo2 = (conf: Conf) => {
     return checkCreationKitScriptExistsInGameDataFolder(conf)
   }
 
-  return pipe(
-    T.of({
+  return async () => {
+    const sources = {
       sources: toSource(conf.game.type),
       otherSources: toOtherSource(conf.game.type),
-    }),
-    T.bind('modsFolder', () => () => join(mo2Instance.value, conf.mo2.modsFolderRelativeToInstance)),
-    T.bind(
-      'pathsToCheck',
-      ({ modsFolder, sources, otherSources }) =>
-        async () =>
-          Promise.all(
-            [
-              await join(modsFolder, '**', sources, defaultScript),
-              await join(modsFolder, '**', otherSources, defaultScript),
-              await join(mo2Instance.value, 'overwrite', sources, defaultScript),
-              await join(mo2Instance.value, 'overwrite', otherSources, defaultScript),
-            ].map(normalize),
-          ),
-    ),
-    TE.fromTask,
-    TE.chain(({ pathsToCheck }) => TE.tryCatch(() => glob(pathsToCheck, O.none, { from: 'checkConf' }), onRejected)),
-    TE.chain((paths) => check(paths, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${paths}`)),
-  )
+    }
+    const modsFolder = await join(mo2Instance.value, conf.mo2.modsFolderRelativeToInstance)
+    const pathsToCheck = await Promise.all(
+      [
+        await join(modsFolder, '**', sources.sources, defaultScript),
+        await join(modsFolder, '**', sources.otherSources, defaultScript),
+        await join(mo2Instance.value, 'overwrite', sources.sources, defaultScript),
+        await join(mo2Instance.value, 'overwrite', sources.otherSources, defaultScript),
+      ].map(normalize),
+    )
+
+    return pipe(
+      TE.tryCatch(() => glob(pathsToCheck, O.none, { from: 'checkConf' }), onRejected),
+      TE.chain((paths) =>
+        check(paths, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${paths}`),
+      ),
+    )()
+  }
 }
 
 const unwrap = (either: E.Either<CheckConfError, unknown>) => {

@@ -5,11 +5,22 @@
  *
  */
 
-use super::insert_brand;
 use regex::Regex;
 use std::process::{Command, Stdio};
 use std::thread::sleep;
 use std::time::Duration;
+
+macro_rules! compile_brand {
+    ($from:expr) => {
+        super::brand!($from, "compile_script")
+    };
+    ($from:expr, $text:expr) => {
+        super::brand!($from, "compile_script")
+    };
+    () => {
+        brand!("compile_script")
+    };
+}
 
 #[tauri::command]
 pub async fn compile_script(
@@ -18,7 +29,7 @@ pub async fn compile_script(
     script_name: &str,
     from: Option<&str>,
 ) -> Result<String, String> {
-    println!("[{}] compile_script: {}", insert_brand(from), script_name);
+    println!("{} {}", compile_brand!(from), script_name);
     #[cfg(debug_assertions)] // only include this code on debug builds
     sleep(Duration::from_secs(match script_name {
         s if s.contains("Data.psc") => 2,
@@ -29,17 +40,17 @@ pub async fn compile_script(
         .args(args)
         .stdout(Stdio::piped())
         .output()
-        .unwrap_or_else(|_| panic!("{}", insert_brand(Some("failed to execute child"))));
+        .unwrap_or_else(|_| panic!("{} {}", compile_brand!(from), "failed to execute child"));
     let output_err = String::from_utf8(output.stderr).expect("cannot convert stderr as string");
     let output = String::from_utf8(output.stdout).expect("cannot convert stdout as string");
 
-    println!("output: {}", output_err);
+    println!("{} [output_err]: {}", compile_brand!(from), output_err);
 
     let output = get_final_output(&output_err, &output, script_name);
 
     println!(
-        "———\n[{}] compile_script: [FINISHED] \n\t->{}\n{}———",
-        insert_brand(from),
+        "———\n{} [FINISHED] \n\t->{}\n{}\n———",
+        compile_brand!(from),
         script_name,
         output
     );

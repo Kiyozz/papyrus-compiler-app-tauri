@@ -19,7 +19,7 @@ export const compileScript =
         // TODO: construct the args, with mo2 support
         const compileCommand = await invokeCompileScript(
           conf.compilation.compilerPath,
-          [],
+          [], // TODO: add args, with mo2 support
           script.path,
           'compileScript',
         )()

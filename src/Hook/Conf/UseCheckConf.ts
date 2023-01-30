@@ -38,7 +38,6 @@ export const useCheckConf = (conf: O.Option<Conf>, options: UseQueryOptions<O.Op
     queryKey: ['conf-check', conf],
     queryFn: async () => {
       invariant(O.isSome(conf), 'Conf is None') // should never occur
-      console.log({ type: conf.value.game.type })
       const configChecked = await checkConf(conf.value)()
 
       if (E.isLeft(configChecked)) {

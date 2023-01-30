@@ -24,8 +24,9 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             pca::path::path_exists,
             pca::path::paths_exists,
-            pca::path::get_scripts_in_path,
-            pca::compile::compile_script
+            pca::path::get_scripts_in_paths,
+            pca::compile::compile_script,
+            pca::environment::current_environment,
         ])
         .run(tauri::generate_context!())
         .expect("error while running PCA application");

@@ -23,10 +23,18 @@ type GlobOptions = {
 /**
  * Call Rust to retrieve paths from a glob pattern
  *
- * @param pattern
+ * @param patterns
  * @param options
  * @param extras
  */
-export const glob = (pattern: string[], options: O.Option<GlobOptions> = O.none, extras: { from?: string } = {}) => {
-  return invoke<string[]>('get_scripts_in_paths', { pattern, options, from: extras.from })
+export const glob = (patterns: string[], options: O.Option<GlobOptions> = O.none, extras: { from?: string } = {}) => {
+  return invoke<string[]>('get_scripts_in_paths', {
+    patterns,
+    options: O.toUndefined(options),
+    from: extras.from,
+  }).catch((err) => {
+    console.log(err)
+
+    throw err
+  })
 }

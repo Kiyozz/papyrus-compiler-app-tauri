@@ -45,7 +45,7 @@ const fr: TranslationSchema = {
     confCheckError_creationKitScriptDoesNotExist:
       "Configuration invalide : Vérifiez le chemin du jeu (les scripts provenant de CreationKit n'existe pas). Avez-vous décompressé le fichier Scripts.zip ?",
     confCheckError_fatalError:
-      "Vérification de la configuration. Une erreur inconnue est survenue. Si vous pensez que cela est un bug provenant de PCA, vérifiez les fichiers de logs et obtenez un support sur le forum PCA sur NexusMods. Vous pouvez avoir de l'aide sur la documentation.",
+      "Une erreur inconnue lors de la vérification de la configuration est survenue. Si vous pensez que cela est un bug provenant de PCA, vérifiez les fichiers de logs et obtenez un support sur le forum PCA sur NexusMods. Vous pouvez avoir de l'aide sur la documentation.",
     confCheckError_unknown: '$t(common.confCheckError_fatalError)',
     refresh: 'Rafraîchir',
     documentation: 'Documentation',
@@ -53,6 +53,7 @@ const fr: TranslationSchema = {
     copySuccess: 'Copié avec succès',
     copyError: 'Erreur lors de la copie: {{error}}',
     createGroup: 'Créer un groupe',
+    removeRecentScriptsError: 'Erreur lors de la suppression: {{error}}',
   },
   nav: {
     compilation: 'Compilation',
