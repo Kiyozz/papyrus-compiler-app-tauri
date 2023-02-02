@@ -6,32 +6,26 @@
  */
 
 import { open } from '@tauri-apps/api/shell'
-import { documentationUrl } from 'App/Constant/Documentation'
-import { useCurrentEnvironment } from 'App/Hook/UseCurrentEnvironment'
+import useDocumentationUrl from 'App/Hook/UseDocumentationUrl'
 import { useTelemetry } from 'App/Hook/UseTelemetry'
-import { isProduction } from 'App/Lib/Environment/IsProduction'
-import { E, isNone, TE, O, pipe } from 'App/Lib/FpTs'
+import { E, TE } from 'App/Lib/FpTs'
 
 const openUrl = (url: string) => () => open(url)
 
 export function useDocumentation() {
-  const currentEnvironment = useCurrentEnvironment({ from: 'useDocumentation' })
   const { send } = useTelemetry()
-  const url = pipe(
-    O.fromNullable(currentEnvironment.data),
-    O.map((env) => (isProduction(env) ? documentationUrl.production : documentationUrl.development)),
-  )
+  const documentationUrl = useDocumentationUrl()
 
   const openTheDocumentation = async (
     reason: 'enter' | 'click' | 'settings-app-bar',
   ): Promise<E.Either<Error, void>> => {
-    if (isNone(url)) {
+    if (!documentationUrl.data) {
       return E.left(new Error('Cannot open documentation, environment is not set'))
     }
 
     send('TelemetryEvent.documentationOpenFromNav', { reason })
     const res = await TE.tryCatch(
-      openUrl(url.value),
+      openUrl(documentationUrl.data),
       (errReason) => new Error(`Failed to open documentation, given error: ${errReason}`),
     )()
 
@@ -44,6 +38,5 @@ export function useDocumentation() {
 
   return {
     open: openTheDocumentation,
-    url,
   }
 }

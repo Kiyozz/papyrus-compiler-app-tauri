@@ -54,6 +54,11 @@ const fr: TranslationSchema = {
     copyError: 'Erreur lors de la copie: {{error}}',
     createGroup: 'Créer un groupe',
     removeRecentScriptsError: 'Erreur lors de la suppression: {{error}}',
+    youAreUsingLatestVersion: 'Vous disposez de la dernière version de PCA',
+    newVersionAvailable: 'Nouvelle version disponible ({{version}})',
+    changelogs: 'Notes de version <0>{{version}}</0>',
+    download: 'Télécharger',
+    openInBrowser: 'Ouvrir dans le navigateur',
   },
   nav: {
     compilation: 'Compilation',

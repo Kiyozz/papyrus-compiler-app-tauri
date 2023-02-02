@@ -9,7 +9,7 @@ import cx from 'classnames'
 import { forwardRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 
-interface ActiveLinkProps extends NavLinkProps {
+type ActiveLinkProps = NavLinkProps & {
   to: string
   className?: string
   activeClassName?: string

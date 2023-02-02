@@ -6,6 +6,6 @@
  */
 
 export const documentationUrl = {
-  production: 'https://documentation.pca-app.dev',
+  production: 'https://pca.kiyozz.com',
   development: 'http://localhost:3001',
 }

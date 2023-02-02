@@ -125,11 +125,27 @@ function MuiTheme({ children }: React.PropsWithChildren) {
             },
             boxShadow: 'none',
           },
+          sizeSmall: {
+            padding: '4px 6px',
+          },
         },
       },
       MuiMenuItem: {
         defaultProps: {
           disableRipple: true,
+        },
+      },
+      MuiAlert: {
+        styleOverrides: {
+          root: {
+            alignItems: 'center',
+          },
+          message: {},
+          action: {
+            display: 'flex',
+            alignItems: 'center',
+            paddingTop: 0,
+          },
         },
       },
     },

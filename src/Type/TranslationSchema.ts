@@ -47,6 +47,11 @@ export type TranslationSchema = {
     copyError: string
     createGroup: string
     removeRecentScriptsError: string
+    youAreUsingLatestVersion: string
+    newVersionAvailable: string
+    download: string
+    changelogs: string
+    openInBrowser: string
   }
   nav: {
     compilation: string

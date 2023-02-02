@@ -270,15 +270,9 @@ function RecentScriptsDialog({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleOnClose} tabIndex={4} color="inherit">
-            {t('common.cancel')}
+            {t('common.close')}
           </Button>
-          <Button
-            // disabled={selectedRecentFiles.size === 0}
-            disabled={A.isEmpty(scriptsToLoad)}
-            onClick={handleOnLoad}
-            tabIndex={3}
-            color="inherit"
-          >
+          <Button disabled={A.isEmpty(scriptsToLoad)} onClick={handleOnLoad} tabIndex={3} color="inherit">
             {t('dialog.recentFiles.actions.load')}
           </Button>
         </DialogActions>
