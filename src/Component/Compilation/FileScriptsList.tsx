@@ -14,6 +14,8 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
 import { CompilationIcon } from 'App/Component/CompilationIcon'
+import TutorialTooltip from 'App/Component/Tutorial/TutorialTooltip'
+import { useTutorial } from 'App/Hook/UseTutorial'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { isDone, isFileScriptCompilation, isRunning } from 'App/Lib/FileScriptCompilation'
 import cx from 'classnames'
@@ -35,57 +37,64 @@ function FileScriptsList<T extends FileScript>({
   className?: string
 }) {
   const { t } = useTranslation()
+  const { refs } = useTutorial()
 
   return (
-    <List className={cx('', className)} component="div">
-      {scripts.map((script) => {
-        return (
-          <ListItem
-            key={script.id}
-            component={Paper}
-            className="mt-0.5 [&:first-child]:mt-0"
-            secondaryAction={
-              <IconButton
-                aria-disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
-                aria-label={t('common.remove')}
-                color="error"
-                disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
-                onClick={() => onRemove(script)}
-              >
-                <DeleteOutlinedIcon />
-              </IconButton>
-            }
-            variant="outlined"
-          >
-            {isFileScriptCompilation(script) ? (
-              <ListItemIcon>
+    <TutorialTooltip
+      title={t('common.tutorial.compilation.compile')}
+      step="compilation-compile"
+      ref={refs['compilation-compile']}
+    >
+      <List className={cx('', className)} component="div">
+        {scripts.map((script) => {
+          return (
+            <ListItem
+              key={script.id}
+              component={Paper}
+              className="mt-0.5 [&:first-child]:mt-0"
+              secondaryAction={
                 <IconButton
-                  disabled={disabled || isRunning(script)}
-                  onClick={() => onStart?.(script)}
-                  className="text-primary-400"
-                  edge="end"
-                  size="small"
+                  aria-disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
+                  aria-label={t('common.remove')}
+                  color="error"
+                  disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
+                  onClick={() => onRemove(script)}
                 >
-                  <PlayCircleIcon />
+                  <DeleteOutlinedIcon />
                 </IconButton>
-              </ListItemIcon>
-            ) : null}
-            <ListItemText aria-label={script.name} primary={script.name} />
-            {isFileScriptCompilation(script) ? (
-              <ListItemIcon>
-                <IconButton
-                  onClick={() => onClickOnError?.(script)}
-                  size="small"
-                  disabled={isRunning(script) || isDone(script)}
-                >
-                  <CompilationIcon script={script} />
-                </IconButton>
-              </ListItemIcon>
-            ) : null}
-          </ListItem>
-        )
-      })}
-    </List>
+              }
+              variant="outlined"
+            >
+              {isFileScriptCompilation(script) ? (
+                <ListItemIcon>
+                  <IconButton
+                    disabled={disabled || isRunning(script)}
+                    onClick={() => onStart?.(script)}
+                    className="text-primary-400"
+                    edge="end"
+                    size="small"
+                  >
+                    <PlayCircleIcon />
+                  </IconButton>
+                </ListItemIcon>
+              ) : null}
+              <ListItemText aria-label={script.name} primary={script.name} />
+              {isFileScriptCompilation(script) ? (
+                <ListItemIcon>
+                  <IconButton
+                    onClick={() => onClickOnError?.(script)}
+                    size="small"
+                    disabled={isRunning(script) || isDone(script)}
+                  >
+                    <CompilationIcon script={script} />
+                  </IconButton>
+                </ListItemIcon>
+              ) : null}
+            </ListItem>
+          )
+        })}
+      </List>
+    </TutorialTooltip>
   )
 }
 

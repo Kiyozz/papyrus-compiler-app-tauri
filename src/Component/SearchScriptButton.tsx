@@ -62,4 +62,6 @@ const SearchScriptButton = forwardRef<
   )
 })
 
+SearchScriptButton.displayName = 'SearchScriptButton'
+
 export default SearchScriptButton

@@ -78,7 +78,6 @@ export const Mo2Decoder = pipe(
 export type Mo2 = D.TypeOf<typeof Mo2Decoder>
 
 export const TutorialDecoder = D.struct({
-  telemetry: D.boolean,
   settings: D.boolean,
 })
 export type Tutorial = D.TypeOf<typeof TutorialDecoder>

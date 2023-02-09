@@ -9,6 +9,9 @@ import { TranslationSchema } from 'App/Type/TranslationSchema'
 
 const fr: TranslationSchema = {
   common: {
+    back: 'Retour',
+    next: 'Suivant',
+    skip: 'Passer',
     close: 'Fermer',
     cancel: 'Annuler',
     clear: 'Vider',
@@ -59,6 +62,32 @@ const fr: TranslationSchema = {
     changelogs: 'Notes de version <0>{{version}}</0>',
     download: 'Télécharger',
     openInBrowser: 'Ouvrir dans le navigateur',
+    tutorial: {
+      welcome: {
+        title: 'Configurer PCA',
+        firstStartText:
+          "C'est votre première utilisation de PCA. Nous vous recommandons de suivre le tutoriel pour vous familiariser avec l'application.",
+        documentationText:
+          "Assurez-vous d'avoir tous les prérequis. Vous pouvez consulter la <0>documentation</0> pour plus d'informations.",
+        needHelpText: "J'ai besoin d'aide",
+      },
+      settings: {
+        game: 'Enregistrez les informations de votre jeu',
+        compiler: "Enregistrez le chemin vers le compilateur Papyrus. Disponible après l'installation de Creation Kit",
+        concurrent: 'Enregistrez le nombre de scripts compilés en simultané.',
+        mo2: 'Enregistrez vos informations MO2. Ignorez cette option, si vous utilisez PCA à travers MO2',
+      },
+      compilation: {
+        addScripts: 'Ajouter des scripts',
+        compile:
+          "Liste des scripts à compiler. Vous pourrez créer des groupes afin d'y ajouter un ensemble de scripts rapidement.",
+        createGroupFromScriptsList: 'Créer un groupe depuis la liste des scripts actuelle',
+      },
+      groups: {
+        whatAreGroups: "Qu'est-ce qu'un groupe ?",
+      },
+      documentation: "Toutefois, vous pouvez consulter la documentation pour plus d'informations.",
+    },
   },
   nav: {
     compilation: 'Compilation',

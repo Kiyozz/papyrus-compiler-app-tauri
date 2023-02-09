@@ -6,6 +6,7 @@
  */
 
 import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query'
+import { useTutorial } from 'App/Hook/UseTutorial'
 import { checkConf, CheckConfError } from 'App/Lib/Conf/CheckConf'
 import { CheckConfErrorTypes, isCheckConfError } from 'App/Lib/Conf/CheckConfTypes'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
@@ -34,6 +35,8 @@ export const isCheckConfQueryError = <T extends CheckConfErrorTypes>(
 }
 
 export const useCheckConf = (conf: O.Option<Conf>, options: UseQueryOptions<O.Option<CheckConfError>> = {}) => {
+  const { step } = useTutorial()
+
   return useQuery({
     queryKey: ['conf-check', conf],
     queryFn: async () => {
@@ -46,7 +49,7 @@ export const useCheckConf = (conf: O.Option<Conf>, options: UseQueryOptions<O.Op
 
       return O.none
     },
-    enabled: O.isSome(conf),
+    enabled: O.isSome(conf) && O.isSome(step) && step.value === 'end',
     retry: false,
     cacheTime: 0,
     staleTime: 60 * 1000 * 5, // 5 minutes

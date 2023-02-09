@@ -21,12 +21,14 @@ import GroupChooseButton from 'App/Component/GroupChooseButton'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
+import TutorialTooltip from 'App/Component/Tutorial/TutorialTooltip'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { useDialogs } from 'App/Hook/UseDialogs'
+import { useTutorial } from 'App/Hook/UseTutorial'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
@@ -34,7 +36,7 @@ import { A, flow, O, pipe, R } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
 import { toExecutable } from 'App/Lib/ToExecutable'
-import { useState } from 'react'
+import { RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function CompilationPage() {
@@ -47,6 +49,7 @@ function CompilationPage() {
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
   const groups = useGroups()
   const conf = useConf()
+  const { refs } = useTutorial()
   const checkConf = useCheckConf(O.fromNullable(conf.data))
 
   const isAllScriptsRunning = scripts.every(isRunning)
@@ -71,13 +74,16 @@ function CompilationPage() {
         >
           {t('common.recentFiles')}
         </Button>
-        <SearchScriptButton
-          className="px-3 py-2"
-          color="inherit"
-          onFileSelect={flow(fileScriptsToFileScriptCompilation, addScripts)}
-        >
-          {t('common.searchScripts')}
-        </SearchScriptButton>
+        <TutorialTooltip title={t('common.tutorial.compilation.addScripts')} step="compilation-add-scripts">
+          <SearchScriptButton
+            ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
+            className="px-3 py-2"
+            color="inherit"
+            onFileSelect={flow(fileScriptsToFileScriptCompilation, addScripts)}
+          >
+            {t('common.searchScripts')}
+          </SearchScriptButton>
+        </TutorialTooltip>
         {isQueryNonNullable(groups) && R.size(groups.data) > 0 ? (
           <GroupChooseButton
             className="px-3 py-2"
@@ -123,7 +129,14 @@ function CompilationPage() {
                 {t('common.clear')}
               </Button>
 
-              <CreateGroupFromScriptsButton className="ml-auto" scripts={scripts} />
+              <TutorialTooltip
+                title={t('common.tutorial.compilation.createGroupFromScriptsList')}
+                step="compilation-create-group-from-scripts-list"
+                placement="left-start"
+                ref={refs['compilation-create-group-from-scripts-list']}
+              >
+                <CreateGroupFromScriptsButton className="ml-auto" scripts={scripts} />
+              </TutorialTooltip>
             </div>
             <FileScriptsList<FileScriptCompilation>
               scripts={scripts}

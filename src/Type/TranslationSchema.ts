@@ -7,6 +7,9 @@
 
 export type TranslationSchema = {
   common: {
+    back: string
+    next: string
+    skip: string
     close: string
     cancel: string
     clear: string
@@ -52,6 +55,29 @@ export type TranslationSchema = {
     download: string
     changelogs: string
     openInBrowser: string
+    tutorial: {
+      welcome: {
+        title: string
+        firstStartText: string
+        documentationText: string
+        needHelpText: string
+      }
+      settings: {
+        game: string
+        compiler: string
+        concurrent: string
+        mo2: string
+      }
+      compilation: {
+        addScripts: string
+        compile: string
+        createGroupFromScriptsList: string
+      }
+      groups: {
+        whatAreGroups: string
+      }
+      documentation: string
+    }
   }
   nav: {
     compilation: string

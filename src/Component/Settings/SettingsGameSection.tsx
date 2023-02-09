@@ -14,7 +14,9 @@ import RadioGroup from '@mui/material/RadioGroup'
 import Tooltip from '@mui/material/Tooltip'
 import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
+import TutorialTooltip from 'App/Component/Tutorial/TutorialTooltip'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
+import { useTutorial } from 'App/Hook/UseTutorial'
 import { GameType } from 'App/Lib/Conf/ConfDecoder'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
@@ -28,6 +30,7 @@ function SettingsGameSection() {
   const conf = useConf()
   const updateConf = useUpdateConf()
   const checkConf = useCheckConf(O.fromNullable(conf.data))
+  const { refs } = useTutorial()
 
   const games: { value: GameType; label: string }[] = [
     {
@@ -59,35 +62,42 @@ function SettingsGameSection() {
   const isGameExeError = isCheckConfQueryError(checkConf, some(['gameExeDoesNotExist']))
 
   return (
-    <SettingsSection id="game-section" title={t('page.settings.sections.game.title')} gutterTop={false}>
-      <FormControl component="fieldset" fullWidth error={isGameExeError}>
-        <RadioGroup
-          classes={{ row: 'justify-between' }}
-          row
-          onChange={(evt, value) => {
-            updateConf.mutate({
-              game: {
-                type: value as GameType,
-              },
-            })
-          }}
-          value={gameType}
-        >
-          {games.map((game) => {
-            return (
-              <FormControlLabel
-                key={game.value}
-                classes={{
-                  label: gameType === game.value && isGameExeError ? 'text-red-400' : '',
-                }}
-                control={<Radio />}
-                label={game.label}
-                value={game.value}
-              />
-            )
-          })}
-        </RadioGroup>
-      </FormControl>
+    <SettingsSection id="game-section" sectionTitle={t('page.settings.sections.game.title')} gutterTop={false}>
+      <TutorialTooltip
+        placement="top-start"
+        title={t('common.tutorial.settings.game')}
+        step="settings-game"
+        ref={refs['settings-game']}
+      >
+        <FormControl component="fieldset" fullWidth error={isGameExeError}>
+          <RadioGroup
+            classes={{ row: 'justify-between' }}
+            row
+            onChange={(evt, value) => {
+              updateConf.mutate({
+                game: {
+                  type: value as GameType,
+                },
+              })
+            }}
+            value={gameType}
+          >
+            {games.map((game) => {
+              return (
+                <FormControlLabel
+                  key={game.value}
+                  classes={{
+                    label: gameType === game.value && isGameExeError ? 'text-red-400' : '',
+                  }}
+                  control={<Radio />}
+                  label={game.label}
+                  value={game.value}
+                />
+              )
+            })}
+          </RadioGroup>
+        </FormControl>
+      </TutorialTooltip>
 
       <div className="mt-3" id="settings-game-game-folder">
         <TextFieldDialog
@@ -118,29 +128,36 @@ function SettingsGameSection() {
       </div>
 
       <div className="mt-3" id="settings-game-compiler">
-        <TextFieldDialog
-          label={
-            <>
-              {t('page.settings.sections.game.compiler.label')}
+        <TutorialTooltip
+          title={t('common.tutorial.settings.compiler')}
+          step="settings-compiler"
+          ref={refs['settings-compiler']}
+        >
+          <TextFieldDialog
+            ref={refs['settings-compiler']}
+            label={
+              <>
+                {t('page.settings.sections.game.compiler.label')}
 
-              <Tooltip title={t('page.settings.sections.game.compiler.tooltip')}>
-                <HelpIcon className="ml-1" />
-              </Tooltip>
-            </>
-          }
-          defaultValue={gameCompilerPath}
-          type="file"
-          onChange={(newValue) => {
-            // update the compiler path in config
-            updateConf.mutate({
-              compilation: {
-                compilerPath: newValue,
-              },
-            })
-          }}
-          placeholder={t('common.select.file')}
-          error={isCheckConfQueryError(checkConf, some(['compilerPathDoesNotExist']))}
-        />
+                <Tooltip title={t('page.settings.sections.game.compiler.tooltip')}>
+                  <HelpIcon className="ml-1" />
+                </Tooltip>
+              </>
+            }
+            defaultValue={gameCompilerPath}
+            type="file"
+            onChange={(newValue) => {
+              // update the compiler path in config
+              updateConf.mutate({
+                compilation: {
+                  compilerPath: newValue,
+                },
+              })
+            }}
+            placeholder={t('common.select.file')}
+            error={isCheckConfQueryError(checkConf, some(['compilerPathDoesNotExist']))}
+          />
+        </TutorialTooltip>
       </div>
       {isCheckConfQueryError(
         checkConf,

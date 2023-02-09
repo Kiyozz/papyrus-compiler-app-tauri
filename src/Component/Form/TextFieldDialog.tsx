@@ -12,26 +12,21 @@ import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput, { OutlinedInputProps } from '@mui/material/OutlinedInput'
-import React, { ReactNode, useState } from 'react'
+import React, { forwardRef, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import FolderIcon from '@mui/icons-material/Folder'
 
-function TextFieldDialog({
-  label,
-  outlinedInputProps,
-  onChange,
-  defaultValue,
-  type,
-  placeholder,
-  ...props
-}: Omit<FormControlProps, 'onChange'> & {
-  label: ReactNode
-  defaultValue: string
-  outlinedInputProps?: OutlinedInputProps
-  onChange?: (newValue: string) => void
-  type: 'folder' | 'file'
-}) {
+const TextFieldDialog = forwardRef<
+  HTMLDivElement,
+  Omit<FormControlProps, 'onChange' | 'ref'> & {
+    label: ReactNode
+    defaultValue: string
+    outlinedInputProps?: OutlinedInputProps
+    onChange?: (newValue: string) => void
+    type: 'folder' | 'file'
+  }
+>(({ label, outlinedInputProps, onChange, defaultValue, type, placeholder, ...props }, ref) => {
   const { t } = useTranslation()
   const [value, setValue] = useState(defaultValue)
   const [isHover, setHover] = useState(false)
@@ -58,7 +53,7 @@ function TextFieldDialog({
   }
 
   return (
-    <FormControl fullWidth variant="outlined" {...props}>
+    <FormControl fullWidth variant="outlined" {...props} ref={ref}>
       <InputLabel className="flex items-center" htmlFor={outlinedInputProps?.id}>
         {label}
       </InputLabel>
@@ -93,6 +88,8 @@ function TextFieldDialog({
       />
     </FormControl>
   )
-}
+})
+
+TextFieldDialog.displayName = 'TextFieldDialog'
 
 export default TextFieldDialog

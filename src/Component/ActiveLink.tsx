@@ -32,4 +32,6 @@ const ActiveLink = forwardRef<HTMLAnchorElement, ActiveLinkProps>(function Activ
   )
 })
 
+ActiveLink.displayName = 'ActiveLink'
+
 export default ActiveLink

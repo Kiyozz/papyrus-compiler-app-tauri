@@ -35,6 +35,7 @@ function MuiTheme({ children }: React.PropsWithChildren) {
       appBar: 20,
       drawer: 20,
       modal: 40,
+      tooltip: 60,
     },
     components: {
       MuiAppBar: {
@@ -46,16 +47,12 @@ function MuiTheme({ children }: React.PropsWithChildren) {
       MuiBackdrop: {
         styleOverrides: {
           root: {
-            // top: platform === 'windows' ? 32 : 34,
-            // top: 34,
+            zIndex: 50,
           },
         },
       },
       MuiDialog: {
         styleOverrides: {
-          root: {
-            // top: 32,
-          },
           scrollBody: {
             '& .MuiDialog-paper': {
               // Intentional, overlay is chromium specific, and no standard

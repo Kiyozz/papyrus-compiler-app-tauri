@@ -16,14 +16,33 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import AppDrawerLink from 'App/Component/Drawer/AppDrawerLink'
+import { TutorialTooltipProps } from 'App/Component/Tutorial/TutorialTooltip'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
+import { useTutorial } from 'App/Hook/UseTutorial'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import cx from 'classnames'
+import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+
+type DrawerLink = {
+  id: string
+  label: string
+  icon: ReactNode
+  tutorial?: Omit<TutorialTooltipProps, 'children'>
+} & (
+  | {
+      path: string
+      onClick?: never
+    }
+  | {
+      path?: never
+      onClick: () => void
+    }
+)
 
 function AppDrawer() {
   const { t } = useTranslation()
@@ -35,6 +54,7 @@ function AppDrawer() {
   const conf = useConf()
   const updateConf = useUpdateConf()
   const { hasAllSuccess, hasAnyError } = useCompilationLogs()
+  const { refs } = useTutorial()
 
   if (!isQueryNonNullable(conf)) return <>Waiting...</>
 
@@ -57,7 +77,7 @@ function AppDrawer() {
       icon: <SettingsIcon />,
       path: '/settings',
     },
-  ]
+  ] satisfies DrawerLink[]
 
   const endLinks = [
     {
@@ -85,6 +105,12 @@ function AppDrawer() {
           void open('click')
         }
       },
+      tutorial: {
+        ref: refs.documentation,
+        placement: 'right-end',
+        step: 'documentation',
+        title: t('common.tutorial.documentation'),
+      },
     },
     {
       id: 'drawer-expand',
@@ -98,7 +124,7 @@ function AppDrawer() {
         })
       },
     },
-  ]
+  ] satisfies DrawerLink[]
 
   return (
     <Drawer
@@ -118,14 +144,14 @@ function AppDrawer() {
       variant="permanent"
     >
       <List>
-        {links.map(({ label, id, path, icon }) => {
-          return <AppDrawerLink key={id} icon={icon} id={id} label={label} path={path} />
-        })}
+        {links.map(({ label, id, path, icon }) => (
+          <AppDrawerLink key={id} icon={icon} id={id} label={label} path={path} />
+        ))}
       </List>
       <List className="mt-auto">
-        {endLinks.map(({ icon, id, label, onClick }) => {
-          return <AppDrawerLink key={id} icon={icon} id={id} label={label} onClick={onClick} />
-        })}
+        {endLinks.map(({ icon, id, label, onClick, tutorial }) => (
+          <AppDrawerLink key={id} icon={icon} id={id} label={label} onClick={onClick} tutorial={tutorial} />
+        ))}
       </List>
     </Drawer>
   )
