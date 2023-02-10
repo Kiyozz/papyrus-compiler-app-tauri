@@ -18,8 +18,6 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import { O } from 'App/Lib/FpTs'
 
-// TODO: group menu remove/edit
-
 const GroupsListItemSecondaryAction = ({
   groupId,
   className,

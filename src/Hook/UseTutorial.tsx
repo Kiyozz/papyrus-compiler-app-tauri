@@ -5,6 +5,7 @@
  *
  */
 
+import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
 import { isNone, none, O, some } from 'App/Lib/FpTs'
 import { createContext, PropsWithChildren, useCallback, useContext, useState, RefObject, useRef, useMemo } from 'react'
@@ -47,6 +48,7 @@ const TutorialProvider = ({ children, conf }: PropsWithChildren<{ conf: Conf }>)
   const compileRef = useRef<HTMLDivElement>(null)
   const createGroupFromScriptsListRef = useRef<HTMLDivElement>(null)
   const documentationRef = useRef<HTMLDivElement>(null)
+  const updateConf = useUpdateConf()
 
   const refs = useMemo(
     (): TutorialRefs => ({
@@ -88,6 +90,11 @@ const TutorialProvider = ({ children, conf }: PropsWithChildren<{ conf: Conf }>)
 
   const skip = useCallback(() => {
     changeStep('end')
+    updateConf.mutate({
+      tutorial: {
+        settings: false,
+      },
+    })
   }, [changeStep])
 
   const total = useMemo(() => {

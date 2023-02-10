@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 
 const TutorialDocumentation = () => {
   const navigate = useNavigate()
-  const { changeStep, scrollInto } = useTutorial()
+  const { changeStep, scrollInto, skip } = useTutorial()
   const { clear } = useCompilationScripts()
 
   return (
@@ -23,9 +23,9 @@ const TutorialDocumentation = () => {
         scrollInto('compilation-create-group-from-scripts-list')
       }}
       onNext={() => {
-        changeStep('end')
-        clear()
         navigate('/settings')
+        skip()
+        clear()
       }}
     />
   )

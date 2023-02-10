@@ -28,7 +28,7 @@ const AnchorWithOpenInBrowser = ({ children, ...props }: AnchorExternalProps) =>
 }
 
 const TutorialWelcome = () => {
-  const { changeStep } = useTutorial()
+  const { changeStep, skip } = useTutorial()
   const [waiting, setWaiting] = useState(true)
   const documentationUrl = useDocumentationUrl()
   const { t } = useTranslation()
@@ -66,13 +66,7 @@ const TutorialWelcome = () => {
             >
               {t('common.tutorial.welcome.needHelpText')}
             </Button>
-            <Button
-              disabled={waiting}
-              color="inherit"
-              onClick={() => {
-                changeStep('end')
-              }}
-            >
+            <Button disabled={waiting} color="inherit" onClick={skip}>
               {t('common.close')}
             </Button>
           </div>
