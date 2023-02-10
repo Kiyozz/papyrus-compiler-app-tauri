@@ -10,7 +10,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ActiveLink from 'App/Component/ActiveLink'
-import TutorialTooltip, { TutorialTooltipProps } from 'App/Component/Tutorial/TutorialTooltip'
+import TutorialTooltip, { TutorialTooltipProps } from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { forwardRef, ReactNode } from 'react'
 
 const AppDrawerLink = forwardRef<

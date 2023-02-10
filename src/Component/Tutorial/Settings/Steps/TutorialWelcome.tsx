@@ -10,9 +10,9 @@ import Button from '@mui/material/Button'
 import Fade from '@mui/material/Fade'
 import Typography from '@mui/material/Typography'
 import AnchorExternal, { AnchorExternalProps } from 'App/Component/AnchorExternal'
-import TutorialContent from 'App/Component/Tutorial/TutorialContent'
+import TutorialContent from 'App/Component/Tutorial/Settings/TutorialContent'
 import useDocumentationUrl from 'App/Hook/UseDocumentationUrl'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useState } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -28,7 +28,7 @@ const AnchorWithOpenInBrowser = ({ children, ...props }: AnchorExternalProps) =>
 }
 
 const TutorialWelcome = () => {
-  const { changeStep, skip } = useTutorial()
+  const { changeStep, skip } = useSettingsTutorial()
   const [waiting, setWaiting] = useState(true)
   const documentationUrl = useDocumentationUrl()
   const { t } = useTranslation()
@@ -43,14 +43,14 @@ const TutorialWelcome = () => {
       <Fade in={!documentationUrl.isLoading}>
         <div className="container mx-auto flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center">
           <Typography variant="h4" gutterBottom className="font-normal">
-            {t('common.tutorial.welcome.title')}
+            {t('common.settingsTutorial.welcome.title')}
           </Typography>
           <Typography gutterBottom className="font-normal">
-            {t('common.tutorial.welcome.firstStartText')}
+            {t('common.settingsTutorial.welcome.firstStartText')}
           </Typography>
           <Fade in={documentationUrl.isSuccess}>
             <Typography className="font-bold">
-              <Trans i18nKey="common.tutorial.welcome.documentationText">
+              <Trans i18nKey="common.settingsTutorial.welcome.documentationText">
                 <AnchorWithOpenInBrowser href={documentationUrl?.data ?? ''} />
               </Trans>
             </Typography>
@@ -64,7 +64,7 @@ const TutorialWelcome = () => {
                 changeStep('settings-game')
               }}
             >
-              {t('common.tutorial.welcome.needHelpText')}
+              {t('common.settingsTutorial.welcome.needHelpText')}
             </Button>
             <Button disabled={waiting} color="inherit" onClick={skip}>
               {t('common.close')}

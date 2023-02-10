@@ -5,14 +5,14 @@
  *
  */
 
-import TutorialBackdrop from 'App/Component/Tutorial/TutorialBackdrop'
+import TutorialBackdrop from 'App/Component/Tutorial/Settings/TutorialBackdrop'
 import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useNavigate } from 'react-router-dom'
 
 const TutorialDocumentation = () => {
   const navigate = useNavigate()
-  const { changeStep, scrollInto, skip } = useTutorial()
+  const { changeStep, scrollInto, skip } = useSettingsTutorial()
   const { clear } = useCompilationScripts()
 
   return (

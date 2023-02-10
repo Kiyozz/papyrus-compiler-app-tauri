@@ -5,13 +5,13 @@
  *
  */
 
-import TutorialBackdrop from 'App/Component/Tutorial/TutorialBackdrop'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import TutorialBackdrop from 'App/Component/Tutorial/Settings/TutorialBackdrop'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useNavigate } from 'react-router-dom'
 
 const TutorialSettingsMo2 = () => {
   const navigate = useNavigate()
-  const { changeStep, scrollInto } = useTutorial()
+  const { changeStep, scrollInto } = useSettingsTutorial()
 
   return (
     <TutorialBackdrop

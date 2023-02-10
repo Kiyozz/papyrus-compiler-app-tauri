@@ -26,6 +26,7 @@ const fr: TranslationSchema = {
     noScripts: 'Aucun script',
     recentFiles: 'Fichiers récents',
     group: 'Groupe',
+    activate: 'Activer',
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',
@@ -62,7 +63,7 @@ const fr: TranslationSchema = {
     changelogs: 'Notes de version <0>{{version}}</0>',
     download: 'Télécharger',
     openInBrowser: 'Ouvrir dans le navigateur',
-    tutorial: {
+    settingsTutorial: {
       welcome: {
         title: 'Configurer PCA',
         firstStartText:
@@ -88,6 +89,12 @@ const fr: TranslationSchema = {
       },
       documentation: "Toutefois, vous pouvez consulter la documentation pour plus d'informations.",
     },
+    telemetry: {
+      title: "Partager l'analyse",
+      text: "Aidez PCA a améliorer l'application en envoyant automatiquement les données anonymes de diagnostic et d'utilisation.",
+    },
+    refuse: 'Refuser',
+    accept: 'Accepter',
   },
   nav: {
     compilation: 'Compilation',
@@ -169,14 +176,13 @@ const fr: TranslationSchema = {
         compilation: {
           title: 'Compilation',
           concurrentScripts: {
-            label: 'Nombre de scripts compilés simultanéments',
+            label: 'Nombre de scripts compilés simultanément',
             helperText: 'Réduisez si vous rencontrez des blocages quand vous lancez la compilation',
           },
         },
         mo2: {
           title: 'Mod Organizer 2',
           use: {
-            label: 'Activer',
             helperText:
               "Activer l'intégration MO2 uniquement si PCA n'est pas lancé à partir de MO2. Plus d'informations sur la documentation de PCA.",
           },
@@ -190,12 +196,6 @@ const fr: TranslationSchema = {
             system: 'Système',
             light: 'Clair',
             dark: 'Sombre',
-          },
-        },
-        telemetry: {
-          title: "Données d'utilisation",
-          use: {
-            label: 'Activer',
           },
         },
       },

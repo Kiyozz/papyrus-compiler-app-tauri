@@ -10,11 +10,11 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
-import TutorialTooltip from 'App/Component/Tutorial/TutorialTooltip'
+import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { O, some } from 'App/Lib/FpTs'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { useTranslation } from 'react-i18next'
@@ -25,7 +25,7 @@ function SettingsMo2Section() {
   const conf = useConf()
   const updateConf = useUpdateConf()
   const checkConf = useCheckConf(O.fromNullable(conf.data))
-  const { refs } = useTutorial()
+  const { refs } = useSettingsTutorial()
 
   if (conf.isLoading) return <>Loading...</>
   if (!conf.isSuccess) return <Navigate to="/" />
@@ -39,7 +39,7 @@ function SettingsMo2Section() {
 
   return (
     <SettingsSection sectionTitle={t('page.settings.sections.mo2.title')} id="mo2-section" ref={refs['settings-mo2']}>
-      <TutorialTooltip title={t('common.tutorial.settings.mo2')} step="settings-mo2" placement="top-end">
+      <TutorialTooltip title={t('common.settingsTutorial.settings.mo2')} step="settings-mo2" placement="top-end">
         <FormControlLabel
           control={
             <Checkbox
@@ -60,7 +60,7 @@ function SettingsMo2Section() {
               }}
             />
           }
-          label={<span className="dark:text-white">{t('page.settings.sections.mo2.use.label')}</span>}
+          label={<span className="dark:text-white">{t('common.activate')}</span>}
         />
       </TutorialTooltip>
 

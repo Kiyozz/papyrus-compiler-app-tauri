@@ -8,8 +8,8 @@
 import CloseIcon from '@mui/icons-material/Close'
 import Backdrop from '@mui/material/Backdrop'
 import Button from '@mui/material/Button'
-import TutorialArrows from 'App/Component/Tutorial/TutorialArrows'
-import { TutorialRefs, useTutorial } from 'App/Hook/UseTutorial'
+import TutorialArrows from 'App/Component/Tutorial/Settings/TutorialArrows'
+import { TutorialRefs, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { isSome } from 'App/Lib/FpTs'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,7 +23,7 @@ const TutorialBackdrop = ({
   onNext: () => void
   tutorialRef: keyof TutorialRefs
 }) => {
-  const { scrollInto, skip, step } = useTutorial()
+  const { scrollInto, skip, step } = useSettingsTutorial()
   const { t } = useTranslation()
 
   useEffect(() => {

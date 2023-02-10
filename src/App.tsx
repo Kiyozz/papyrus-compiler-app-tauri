@@ -8,17 +8,18 @@
 import Fade from '@mui/material/Fade'
 import CompilationLogsDialog from 'App/Component/Dialog/CompilationLogsDialog'
 import OpenDocumentationDialog from 'App/Component/Dialog/OpenDocumentationDialog'
+import TelemetryDialog from 'App/Component/Dialog/TelemetryDialog'
 import AppDrawer from 'App/Component/Drawer/AppDrawer'
 import LatestVersionSnackbar from 'App/Component/Snackbar/LatestVersionSnackbar'
-import Tutorial from 'App/Component/Tutorial'
+import SettingsTutorial from 'App/Component/SettingsTutorial'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useRootTheme } from 'App/Hook/UseRootTheme'
-import TutorialProvider from 'App/Hook/UseTutorial'
+import SettingsTutorialProvider from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { Outlet } from 'react-router-dom'
 
 function App() {
   useRootTheme()
-  const { data: conf, isLoading, isSuccess } = useConf()
+  const { isLoading } = useConf()
 
   return (
     <>
@@ -27,17 +28,16 @@ function App() {
       </Fade>
       <Fade in={!isLoading}>
         <div>
-          {isSuccess && conf && (
-            <TutorialProvider conf={conf}>
-              <AppDrawer />
-              <CompilationLogsDialog />
-              <OpenDocumentationDialog />
-              <LatestVersionSnackbar />
-              <Tutorial />
+          <SettingsTutorialProvider>
+            <AppDrawer />
+            <CompilationLogsDialog />
+            <OpenDocumentationDialog />
+            <LatestVersionSnackbar />
+            <SettingsTutorial />
+            <TelemetryDialog />
 
-              <Outlet />
-            </TutorialProvider>
-          )}
+            <Outlet />
+          </SettingsTutorialProvider>
         </div>
       </Fade>
     </>

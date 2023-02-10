@@ -14,9 +14,9 @@ import RadioGroup from '@mui/material/RadioGroup'
 import Tooltip from '@mui/material/Tooltip'
 import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
-import TutorialTooltip from 'App/Component/Tutorial/TutorialTooltip'
+import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { GameType } from 'App/Lib/Conf/ConfDecoder'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
@@ -30,7 +30,7 @@ function SettingsGameSection() {
   const conf = useConf()
   const updateConf = useUpdateConf()
   const checkConf = useCheckConf(O.fromNullable(conf.data))
-  const { refs } = useTutorial()
+  const { refs } = useSettingsTutorial()
 
   const games: { value: GameType; label: string }[] = [
     {
@@ -58,14 +58,13 @@ function SettingsGameSection() {
   const gameType = conf.data.game.type
   const gamePath = conf.data.game.path
   const gameCompilerPath = conf.data.compilation.compilerPath
-
   const isGameExeError = isCheckConfQueryError(checkConf, some(['gameExeDoesNotExist']))
 
   return (
     <SettingsSection id="game-section" sectionTitle={t('page.settings.sections.game.title')} gutterTop={false}>
       <TutorialTooltip
         placement="top-start"
-        title={t('common.tutorial.settings.game')}
+        title={t('common.settingsTutorial.settings.game')}
         step="settings-game"
         ref={refs['settings-game']}
       >
@@ -77,6 +76,9 @@ function SettingsGameSection() {
               updateConf.mutate({
                 game: {
                   type: value as GameType,
+                },
+                compilation: {
+                  flag: (value as GameType) === 'Fallout 4' ? 'Institute_Papyrus_Flags.flg' : 'TESV_Papyrus_Flags.flg',
                 },
               })
             }}
@@ -129,7 +131,7 @@ function SettingsGameSection() {
 
       <div className="mt-3" id="settings-game-compiler">
         <TutorialTooltip
-          title={t('common.tutorial.settings.compiler')}
+          title={t('common.settingsTutorial.settings.compiler')}
           step="settings-compiler"
           ref={refs['settings-compiler']}
         >

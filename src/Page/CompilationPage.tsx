@@ -21,14 +21,14 @@ import GroupChooseButton from 'App/Component/GroupChooseButton'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
-import TutorialTooltip from 'App/Component/Tutorial/TutorialTooltip'
+import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { useDialogs } from 'App/Hook/UseDialogs'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
@@ -49,7 +49,7 @@ function CompilationPage() {
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
   const groups = useGroups()
   const conf = useConf()
-  const { refs } = useTutorial()
+  const { refs } = useSettingsTutorial()
   const checkConf = useCheckConf(O.fromNullable(conf.data))
 
   const isAllScriptsRunning = scripts.every(isRunning)
@@ -74,7 +74,7 @@ function CompilationPage() {
         >
           {t('common.recentFiles')}
         </Button>
-        <TutorialTooltip title={t('common.tutorial.compilation.addScripts')} step="compilation-add-scripts">
+        <TutorialTooltip title={t('common.settingsTutorial.compilation.addScripts')} step="compilation-add-scripts">
           <SearchScriptButton
             ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
             className="px-3 py-2"
@@ -130,7 +130,7 @@ function CompilationPage() {
               </Button>
 
               <TutorialTooltip
-                title={t('common.tutorial.compilation.createGroupFromScriptsList')}
+                title={t('common.settingsTutorial.compilation.createGroupFromScriptsList')}
                 step="compilation-create-group-from-scripts-list"
                 placement="left-start"
                 ref={refs['compilation-create-group-from-scripts-list']}

@@ -79,6 +79,7 @@ export type Mo2 = D.TypeOf<typeof Mo2Decoder>
 
 export const TutorialDecoder = D.struct({
   settings: D.boolean,
+  telemetry: D.boolean,
 })
 export type Tutorial = D.TypeOf<typeof TutorialDecoder>
 

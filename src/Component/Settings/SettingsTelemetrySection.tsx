@@ -5,8 +5,10 @@
  *
  */
 
+import HelpIcon from '@mui/icons-material/Help'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Tooltip from '@mui/material/Tooltip'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
@@ -24,7 +26,17 @@ function SettingsTelemetrySection() {
   const telemetryUse = conf.data.telemetry.use
 
   return (
-    <SettingsSection id="telemetry-section" sectionTitle={t('page.settings.sections.telemetry.title')}>
+    <SettingsSection
+      id="telemetry-section"
+      sectionTitle={
+        <div className="flex items-center gap-2">
+          <span>{t('common.telemetry.title')}</span>
+          <Tooltip title={t('common.telemetry.text')} placement="top">
+            <HelpIcon />
+          </Tooltip>
+        </div>
+      }
+    >
       <FormControlLabel
         control={
           <Checkbox
@@ -41,7 +53,7 @@ function SettingsTelemetrySection() {
             name="telemetry"
           />
         }
-        label={<span className="dark:text-white">{t('page.settings.sections.telemetry.use.label')}</span>}
+        label={<span className="dark:text-white">{t('common.activate')}</span>}
       />
     </SettingsSection>
   )

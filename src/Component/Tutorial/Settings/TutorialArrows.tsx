@@ -9,11 +9,11 @@ import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { isNone } from 'App/Lib/FpTs'
 
 const TutorialArrows = ({ onBack, onNext }: { onBack: () => void; onNext: () => void }) => {
-  const { total, step } = useTutorial()
+  const { total, step } = useSettingsTutorial()
 
   return (
     <>

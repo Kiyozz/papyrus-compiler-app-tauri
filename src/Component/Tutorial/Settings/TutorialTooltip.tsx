@@ -6,7 +6,7 @@
  */
 
 import Tooltip, { TooltipProps } from '@mui/material/Tooltip'
-import { TutorialStep, useTutorial } from 'App/Hook/UseTutorial'
+import { TutorialStep, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { isSome } from 'App/Lib/FpTs'
 import { ComponentProps, forwardRef } from 'react'
 
@@ -14,7 +14,7 @@ export type TutorialTooltipProps = ComponentProps<typeof TutorialTooltip>
 
 const TutorialTooltip = forwardRef<HTMLDivElement, Omit<TooltipProps, 'open' | 'ref'> & { step: TutorialStep }>(
   ({ classes, children, step, ...props }, ref) => {
-    const { step: currentStep } = useTutorial()
+    const { step: currentStep } = useSettingsTutorial()
 
     return (
       <Tooltip

@@ -8,10 +8,10 @@
 import TextField from '@mui/material/TextField'
 import is from '@sindresorhus/is'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
-import TutorialTooltip from 'App/Component/Tutorial/TutorialTooltip'
+import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { O, pipe } from 'App/Lib/FpTs'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
@@ -29,7 +29,7 @@ function SettingsCompilationSection() {
   const { t } = useTranslation()
   const conf = useConf()
   const updateConf = useUpdateConf()
-  const { refs } = useTutorial()
+  const { refs } = useSettingsTutorial()
 
   if (conf.isLoading) return <>Loading...</>
   if (!conf.isSuccess) return <Navigate to="/" />
@@ -39,7 +39,7 @@ function SettingsCompilationSection() {
   return (
     <SettingsSection id="compilation-section" sectionTitle={t('page.settings.sections.compilation.title')}>
       <TutorialTooltip
-        title={t('common.tutorial.settings.concurrent')}
+        title={t('common.settingsTutorial.settings.concurrent')}
         step="settings-concurrent"
         placement="top-start"
       >

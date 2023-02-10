@@ -16,13 +16,13 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import AppDrawerLink from 'App/Component/Drawer/AppDrawerLink'
-import { TutorialTooltipProps } from 'App/Component/Tutorial/TutorialTooltip'
+import { TutorialTooltipProps } from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import cx from 'classnames'
 import { ReactNode } from 'react'
@@ -54,7 +54,7 @@ function AppDrawer() {
   const conf = useConf()
   const updateConf = useUpdateConf()
   const { hasAllSuccess, hasAnyError } = useCompilationLogs()
-  const { refs } = useTutorial()
+  const { refs } = useSettingsTutorial()
 
   if (!isQueryNonNullable(conf)) return <>Waiting...</>
 
@@ -109,7 +109,7 @@ function AppDrawer() {
         ref: refs.documentation,
         placement: 'right-end',
         step: 'documentation',
-        title: t('common.tutorial.documentation'),
+        title: t('common.settingsTutorial.documentation'),
       },
     },
     {

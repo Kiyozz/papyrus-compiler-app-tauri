@@ -5,11 +5,11 @@
  *
  */
 
-import TutorialBackdrop from 'App/Component/Tutorial/TutorialBackdrop'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import TutorialBackdrop from 'App/Component/Tutorial/Settings/TutorialBackdrop'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 
 const TutorialSettingsConcurrent = () => {
-  const { changeStep, scrollInto } = useTutorial()
+  const { changeStep, scrollInto } = useSettingsTutorial()
 
   return (
     <TutorialBackdrop

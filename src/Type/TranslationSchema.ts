@@ -24,6 +24,7 @@ export type TranslationSchema = {
     noScripts: string
     group: string
     recentFiles: string
+    activate: string
     select: {
       file: string
       folder: string
@@ -55,7 +56,7 @@ export type TranslationSchema = {
     download: string
     changelogs: string
     openInBrowser: string
-    tutorial: {
+    settingsTutorial: {
       welcome: {
         title: string
         firstStartText: string
@@ -78,6 +79,12 @@ export type TranslationSchema = {
       }
       documentation: string
     }
+    telemetry: {
+      title: string
+      text: string
+    }
+    refuse: string
+    accept: string
   }
   nav: {
     compilation: string
@@ -165,7 +172,6 @@ export type TranslationSchema = {
         mo2: {
           title: string
           use: {
-            label: string
             helperText: string
           }
           instance: {
@@ -178,12 +184,6 @@ export type TranslationSchema = {
             system: string
             light: string
             dark: string
-          }
-        }
-        telemetry: {
-          title: string
-          use: {
-            label: string
           }
         }
       }

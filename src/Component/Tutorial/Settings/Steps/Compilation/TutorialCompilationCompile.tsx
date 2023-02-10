@@ -5,12 +5,12 @@
  *
  */
 
-import TutorialBackdrop from 'App/Component/Tutorial/TutorialBackdrop'
+import TutorialBackdrop from 'App/Component/Tutorial/Settings/TutorialBackdrop'
 import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 
 const TutorialCompilationCompile = () => {
-  const { changeStep, scrollInto } = useTutorial()
+  const { changeStep, scrollInto } = useSettingsTutorial()
   const { clear } = useCompilationScripts()
 
   return (

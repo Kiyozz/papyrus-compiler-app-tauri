@@ -5,8 +5,8 @@
  *
  */
 
+import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
-import { Conf } from 'App/Lib/Conf/ConfDecoder'
 import { isNone, none, O, some } from 'App/Lib/FpTs'
 import { createContext, PropsWithChildren, useCallback, useContext, useState, RefObject, useRef, useMemo } from 'react'
 import { match } from 'ts-pattern'
@@ -38,8 +38,18 @@ const Context = createContext({
   },
 })
 
-const TutorialProvider = ({ children, conf }: PropsWithChildren<{ conf: Conf }>) => {
-  const [step, setStep] = useState<O.Option<TutorialStep>>(conf.tutorial.settings ? some('welcome') : none)
+const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
+  useConf({
+    onSuccess: (data) => {
+      if (!data.tutorial.settings) {
+        return
+      }
+
+      setStep(some('welcome'))
+    },
+  })
+
+  const [step, setStep] = useState<O.Option<TutorialStep>>(none)
   const gameRef = useRef<HTMLDivElement>(null)
   const compilerRef = useRef<HTMLDivElement>(null)
   const concurrentRef = useRef<HTMLDivElement>(null)
@@ -130,6 +140,6 @@ const TutorialProvider = ({ children, conf }: PropsWithChildren<{ conf: Conf }>)
   )
 }
 
-export const useTutorial = () => useContext(Context)
+export const useSettingsTutorial = () => useContext(Context)
 
-export default TutorialProvider
+export default SettingsTutorialProvider

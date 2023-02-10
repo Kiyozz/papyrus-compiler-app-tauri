@@ -14,8 +14,8 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
 import { CompilationIcon } from 'App/Component/CompilationIcon'
-import TutorialTooltip from 'App/Component/Tutorial/TutorialTooltip'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { isDone, isFileScriptCompilation, isRunning } from 'App/Lib/FileScriptCompilation'
 import cx from 'classnames'
@@ -37,11 +37,11 @@ function FileScriptsList<T extends FileScript>({
   className?: string
 }) {
   const { t } = useTranslation()
-  const { refs } = useTutorial()
+  const { refs } = useSettingsTutorial()
 
   return (
     <TutorialTooltip
-      title={t('common.tutorial.compilation.compile')}
+      title={t('common.settingsTutorial.compilation.compile')}
       step="compilation-compile"
       ref={refs['compilation-compile']}
     >

@@ -5,16 +5,16 @@
  *
  */
 
-import TutorialBackdrop from 'App/Component/Tutorial/TutorialBackdrop'
+import TutorialBackdrop from 'App/Component/Tutorial/Settings/TutorialBackdrop'
 import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
-import { useTutorial } from 'App/Hook/UseTutorial'
+import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const TutorialCompilationAddScripts = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { changeStep, scrollInto } = useTutorial()
+  const { changeStep, scrollInto } = useSettingsTutorial()
   const { add } = useCompilationScripts()
 
   // When go back, change to mo2 and focus it
