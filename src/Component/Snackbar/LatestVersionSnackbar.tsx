@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
 import ChangelogDialog from 'App/Component/Dialog/ChangelogDialog'
 import { useLatestVersion } from 'App/Hook/UseLatestVersion'
+import { useListenCheckForUpdates } from 'App/Hook/UseListenCheckForUpdates'
 import { useVersion } from 'App/Hook/UseVersion'
 import { isNewerVersion } from 'App/Util/IsNewerVersion'
 import { useState } from 'react'
@@ -36,12 +37,12 @@ const LatestVersionSnackbar = () => {
       ? isNewerVersion(version.data, latestVersion.data.data.tag_name)
       : false
 
-  // TODO: When app menu is implemented, handle this in the menu
-  // noinspection JSUnusedLocalSymbols
-  const handleManualUpdateCheck = () => {
-    setManualUpdateCheck(true)
-    latestVersion.refetch()
-  }
+  useListenCheckForUpdates({
+    onCheckForUpdates: () => {
+      setManualUpdateCheck(true)
+      latestVersion.refetch()
+    },
+  })
 
   return (
     <>
@@ -51,7 +52,14 @@ const LatestVersionSnackbar = () => {
         markdownNotes={latestVersion.data?.data.body ?? ''}
         version={latestVersion.data?.data.tag_name ?? ''}
       />
-      <Snackbar open={snackOpen} onClose={() => setSnackOpen(false)} className="z-20">
+      <Snackbar
+        open={(latestVersion.isFetching && manualUpdateCheck) || snackOpen}
+        onClose={() => {
+          setManualUpdateCheck(false)
+          setSnackOpen(false)
+        }}
+        className="z-20"
+      >
         <Alert
           severity={isLatestVersion ? 'success' : 'info'}
           action={

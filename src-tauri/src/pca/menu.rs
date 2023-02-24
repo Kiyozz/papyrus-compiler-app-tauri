@@ -19,9 +19,10 @@ pub fn create_menu() -> Menu {
         "Settings...",
         Menu::new().add_item(open_conf).add_item(reset_conf),
     );
-    let report_bug = CustomMenuItem::new("report_bug", "Report a bug");
-    let open_github = CustomMenuItem::new("open_github", "GitHub");
-    let open_nexus_mods = CustomMenuItem::new("open_nexus_mods", "Nexus Mods");
+    let report_bug = CustomMenuItem::new("report_bug", "Report a Bug...");
+    let open_github = CustomMenuItem::new("open_github", "GitHub...");
+    let open_nexus_mods = CustomMenuItem::new("open_nexus_mods", "NexusMods...");
+    let check_for_updates = CustomMenuItem::new("check_for_updates", "Check for Updates...");
 
     #[cfg(target_os = "macos")]
     {
@@ -29,6 +30,7 @@ pub fn create_menu() -> Menu {
             "PCA",
             Menu::new()
                 .add_native_item(MenuItem::About("PCA".to_string(), AboutMetadata::default()))
+                .add_item(check_for_updates)
                 .add_native_item(MenuItem::Separator)
                 .add_submenu(settings)
                 .add_native_item(MenuItem::Separator)

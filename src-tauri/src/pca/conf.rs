@@ -98,10 +98,13 @@ impl From<&PathResolver> for Conf {
     }
 }
 
-pub fn reset(resolver: &PathResolver) -> Result<(), std::io::Error> {
+pub fn reset(resolver: &PathResolver) -> Result<Conf, std::io::Error> {
     let conf = Conf::default();
     let json = serde_json::to_string_pretty(&conf).expect("Failed to serialize settings");
     fs::write(resolver.app_conf(), json)
+        .expect("conf::reset — failed to write settings file. Try resetting the settings.");
+
+    Ok(conf)
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

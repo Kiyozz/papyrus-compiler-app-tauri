@@ -13,6 +13,7 @@ import AppDrawer from 'App/Component/Drawer/AppDrawer'
 import LatestVersionSnackbar from 'App/Component/Snackbar/LatestVersionSnackbar'
 import SettingsTutorial from 'App/Component/SettingsTutorial'
 import { useConf } from 'App/Hook/Conf/UseConf'
+import { useListenConfReset } from 'App/Hook/UseListenConfReset'
 import { useRootTheme } from 'App/Hook/UseRootTheme'
 import SettingsTutorialProvider from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { Outlet } from 'react-router-dom'
@@ -20,6 +21,8 @@ import { Outlet } from 'react-router-dom'
 function App() {
   useRootTheme()
   const { isLoading } = useConf()
+
+  useListenConfReset()
 
   return (
     <>

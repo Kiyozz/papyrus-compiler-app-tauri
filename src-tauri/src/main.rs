@@ -44,10 +44,11 @@ fn main() {
                     }
                     "reset_conf" => {
                         trace!("reset conf file");
-                        pca::conf::reset(&path_resolver).expect("Failed to reset settings");
+                        let new_conf =
+                            pca::conf::reset(&path_resolver).expect("Failed to reset settings");
                         trace!("conf reset");
                         window
-                            .emit("reset_conf", "")
+                            .emit("pca://conf_reset", new_conf)
                             .expect("Failed to emit reset_conf event");
                     }
                     "open_logs" => {
@@ -99,6 +100,13 @@ fn main() {
                         )
                         .expect("Failed to open nexus mods page");
                         trace!("nexus mods page opened");
+                    }
+                    "check_for_updates" => {
+                        trace!("emit check_for_updates event");
+                        window
+                            .emit("pca://check_for_updates", None::<Option<String>>)
+                            .expect("Failed to emit check_for_updates event");
+                        trace!("check_for_updates event emitted");
                     }
                     _ => {}
                 }
