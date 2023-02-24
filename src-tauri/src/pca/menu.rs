@@ -19,6 +19,9 @@ pub fn create_menu() -> Menu {
         "Settings...",
         Menu::new().add_item(open_conf).add_item(reset_conf),
     );
+    let report_bug = CustomMenuItem::new("report_bug", "Report a bug");
+    let open_github = CustomMenuItem::new("open_github", "GitHub");
+    let open_nexus_mods = CustomMenuItem::new("open_nexus_mods", "Nexus Mods");
 
     #[cfg(target_os = "macos")]
     {
@@ -93,6 +96,16 @@ pub fn create_menu() -> Menu {
     }
     window_menu = window_menu.add_native_item(MenuItem::CloseWindow);
     menu = menu.add_submenu(Submenu::new("Window", window_menu));
+
+    let mut help_menu = Menu::new();
+
+    help_menu = help_menu
+        .add_item(report_bug)
+        .add_native_item(MenuItem::Separator)
+        .add_item(open_github)
+        .add_item(open_nexus_mods);
+
+    menu = menu.add_submenu(Submenu::new("Help", help_menu));
 
     menu
 }

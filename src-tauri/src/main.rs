@@ -70,6 +70,36 @@ fn main() {
                         .expect("Failed to open previous logs");
                         trace!("previous logs opened");
                     }
+                    "report_bug" => {
+                        trace!("open bug report page");
+                        shell::open(
+                            &shell_scope,
+                            "https://github.com/Kiyozz/papyrus-compiler-app/issues/new",
+                            None,
+                        )
+                        .expect("Failed to open bug report page");
+                        trace!("bug report page opened");
+                    }
+                    "open_github" => {
+                        trace!("open github page");
+                        shell::open(
+                            &shell_scope,
+                            "https://github.com/Kiyozz/papyrus-compiler-app",
+                            None,
+                        )
+                        .expect("Failed to open github page");
+                        trace!("github page opened");
+                    }
+                    "open_nexus_mods" => {
+                        trace!("open nexus mods page");
+                        shell::open(
+                            &shell_scope,
+                            "https://nexusmods.com/skyrimspecialedition/mods/23852",
+                            None,
+                        )
+                        .expect("Failed to open nexus mods page");
+                        trace!("nexus mods page opened");
+                    }
                     _ => {}
                 }
             });
