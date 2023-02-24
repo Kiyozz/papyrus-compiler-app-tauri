@@ -5,6 +5,8 @@
  *
  */
 
+use log::debug;
+
 #[tauri::command]
 pub fn current_environment(from: Option<&str>) -> &str {
     let env = if cfg!(debug_assertions) {
@@ -13,7 +15,7 @@ pub fn current_environment(from: Option<&str>) -> &str {
         "release"
     };
 
-    println!("{} {}", super::brand!(from, "current_environment"), env);
+    debug!("{} {}", super::brand!(from, "current_environment"), env);
 
     env
 }

@@ -5,6 +5,7 @@
  *
  */
 
+use log::{debug, info};
 use regex::Regex;
 use std::process::{Command, Stdio};
 use std::thread::sleep;
@@ -29,7 +30,7 @@ pub async fn compile_script(
     script_name: &str,
     from: Option<&str>,
 ) -> Result<String, String> {
-    println!("{} {}", compile_brand!(from), script_name);
+    info!("{} {}", compile_brand!(from), script_name);
     #[cfg(debug_assertions)] // only include this code on debug builds
     sleep(Duration::from_secs(match script_name {
         s if s.contains("Data.psc") => 2,
@@ -44,11 +45,11 @@ pub async fn compile_script(
     let output_err = String::from_utf8(output.stderr).expect("cannot convert stderr as string");
     let output = String::from_utf8(output.stdout).expect("cannot convert stdout as string");
 
-    println!("{} [output_err]: {}", compile_brand!(from), output_err);
+    debug!("{} [output_err]: {}", compile_brand!(from), output_err);
 
     let output = get_final_output(&output_err, &output, script_name);
 
-    println!(
+    debug!(
         "———\n{} [FINISHED] \n\t->{}\n{}\n———",
         compile_brand!(from),
         script_name,

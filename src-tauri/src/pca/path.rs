@@ -6,18 +6,19 @@
  */
 
 use glob::{glob_with, MatchOptions};
+use log::{debug, trace};
 use std::path::Path;
 
 #[tauri::command]
 pub fn path_exists(path: &str, from: Option<&str>) -> bool {
-    println!("{} {}", super::brand!(from, "path_exists"), path);
+    debug!("{} {}", super::brand!(from, "path_exists"), path);
 
     Path::new(path).exists()
 }
 
 #[tauri::command]
 pub fn paths_exists(paths: Vec<&str>, from: Option<&str>) -> bool {
-    println!("{} {:?}", super::brand!(from, "paths_exists"), paths);
+    debug!("{} {:?}", super::brand!(from, "paths_exists"), paths);
 
     paths.iter().map(|path| Path::new(path).exists()).all(|x| x)
 }
@@ -28,7 +29,7 @@ pub fn get_scripts_in_paths(
     options: Option<super::glob::GlobMatchOptions>,
     from: Option<&str>,
 ) -> Vec<String> {
-    println!(
+    debug!(
         "{} {:?}",
         super::brand!(from, "get_scripts_in_path"),
         patterns
@@ -56,13 +57,13 @@ pub fn get_scripts_in_paths(
             .collect::<Vec<_>>()
         })
         .filter(|path| {
-            println!("retrieved -> {:?}", path);
+            trace!("retrieved -> {:?}", path);
 
             !path.is_empty()
         })
         .collect::<Vec<_>>();
 
-    println!(
+    debug!(
         "{} {:?}",
         super::brand!(from, "get_scripts_in_path"),
         glob_res

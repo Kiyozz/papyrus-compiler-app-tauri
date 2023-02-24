@@ -6,8 +6,12 @@
  */
 
 pub mod compile;
+pub mod conf;
+pub mod data;
 pub mod environment;
 pub mod glob;
+pub mod logs;
+pub mod menu;
 pub mod path;
 
 macro_rules! brand {

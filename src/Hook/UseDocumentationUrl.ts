@@ -11,7 +11,7 @@ import { useCurrentEnvironment } from 'App/Hook/UseCurrentEnvironment'
 import { isProduction } from 'App/Lib/Environment/IsProduction'
 
 const useDocumentationUrl = (options: UseQueryOptions<string> = {}) => {
-  const currentEnvironment = useCurrentEnvironment()
+  const currentEnvironment = useCurrentEnvironment({ from: 'useDocumentationUrl' })
 
   return useQuery({
     queryKey: ['app', 'documentation', 'url'],

@@ -102,6 +102,16 @@ const TelemetryDecoder = D.struct({
 })
 export type Telemetry = D.TypeOf<typeof TelemetryDecoder>
 
+const LogLevelDecoder = D.union(
+  D.literal('trace'),
+  D.literal('debug'),
+  D.literal('info'),
+  D.literal('warn'),
+  D.literal('error'),
+)
+
+export type LogLevel = D.TypeOf<typeof LogLevelDecoder>
+
 export const ConfDecoder = D.struct({
   game: GameDecoder,
   compilation: CompilationDecoder,
@@ -111,6 +121,7 @@ export const ConfDecoder = D.struct({
   theme: ThemeDecoder,
   locale: LocaleDecoder,
   misc: MiscDecoder,
+  logLevel: LogLevelDecoder,
 })
 
 export type Conf = D.TypeOf<typeof ConfDecoder>

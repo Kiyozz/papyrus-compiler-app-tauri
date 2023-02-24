@@ -66,6 +66,7 @@ const defaultOptions: ConfOptions<Conf> = {
       },
       drawerOpen: false,
     },
+    logLevel: 'error',
   },
 }
 

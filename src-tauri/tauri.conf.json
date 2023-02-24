@@ -20,14 +20,7 @@
       },
       "shell": {
         "execute": true,
-        "open": true,
-        "scope": [
-          {
-            "name": "run-papyrus-compiler",
-            "cmd": "PapyrusCompiler.exe",
-            "args": true
-          }
-        ]
+        "open": "com\\.kiyozz\\.pca[\/].*(settings\\.json|pca\\.log|pca_previous\\.log)$"
       },
       "http": {
         "request": true,
@@ -40,7 +33,7 @@
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
-      "copyright": "WushuLate@NexusMods-Kiyozz@GitHub",
+      "copyright": "WushuLate@NexusMods/Kiyozz@GitHub",
       "deb": {
         "depends": []
       },
