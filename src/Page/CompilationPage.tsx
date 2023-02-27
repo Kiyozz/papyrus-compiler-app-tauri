@@ -29,6 +29,7 @@ import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { createLog, createTraceLog } from 'App/Lib/CreateLog'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
@@ -39,13 +40,16 @@ import { toExecutable } from 'App/Lib/ToExecutable'
 import { RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+const log = createLog('CompilationPage')
+const traceLog = createTraceLog('CompilationPage')
+
 function CompilationPage() {
   const { t } = useTranslation()
   const {
     compilationLogs: [, setCompilationLogsDialogOpen],
   } = useDialogs()
   const { scripts, add: addScripts, clear: clearScripts, remove: removeScripts, compile } = useCompilation()
-  const { remove: removeLog, clear: clearLogs } = useCompilationLogs()
+  const { remove: removeCompilationLog, clear: clearCompilationLogs } = useCompilationLogs()
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
   const groups = useGroups()
   const conf = useConf()
@@ -60,8 +64,12 @@ function CompilationPage() {
         open={isRecentFilesDialogOpen}
         onClose={() => setRecentFilesDialogOpen(false)}
         currentScripts={scripts}
-        onScriptsLoad={flow(pathsToFileScript, fileScriptsToFileScriptCompilation, addScripts, () =>
-          setRecentFilesDialogOpen(false),
+        onScriptsLoad={flow(
+          pathsToFileScript,
+          fileScriptsToFileScriptCompilation,
+          addScripts,
+          log('add scripts from recent scripts'),
+          () => setRecentFilesDialogOpen(false),
         )}
       />
 
@@ -79,7 +87,7 @@ function CompilationPage() {
             ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
             className="px-3 py-2"
             color="inherit"
-            onFileSelect={flow(fileScriptsToFileScriptCompilation, addScripts)}
+            onFileSelect={flow(fileScriptsToFileScriptCompilation, addScripts, log('add scripts from file select'))}
           >
             {t('common.searchScripts')}
           </SearchScriptButton>
@@ -94,6 +102,7 @@ function CompilationPage() {
               pathsToFileScript,
               fileScriptsToFileScriptCompilation,
               addScripts,
+              log('add scripts from group'),
             )}
           >
             {t('common.group')}
@@ -111,7 +120,8 @@ function CompilationPage() {
                     scripts,
                     A.filter((script) => script.status !== 'running'),
                     (scripts) => {
-                      scripts.forEach(removeLog)
+                      traceLog('start compilation for all remaining scripts')()
+                      scripts.forEach(removeCompilationLog)
 
                       return compile(scripts)
                     },
@@ -122,7 +132,7 @@ function CompilationPage() {
 
               <Button
                 disabled={isAllScriptsRunning}
-                onClick={flow(clearScripts, clearLogs)}
+                onClick={flow(clearScripts, clearCompilationLogs, traceLog('clear scripts and compilation logs'))}
                 startIcon={<ClearIcon />}
                 color="inherit"
               >
@@ -141,11 +151,13 @@ function CompilationPage() {
             <FileScriptsList<FileScriptCompilation>
               scripts={scripts}
               onRemove={(scriptToRemove) => {
-                removeLog(scriptToRemove)
+                removeCompilationLog(scriptToRemove)
                 removeScripts([scriptToRemove])
+                traceLog('remove script', scriptToRemove)()
               }}
               onStart={async (scriptToStart) => {
-                removeLog(scriptToStart)
+                void traceLog('start compile single script', scriptToStart)()
+                removeCompilationLog(scriptToStart)
                 await compile([scriptToStart])
               }}
               onClickOnError={() => {

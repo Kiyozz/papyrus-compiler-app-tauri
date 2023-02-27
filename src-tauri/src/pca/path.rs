@@ -17,6 +17,13 @@ pub fn path_exists(path: &str, from: Option<&str>) -> bool {
 }
 
 #[tauri::command]
+pub fn is_file(path: &str, from: Option<&str>) -> bool {
+    debug!("{} {}", super::brand!(from, "is_file"), path);
+
+    Path::new(path).is_file()
+}
+
+#[tauri::command]
 pub fn paths_exists(paths: Vec<&str>, from: Option<&str>) -> bool {
     debug!("{} {:?}", super::brand!(from, "paths_exists"), paths);
 

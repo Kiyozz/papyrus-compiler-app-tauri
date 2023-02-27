@@ -13,6 +13,8 @@ export const exists = (path: string, extras: { from?: string } = {}) =>
   invoke<boolean>('path_exists', { path, ...extras })
 export const allExists = (paths: string[], extras: { from?: string } = {}) =>
   invoke<boolean>('paths_exists', { paths, ...extras })
+export const isFile = (path: string, extras: { from?: string } = {}) =>
+  invoke<boolean>('is_file', { path, ...extras })
 
 type GlobOptions = {
   caseSensitive: boolean

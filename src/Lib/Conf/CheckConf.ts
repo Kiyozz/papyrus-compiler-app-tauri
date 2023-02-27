@@ -6,7 +6,7 @@
  */
 
 import { join, normalize } from '@tauri-apps/api/path'
-import { allExists, exists, glob } from 'App/Lib/Path'
+import { allExists, exists, glob, isFile } from 'App/Lib/Path'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
 import { toDefaultScript } from 'App/Lib/ToDefaultScript'
 import { toExecutable } from 'App/Lib/ToExecutable'
@@ -76,10 +76,24 @@ const checkGamePath = (conf: Conf) =>
  * @param conf
  */
 const checkCompiler = (conf: Conf) =>
-  check(
-    conf.compilation.compilerPath,
-    'compilerPathDoesNotExist',
-    `compiler path does not exist: ${conf.compilation.compilerPath}`,
+  pipe(
+    check(
+      conf.compilation.compilerPath,
+      'compilerPathDoesNotExist',
+      `compiler path does not exist: ${conf.compilation.compilerPath}`,
+    ),
+    TE.chain(() =>
+      TE.tryCatch(async () => {
+        const isPathIsFile = await isFile(conf.compilation.compilerPath, { from: 'checkConf' })
+
+        if (!isPathIsFile) {
+          throw {
+            type: 'compilerPathIsNotAFile',
+            message: `compiler path is not a file: ${conf.compilation.compilerPath}`,
+          } satisfies CheckConfError
+        }
+      }, onRejected),
+    ),
   )
 
 /**
@@ -188,18 +202,30 @@ const unwrap = (either: E.Either<CheckConfError, unknown>) => {
  * @param conf
  */
 export const checkConf = (conf: Conf): TE.TaskEither<CheckConfError, Conf> =>
-  TE.tryCatch(async () => {
-    unwrap(
-      await pipe(
-        checkGamePath(conf),
-        TE.chain(() => checkGameExe(conf)),
-        TE.chain(() => checkCompiler(conf)),
-        TE.chain(() => (conf.mo2.use ? checkMo2(conf) : TE.right(undefined))),
-        TE.chain(() =>
-          conf.mo2.use ? checkCreationKitScriptExistsInMo2(conf) : checkCreationKitScriptExistsInGameDataFolder(conf),
-        ),
-      )(),
-    )
+  TE.tryCatch(
+    async () => {
+      unwrap(
+        await pipe(
+          checkGamePath(conf),
+          TE.chain(() => checkGameExe(conf)),
+          TE.chain(() => checkCompiler(conf)),
+          TE.chain(() => (conf.mo2.use ? checkMo2(conf) : TE.right(undefined))),
+          TE.chain(() =>
+            conf.mo2.use ? checkCreationKitScriptExistsInMo2(conf) : checkCreationKitScriptExistsInGameDataFolder(conf),
+          ),
+        )(),
+      )
 
-    return conf
-  }, onRejected)
+      return conf
+    },
+    (reason) => {
+      if (isCheckConfError(reason)) {
+        return reason
+      }
+
+      return {
+        type: 'fatalError',
+        message: `checkConf error: ${reason}`,
+      }
+    },
+  )

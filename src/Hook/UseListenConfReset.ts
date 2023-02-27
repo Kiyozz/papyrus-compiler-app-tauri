@@ -16,7 +16,7 @@ export const useListenConfReset = () => {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    const unsubscribe = listen<Conf>('pca://conf_reset', (evt) => {
+    const unsubscribe = listen<Conf>('pca://conf_reset', async (evt) => {
       const conf = ConfDecoder.decode(evt.payload)
 
       if (isLeft(conf)) {
@@ -24,6 +24,7 @@ export const useListenConfReset = () => {
       }
 
       queryClient.setQueryData(['conf'], conf.right)
+      await queryClient.invalidateQueries(['conf-check', conf.right])
     })
 
     return () => {

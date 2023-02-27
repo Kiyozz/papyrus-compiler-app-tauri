@@ -11,14 +11,14 @@ import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
 import { useCompile } from 'App/Hook/useCompile'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
-import { A, E, isLeft, O, pipe, RA, TE } from 'App/Lib/FpTs'
+import { A, pipe, RA, TE } from 'App/Lib/FpTs'
 import { useCallback } from 'react'
 
 export function useCompilation() {
   const updateRecentScripts = useUpdateRecentScripts()
 
   const { add, scripts, remove, replace } = useCompilationScripts()
-  const { add: addLog } = useCompilationLogs()
+  const { add: addCompilationLog } = useCompilationLogs()
   const compileMutation = useCompile()
   const compile = useCallback(async (scripts: FileScriptCompilation[]) => {
     const res = await pipe(
@@ -35,68 +35,47 @@ export function useCompilation() {
                 return compileMutation.mutateAsync(script)
               },
               (reason) => {
-                return new Error(`failed to compile script ${script.name}: ${reason}`)
+                return new Error(`failed to compile script ${script.name}. error given: ${reason}`)
               },
             ),
-            TE.map((opt) => {
-              return pipe(
-                opt,
-                O.fold(
-                  () => {
-                    replace({
-                      ...script,
-                      status: 'error',
-                    })
+            TE.mapLeft((reason) => {
+              console.error('compile', reason)
 
-                    return O.none
-                  },
-                  (log) => {
-                    if (log.status === 'error') {
-                      replace({
-                        ...script,
-                        status: 'error',
-                      })
-                    } else {
-                      replace({
-                        ...script,
-                        status: 'done',
-                      })
-                    }
+              replace({
+                ...script,
+                status: 'error',
+              })
 
-                    addLog(log)
+              return reason
+            }),
+            TE.map((log) => {
+              replace({
+                ...script,
+                status: log.status === 'error' ? 'error' : 'done',
+              })
 
-                    return O.some(log)
-                  },
-                ),
-              )
+              addCompilationLog(log)
+
+              return log
             }),
           ),
         ),
       ),
-    )()
-
-    await pipe(
-      res,
-      E.fold(
-        async (err) => console.error(err),
-        async (logs) => {
-          const logsRes = await TE.tryCatch(
-            () => {
-              return updateRecentScripts.mutateAsync({
-                recentScripts: A.compact(pipe(logs, RA.toArray)).map((log) => log.script.path),
-              })
-            },
-            (reason) => new Error(`failed to update recent scripts: ${reason}`),
-          )()
-
-          if (isLeft(logsRes)) {
-            console.error(logsRes.left)
-          }
-        },
-      ),
     )
 
-    // handle add logs in app
+    return pipe(
+      res,
+      TE.chain((logs) => {
+        return TE.tryCatch(
+          () => {
+            return updateRecentScripts.mutateAsync({
+              recentScripts: pipe(logs, RA.toArray).map((log) => log.script.path),
+            })
+          },
+          (reason) => new Error(`failed to update recent scripts: ${reason}`),
+        )
+      }),
+    )()
   }, [])
 
   return {

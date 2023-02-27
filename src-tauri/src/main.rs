@@ -118,6 +118,7 @@ fn main() {
             pca::path::path_exists,
             pca::path::paths_exists,
             pca::path::get_scripts_in_paths,
+            pca::path::is_file,
             pca::compile::compile_script,
             pca::environment::current_environment,
             pca::logs::log,

@@ -12,6 +12,7 @@ export type CheckConfErrorTypes =
   | 'gamePathDoesNotExist'
   | 'gameExeDoesNotExist'
   | 'compilerPathDoesNotExist'
+  | 'compilerPathIsNotAFile'
   | 'mo2InstanceIsNotSet'
   | 'mo2InstanceDoesNotExist'
   | 'mo2InstanceNoModsFolder'
@@ -33,6 +34,7 @@ export const isCheckConfErrorTypes = (value: unknown): value is CheckConfErrorTy
         'gamePathDoesNotExist',
         'gameExeDoesNotExist',
         'compilerPathDoesNotExist',
+        'compilerPathIsNotAFile',
         'mo2InstanceIsNotSet',
         'mo2InstanceDoesNotExist',
         'mo2InstanceNoModsFolder',

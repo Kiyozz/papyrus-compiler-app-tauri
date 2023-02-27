@@ -9,11 +9,15 @@ import { LogLevel } from 'App/Lib/Conf/ConfDecoder'
 import { isLeft, TE } from 'App/Lib/FpTs'
 import { stringify } from 'App/Lib/Json'
 
-export const useLog =
-  (ns: string) =>
-  (message: string, level: LogLevel, ...args: unknown[]) =>
+export const createDebugLog = (ns: string) => createLog(ns, 'debug')
+export const createTraceLog = (ns: string) => createLog(ns, 'trace')
+export const createWarnLog = (ns: string) => createLog(ns, 'warn')
+export const createErrorLog = (ns: string) => createLog(ns, 'error')
+
+export const createLog =
+  (ns: string, level: LogLevel = 'info') =>
+  (message: string, ...args: unknown[]) =>
   async (): Promise<void> => {
-    console.log(args)
     const json = stringify(args)
 
     if (isLeft(json)) {

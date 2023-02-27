@@ -41,11 +41,7 @@ const Context = createContext({
 const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
   useConf({
     onSuccess: (data) => {
-      if (!data.tutorial.settings) {
-        return
-      }
-
-      setStep(some('welcome'))
+      setStep(some(!data.tutorial.settings ? 'end' : 'welcome'))
     },
   })
 

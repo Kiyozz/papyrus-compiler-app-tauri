@@ -38,6 +38,7 @@ export type TranslationSchema = {
     confCheckError_gamePathDoesNotExist: string
     confCheckError_gameExeDoesNotExist: string
     confCheckError_compilerPathDoesNotExist: string
+    confCheckError_compilerPathIsNotAFile: string
     confCheckError_mo2InstanceIsNotSet: string
     confCheckError_mo2InstanceDoesNotExist: string
     confCheckError_mo2InstanceNoModsFolder: string

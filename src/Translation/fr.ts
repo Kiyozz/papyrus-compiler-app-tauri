@@ -41,6 +41,8 @@ const fr: TranslationSchema = {
     confCheckError_gameExeDoesNotExist:
       "Configuration invalide : vérifiez le chemin du jeu ({{gameExe}} n'a pas été trouvé).",
     confCheckError_compilerPathDoesNotExist: 'Configuration invalide : vérifiez le chemin du compilateur Papyrus.',
+    confCheckError_compilerPathIsNotAFile:
+      "Configuration invalide : vérifiez le chemin du compilateur Papyrus (le chemin n'est pas un fichier).",
     confCheckError_mo2InstanceIsNotSet:
       "Configuration invalide : Vous avez choisi d'utiliser l'intégration MO2, mais vous n'avez pas spécifié le chemin de l'instance.",
     confCheckError_mo2InstanceDoesNotExist: "Configuration invalide : Vérifiez le chemin de l'instance MO2.",
