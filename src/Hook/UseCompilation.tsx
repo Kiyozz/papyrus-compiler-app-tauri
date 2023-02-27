@@ -10,9 +10,13 @@ import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentSc
 import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
 import { useCompile } from 'App/Hook/useCompile'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { createErrorLog, createTraceLog } from 'App/Lib/CreateLog'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { A, pipe, RA, TE } from 'App/Lib/FpTs'
 import { useCallback } from 'react'
+
+const traceLog = createTraceLog('useCompilation')
+const errorLog = createErrorLog('useCompilation')
 
 export function useCompilation() {
   const updateRecentScripts = useUpdateRecentScripts()
@@ -21,6 +25,8 @@ export function useCompilation() {
   const { add: addCompilationLog } = useCompilationLogs()
   const compileMutation = useCompile()
   const compile = useCallback(async (scripts: FileScriptCompilation[]) => {
+    void traceLog('compile', scripts)()
+
     const res = await pipe(
       TE.sequenceArray(
         scripts.map((script) =>
@@ -32,6 +38,8 @@ export function useCompilation() {
                   status: 'running',
                 })
 
+                traceLog('start compile', script)()
+
                 return compileMutation.mutateAsync(script)
               },
               (reason) => {
@@ -39,6 +47,7 @@ export function useCompilation() {
               },
             ),
             TE.mapLeft((reason) => {
+              errorLog('error compile script', script, reason)()
               console.error('compile', reason)
 
               replace({
@@ -54,6 +63,8 @@ export function useCompilation() {
                 status: log.status === 'error' ? 'error' : 'done',
               })
 
+              traceLog('add compilation log', log)()
+
               addCompilationLog(log)
 
               return log
@@ -68,11 +79,20 @@ export function useCompilation() {
       TE.chain((logs) => {
         return TE.tryCatch(
           () => {
+            traceLog(
+              'add scripts to recent scripts',
+              logs.map((l) => l.script),
+            )()
+
             return updateRecentScripts.mutateAsync({
               recentScripts: pipe(logs, RA.toArray).map((log) => log.script.path),
             })
           },
-          (reason) => new Error(`failed to update recent scripts: ${reason}`),
+          (reason) => {
+            errorLog('error update recent scripts', reason)()
+
+            return new Error(`failed to update recent scripts: ${reason}`)
+          },
         )
       }),
     )()
