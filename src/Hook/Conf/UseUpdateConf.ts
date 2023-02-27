@@ -7,13 +7,18 @@
 
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query'
 import { writeConfig } from 'App/Lib/Conf/Conf'
+import { createDebugLog } from 'App/Lib/CreateLog'
 import { E } from 'App/Lib/FpTs'
+
+const debugLog = createDebugLog('useUpdateConf')
 
 export const useUpdateConf = (options: UseMutationOptions<void, Error, Parameters<typeof writeConfig>[0]> = {}) => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (partialConfig) => {
+      void debugLog('updating conf', partialConfig)()
+
       const res = await writeConfig(partialConfig)()
 
       if (E.isLeft(res)) {

@@ -71,7 +71,7 @@ pub fn get_scripts_in_paths(
         .collect::<Vec<_>>();
 
     debug!(
-        "{} {:?}",
+        "{} — result — {:?}",
         super::brand!(from, "get_scripts_in_path"),
         glob_res
     );

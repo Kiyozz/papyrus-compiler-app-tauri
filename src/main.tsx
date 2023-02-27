@@ -22,6 +22,19 @@ import MuiTheme from './MuiTheme'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import './style.css'
 
+declare global {
+  interface Error {
+    toJSON(): { type: string; message: string }
+  }
+}
+
+Error.prototype.toJSON = function () {
+  return {
+    type: this.name,
+    message: this.message,
+  }
+}
+
 await configureTranslations()
 
 const queryClient = new QueryClient({
