@@ -7,10 +7,11 @@
 
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query'
 import { writeConfig } from 'App/Lib/Conf/Conf'
-import { createDebugLog } from 'App/Lib/CreateLog'
+import { createDebugLog, createErrorLog } from 'App/Lib/CreateLog'
 import { E } from 'App/Lib/FpTs'
 
 const debugLog = createDebugLog('useUpdateConf')
+const errorLog = createErrorLog('useUpdateConf')
 
 export const useUpdateConf = (options: UseMutationOptions<void, Error, Parameters<typeof writeConfig>[0]> = {}) => {
   const queryClient = useQueryClient()
@@ -22,6 +23,8 @@ export const useUpdateConf = (options: UseMutationOptions<void, Error, Parameter
       const res = await writeConfig(partialConfig)()
 
       if (E.isLeft(res)) {
+        void errorLog('error updating conf', res.left)()
+
         throw res.left
       }
 
