@@ -7,11 +7,12 @@
 
 use crate::pca::conf::Conf;
 use crate::pca::data::ConfPath;
-use log::warn;
+use log::{debug, error, info, trace, warn};
 use log4rs::append::{console::ConsoleAppender, file::FileAppender};
 use log4rs::config::{Appender, Logger, Root};
 use log4rs::encode::pattern::PatternEncoder;
 use log4rs::Config as LogConfig;
+use serde_json::Value;
 use std::fs;
 use std::path::PathBuf;
 use tauri::PathResolver;
@@ -68,5 +69,19 @@ impl Logs {
             previous_file_path: previous_app_logs,
             handle,
         }
+    }
+}
+
+#[tauri::command]
+pub fn log(ns: String, message: String, level: String, args: &str) {
+    let args = serde_json::from_str::<Value>(args).unwrap();
+
+    match level.as_str() {
+        "trace" => trace!(target: "pca", "{} {} {}", ns, message, args),
+        "debug" => debug!(target: "pca", "{} {} {}", ns, message, args),
+        "info" => info!(target: "pca", "{} {} {}", ns, message, args),
+        "warn" => warn!(target: "pca", "{} {} {}", ns, message, args),
+        "error" => error!(target: "pca", "{} {} {}", ns, message, args),
+        _ => trace!(target: "pca", "{} {} {}", ns, message, args),
     }
 }

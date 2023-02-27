@@ -120,6 +120,7 @@ fn main() {
             pca::path::get_scripts_in_paths,
             pca::compile::compile_script,
             pca::environment::current_environment,
+            pca::logs::log,
         ])
         .run(tauri::generate_context!())
         .expect("error while running PCA application");

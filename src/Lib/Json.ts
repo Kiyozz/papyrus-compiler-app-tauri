@@ -5,6 +5,7 @@
  *
  */
 
+import jsonStringify from 'safe-json-stringify'
 import { E, flow, J, pipe } from 'App/Lib/FpTs'
 import { D } from 'App/Lib/IoTs'
 
@@ -24,8 +25,8 @@ export const parseAndDecode =
       ),
     )
 
-export const stringify = (contents: unknown): E.Either<Error, string> =>
+export const stringify = (contents: object): E.Either<Error, string> =>
   E.tryCatch(
-    () => JSON.stringify(contents, undefined, 2),
+    () => jsonStringify(contents, undefined, 2),
     (reason) => new Error(`Cannot stringify json, error given: ${reason}`),
   )
