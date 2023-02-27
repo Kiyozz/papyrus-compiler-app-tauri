@@ -23,7 +23,8 @@ import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
 import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
-import { A, none, O, pipe, R, TO } from 'App/Lib/FpTs'
+import { createDebugLog, createTraceLog } from 'App/Lib/CreateLog'
+import { A, flow, none, O, pipe, R, TO } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
@@ -31,6 +32,9 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { useEffectOnce } from 'usehooks-ts'
 import { v4 } from 'uuid'
+
+const traceLog = createTraceLog('GroupsPage')
+const debugLog = createDebugLog('GroupsPage')
 
 function GroupsPage() {
   const location = useLocation()
@@ -76,17 +80,14 @@ function GroupsPage() {
       O.map(({ scripts }) => scripts),
       (scripts) => {
         if (O.isSome(scripts)) {
+          debugLog('add group from compilation page scripts list')()
           openAddGroupDialog(scripts.value)
         }
       },
     )
   })
 
-  const closeDialogs = () => {
-    closeAddGroupDialog()
-    closeRemoveGroupDialog()
-    closeEditGroupDialog()
-  }
+  const closeDialogs = flow(closeAddGroupDialog, closeRemoveGroupDialog, closeEditGroupDialog, traceLog('closeDialogs'))
 
   return (
     <>
@@ -100,7 +101,7 @@ function GroupsPage() {
             TO.fromOption,
           )()
 
-          closeDialogs()
+          void closeDialogs()
         }}
         onCancel={closeDialogs}
         TransitionProps={removeDialogTransitionProps}
@@ -113,6 +114,8 @@ function GroupsPage() {
             defaultScripts={addGroupDefaultScripts}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
+              void debugLog('add group', name)()
+
               await updateGroups.mutateAsync({
                 [v4()]: {
                   name,
@@ -124,7 +127,7 @@ function GroupsPage() {
                 },
               })
 
-              closeDialogs()
+              void closeDialogs()
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}
@@ -135,6 +138,8 @@ function GroupsPage() {
             group={groupToEdit}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
+              void debugLog('edit group', name)()
+
               await pipe(
                 groupToEdit,
                 TO.fromOption,
@@ -154,7 +159,7 @@ function GroupsPage() {
                 }),
               )()
 
-              closeDialogs()
+              void closeDialogs()
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}
@@ -192,8 +197,7 @@ function GroupsPage() {
               ? pipe(
                   groups.data,
                   groupRecordToArray,
-                  O.fromPredicate(A.isNonEmpty),
-                  O.match(
+                  A.match(
                     () => <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>,
                     (groups) => (
                       <>
