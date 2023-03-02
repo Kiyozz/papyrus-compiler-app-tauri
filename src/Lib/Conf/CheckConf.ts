@@ -6,7 +6,7 @@
  */
 
 import { join, normalize } from '@tauri-apps/api/path'
-import { createDebugLog } from 'App/Lib/CreateLog'
+import { createLogs } from 'App/Lib/CreateLog'
 import { allExists, exists, glob, isFile } from 'App/Lib/Path'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
 import { toDefaultScript } from 'App/Lib/ToDefaultScript'
@@ -18,7 +18,7 @@ import { CheckConfErrorTypes, isCheckConfError } from './CheckConfTypes'
 
 export type CheckConfError<T extends CheckConfErrorTypes = CheckConfErrorTypes> = { type: T; message: string }
 
-const debugLog = createDebugLog('checkConf')
+const logs = createLogs('checkConf')
 
 const onRejected = (reason: unknown): CheckConfError => {
   if (isCheckConfError(reason)) {
@@ -207,7 +207,7 @@ const unwrap = (either: E.Either<CheckConfError, unknown>) => {
 export const checkConf = (conf: Conf): TE.TaskEither<CheckConfError, Conf> =>
   TE.tryCatch(
     async () => {
-      void debugLog('checking conf', conf)()
+      void logs.debug('checking conf', conf)()
 
       unwrap(
         await pipe(

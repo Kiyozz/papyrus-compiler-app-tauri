@@ -9,24 +9,22 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { Conf } from 'App/Lib/Conf/ConfDecoder'
 import { readConfig } from 'App/Lib/Conf/Conf'
 import { E } from 'App/Lib/FpTs'
-import { createDebugLog, createErrorLog, createTraceLog } from 'App/Lib/CreateLog'
+import { createLogs } from 'App/Lib/CreateLog'
 
-const traceLog = createTraceLog('useConf')
-const debugLog = createDebugLog('useConf')
-const errorLog = createErrorLog('useConf')
+const logs = createLogs('useConf')
 
 export const useConf = (options: UseQueryOptions<Conf> = {}) => {
   return useQuery({
     queryKey: ['conf'],
     queryFn: async () => {
-      void debugLog('read config')()
+      void logs.debug('read config')()
 
       const config = await readConfig()
 
-      void traceLog('config read')()
+      void logs.trace('config read')()
 
       if (E.isLeft(config)) {
-        void errorLog('config read failed', config.left)()
+        void logs.error('config read failed', config.left)()
 
         throw config.left
       }

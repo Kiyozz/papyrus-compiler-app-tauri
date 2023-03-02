@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@datapunt/matomo-tracker-react': ^0.5.1
   '@emotion/react': ^11.10.5
   '@emotion/styled': ^11.10.5
   '@fontsource/ibm-plex-mono': ^4.5.13
@@ -60,6 +61,7 @@ specifiers:
   zod: ^3.20.2
 
 dependencies:
+  '@datapunt/matomo-tracker-react': 0.5.1_react@18.2.0
   '@emotion/react': 11.10.5_kzbn2opkn2327fwg5yzwzya5o4
   '@emotion/styled': 11.10.5_qvatmowesywn4ye42qoh247szu
   '@fontsource/ibm-plex-mono': 4.5.13
@@ -369,6 +371,19 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
+
+  /@datapunt/matomo-tracker-js/0.5.1:
+    resolution: {integrity: sha512-9/MW9vt/BA5Db7tO6LqCeQKtuvBNjyq51faF3AzUmPMlYsJCnASIxcut3VqJKiribhUoey7aYbPIYuj9x4DLPA==}
+    dev: false
+
+  /@datapunt/matomo-tracker-react/0.5.1_react@18.2.0:
+    resolution: {integrity: sha512-lrNYM9hFL6XK0VAdtMb7MwZrLWhaAconx4c7gOGAMvoWuoVm+ZZIYFuKtfYdYMeBf0avxWtmKRwjZEg7T8jV2A==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      '@datapunt/matomo-tracker-js': 0.5.1
+      react: 18.2.0
+    dev: false
 
   /@emotion/babel-plugin/11.10.5:
     resolution: {integrity: sha512-xE7/hyLHJac7D2Ve9dKroBBZqBT7WuPQmWcq7HSGb84sUuP4mlOWoB8dvVfD9yk5DHkU1m6RW7xSoDtnQHNQeA==}

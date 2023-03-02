@@ -6,12 +6,11 @@
  */
 
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query'
-import { createDebugLog, createErrorLog } from 'App/Lib/CreateLog'
+import { createLogs } from 'App/Lib/CreateLog'
 import { E } from 'App/Lib/FpTs'
 import { writeDefaultRecentScripts } from 'App/Lib/RecentScripts/RecentScripts'
 
-const debugLog = createDebugLog('useUpdateRecentScripts')
-const errorLog = createErrorLog('useUpdateRecentScripts')
+const logs = createLogs('useUpdateRecentScripts')
 
 export const useUpdateRecentScripts = (
   options: UseMutationOptions<void, Error, Parameters<typeof writeDefaultRecentScripts>[0]> = {},
@@ -20,12 +19,12 @@ export const useUpdateRecentScripts = (
 
   return useMutation({
     mutationFn: async (params) => {
-      void debugLog('update recent scripts', params)()
+      void logs.debug('update recent scripts', params)()
 
       const res = await writeDefaultRecentScripts(params)()
 
       if (E.isLeft(res)) {
-        void errorLog('error update recent scripts', res.left)()
+        void logs.error('error update recent scripts', res.left)()
 
         throw res.left
       }

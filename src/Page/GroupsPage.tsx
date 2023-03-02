@@ -23,7 +23,7 @@ import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
 import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
-import { createDebugLog, createTraceLog } from 'App/Lib/CreateLog'
+import { createLogs } from 'App/Lib/CreateLog'
 import { A, flow, none, O, pipe, R, TO } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { GroupWithId } from 'App/Type/GroupWithId'
@@ -33,8 +33,7 @@ import { useLocation } from 'react-router-dom'
 import { useEffectOnce } from 'usehooks-ts'
 import { v4 } from 'uuid'
 
-const traceLog = createTraceLog('GroupsPage')
-const debugLog = createDebugLog('GroupsPage')
+const logs = createLogs('GroupsPage')
 
 function GroupsPage() {
   const location = useLocation()
@@ -80,14 +79,19 @@ function GroupsPage() {
       O.map(({ scripts }) => scripts),
       (scripts) => {
         if (O.isSome(scripts)) {
-          debugLog('add group from compilation page scripts list')()
+          logs.debug('add group from compilation page scripts list')()
           openAddGroupDialog(scripts.value)
         }
       },
     )
   })
 
-  const closeDialogs = flow(closeAddGroupDialog, closeRemoveGroupDialog, closeEditGroupDialog, traceLog('closeDialogs'))
+  const closeDialogs = flow(
+    closeAddGroupDialog,
+    closeRemoveGroupDialog,
+    closeEditGroupDialog,
+    logs.trace('closeDialogs'),
+  )
 
   return (
     <>
@@ -114,7 +118,7 @@ function GroupsPage() {
             defaultScripts={addGroupDefaultScripts}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
-              void debugLog('add group', name)()
+              void logs.debug('add group', name)()
 
               await updateGroups.mutateAsync({
                 [v4()]: {
@@ -138,7 +142,7 @@ function GroupsPage() {
             group={groupToEdit}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
-              void debugLog('edit group', name)()
+              void logs.debug('edit group', name)()
 
               await pipe(
                 groupToEdit,

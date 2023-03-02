@@ -5,21 +5,25 @@
  *
  */
 
+import { createInstance, MatomoProvider } from '@datapunt/matomo-tracker-react'
+import { MatomoInstance } from '@datapunt/matomo-tracker-react/es/types'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import CompilationLogsProvider from 'App/Hook/CompilationLogs/UseCompilationLogs'
+import { useConf } from 'App/Hook/Conf/UseConf'
 import CompilationScriptsProvider from 'App/Hook/UseCompilationScripts'
-import { pipe } from 'App/Lib/FpTs'
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import DialogsProvider from 'App/Hook/UseDialogs'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import CompilationPage from 'App/Page/CompilationPage'
 import GroupsPage from 'App/Page/GroupsPage'
 import SettingsPage from 'App/Page/SettingsPage'
 import { configureTranslations } from 'App/Translation/ConfigureTranslations'
+import React, { PropsWithChildren, useRef, useState } from 'react'
+import ReactDOM from 'react-dom/client'
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { useUpdateEffect } from 'usehooks-ts'
 import App from './App'
 import MuiTheme from './MuiTheme'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import './style.css'
 
 declare global {
@@ -28,6 +32,7 @@ declare global {
   }
 }
 
+// Serialize the error to JSON for IPC
 Error.prototype.toJSON = function () {
   return {
     type: this.name,
@@ -45,29 +50,82 @@ const queryClient = new QueryClient({
   },
 })
 
-pipe(document.getElementById('root') as HTMLElement, ReactDOM.createRoot, (root) =>
-  root.render(
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools position="bottom-right" />
-        <DialogsProvider>
-          <CompilationLogsProvider>
-            <CompilationScriptsProvider>
-              <MuiTheme>
-                <MemoryRouter>
-                  <Routes>
-                    <Route path="/" element={<App />}>
-                      <Route index element={<CompilationPage />} />
-                      <Route path="/groups" element={<GroupsPage />} />
-                      <Route path="/settings" element={<SettingsPage />} />
-                    </Route>
-                  </Routes>
-                </MemoryRouter>
-              </MuiTheme>
-            </CompilationScriptsProvider>
-          </CompilationLogsProvider>
-        </DialogsProvider>
-      </QueryClientProvider>
-    </React.StrictMode>,
-  ),
+const Matomo = ({ children }: PropsWithChildren) => {
+  const initialized = useRef(false)
+  const { pathname } = useLocation()
+
+  useConf({
+    onSuccess: (conf) => {
+      const instance = createInstance({
+        urlBase: 'http://localhost:4000',
+        siteId: 1,
+        disabled: !conf.telemetry.use,
+        heartBeat: {
+          active: conf.telemetry.use,
+        },
+      })
+
+      setMatomo(instance)
+
+      const isInTutorial = conf.tutorial.telemetry || conf.tutorial.settings
+
+      if (!initialized.current && conf.telemetry.use && !isInTutorial) {
+        instance.trackPageView({
+          href: pathname,
+        })
+
+        initialized.current = true
+      }
+    },
+  })
+
+  const [matomo, setMatomo] = useState<MatomoInstance>()
+
+  if (!matomo) return null
+
+  // @ts-expect-error - d.ts is invalid
+  return <MatomoProvider value={matomo}>{children}</MatomoProvider>
+}
+
+const RouterListen = ({ children }: PropsWithChildren) => {
+  const location = useLocation()
+  const { trackPageView } = useMatomo()
+
+  useUpdateEffect(() => {
+    trackPageView({ href: location.pathname })
+  }, [location.pathname])
+
+  return <>{children}</>
+}
+
+const root = document.getElementById('root') as HTMLElement
+const rootRef = ReactDOM.createRoot(root)
+
+rootRef.render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools position="bottom-right" />
+      <DialogsProvider>
+        <CompilationLogsProvider>
+          <CompilationScriptsProvider>
+            <MuiTheme>
+              <MemoryRouter>
+                <Matomo>
+                  <RouterListen>
+                    <Routes>
+                      <Route path="/" element={<App />}>
+                        <Route index element={<CompilationPage />} />
+                        <Route path="/groups" element={<GroupsPage />} />
+                        <Route path="/settings" element={<SettingsPage />} />
+                      </Route>
+                    </Routes>
+                  </RouterListen>
+                </Matomo>
+              </MemoryRouter>
+            </MuiTheme>
+          </CompilationScriptsProvider>
+        </CompilationLogsProvider>
+      </DialogsProvider>
+    </QueryClientProvider>
+  </React.StrictMode>,
 )

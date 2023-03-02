@@ -10,13 +10,12 @@ import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentSc
 import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
 import { useCompile } from 'App/Hook/useCompile'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
-import { createErrorLog, createTraceLog } from 'App/Lib/CreateLog'
+import { createLogs } from 'App/Lib/CreateLog'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { A, pipe, RA, TE } from 'App/Lib/FpTs'
 import { useCallback } from 'react'
 
-const traceLog = createTraceLog('useCompilation')
-const errorLog = createErrorLog('useCompilation')
+const logs = createLogs('useCompilation')
 
 export function useCompilation() {
   const updateRecentScripts = useUpdateRecentScripts()
@@ -25,7 +24,7 @@ export function useCompilation() {
   const { add: addCompilationLog } = useCompilationLogs()
   const compileMutation = useCompile()
   const compile = useCallback(async (scripts: FileScriptCompilation[]) => {
-    void traceLog('compile', scripts)()
+    void logs.trace('compile', scripts)()
 
     const res = await pipe(
       TE.sequenceArray(
@@ -38,7 +37,7 @@ export function useCompilation() {
                   status: 'running',
                 })
 
-                traceLog('start compile', script)()
+                logs.trace('start compile', script)()
 
                 return compileMutation.mutateAsync(script)
               },
@@ -47,7 +46,7 @@ export function useCompilation() {
               },
             ),
             TE.mapLeft((reason) => {
-              errorLog('error compile script', script, reason)()
+              logs.error('error compile script', script, reason)()
               console.error('compile', reason)
 
               replace({
@@ -63,7 +62,7 @@ export function useCompilation() {
                 status: log.status === 'error' ? 'error' : 'done',
               })
 
-              traceLog('add compilation log', log)()
+              logs.trace('add compilation log', log)()
 
               addCompilationLog(log)
 
@@ -76,20 +75,20 @@ export function useCompilation() {
 
     return pipe(
       res,
-      TE.chain((logs) => {
+      TE.chain((compilationLogs) => {
         return TE.tryCatch(
           () => {
-            traceLog(
+            logs.trace(
               'add scripts to recent scripts',
-              logs.map((l) => l.script),
+              compilationLogs.map((l) => l.script),
             )()
 
             return updateRecentScripts.mutateAsync({
-              recentScripts: pipe(logs, RA.toArray).map((log) => log.script.path),
+              recentScripts: pipe(compilationLogs, RA.toArray).map((log) => log.script.path),
             })
           },
           (reason) => {
-            errorLog('error update recent scripts', reason)()
+            logs.error('error update recent scripts', reason)()
 
             return new Error(`failed to update recent scripts: ${reason}`)
           },

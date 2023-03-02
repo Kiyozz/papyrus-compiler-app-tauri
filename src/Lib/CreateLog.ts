@@ -14,6 +14,14 @@ export const createTraceLog = (ns: string) => createLog(ns, 'trace')
 export const createWarnLog = (ns: string) => createLog(ns, 'warn')
 export const createErrorLog = (ns: string) => createLog(ns, 'error')
 
+export const createLogs = (ns: string) => ({
+  debug: createDebugLog(ns),
+  trace: createTraceLog(ns),
+  warn: createWarnLog(ns),
+  error: createErrorLog(ns),
+  log: createLog(ns),
+})
+
 export const createLog =
   (ns: string, level: LogLevel = 'info') =>
   (message: string, ...args: unknown[]) =>

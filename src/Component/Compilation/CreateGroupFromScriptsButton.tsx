@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add'
 import Button, { ButtonProps } from '@mui/material/Button'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { fileScriptsCompilationToFileScripts } from 'App/Lib/FileScriptsCompilationToFileScripts'
 import { A } from 'App/Lib/FpTs'
@@ -15,6 +16,7 @@ const CreateGroupFromScriptsButton = forwardRef<
 >(({ scripts, className, ...props }, ref) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const { trackEvent } = useMatomo()
 
   return (
     <Button
@@ -23,6 +25,12 @@ const CreateGroupFromScriptsButton = forwardRef<
       className={className}
       disabled={A.isEmpty(scripts)}
       onClick={() => {
+        trackEvent({
+          category: 'Compilation',
+          action: 'Create group from scripts',
+          value: scripts.length,
+        })
+
         navigate('/groups', {
           state: {
             scripts: fileScriptsCompilationToFileScripts(scripts),

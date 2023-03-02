@@ -29,7 +29,8 @@ import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { createLog, createTraceLog } from 'App/Lib/CreateLog'
+import { useMatomo } from 'App/Hook/UseMatomo'
+import { createLogs } from 'App/Lib/CreateLog'
 import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
@@ -40,11 +41,11 @@ import { toExecutable } from 'App/Lib/ToExecutable'
 import { RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const log = createLog('CompilationPage')
-const traceLog = createTraceLog('CompilationPage')
+const logs = createLogs('CompilationPage')
 
 function CompilationPage() {
   const { t } = useTranslation()
+  const { trackEvent } = useMatomo()
   const {
     compilationLogs: [, setCompilationLogsDialogOpen],
   } = useDialogs()
@@ -68,7 +69,7 @@ function CompilationPage() {
           pathsToFileScript,
           fileScriptsToFileScriptCompilation,
           addScripts,
-          log('add scripts from recent scripts'),
+          logs.log('add scripts from recent scripts'),
           () => setRecentFilesDialogOpen(false),
         )}
       />
@@ -87,7 +88,12 @@ function CompilationPage() {
             ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
             className="px-3 py-2"
             color="inherit"
-            onFileSelect={flow(fileScriptsToFileScriptCompilation, addScripts, log('add scripts from file select'))}
+            onFileSelect={flow(
+              fileScriptsToFileScriptCompilation,
+              addScripts,
+              logs.log('add scripts from file select'),
+              () => trackEvent({ category: 'Compilation', action: 'Add scripts from file select' }),
+            )}
           >
             {t('common.searchScripts')}
           </SearchScriptButton>
@@ -102,7 +108,8 @@ function CompilationPage() {
               pathsToFileScript,
               fileScriptsToFileScriptCompilation,
               addScripts,
-              log('add scripts from group'),
+              logs.log('add scripts from group'),
+              () => trackEvent({ category: 'Compilation', action: 'Add scripts from group' }),
             )}
           >
             {t('common.group')}
@@ -116,11 +123,17 @@ function CompilationPage() {
             <div className="mb-4 flex gap-2">
               <StartCompilationButton
                 onCompilationStart={async () => {
+                  trackEvent({
+                    category: 'Compilation',
+                    action: 'Start',
+                    name: 'All scripts',
+                  })
+
                   await pipe(
                     scripts,
                     A.filter((script) => script.status !== 'running'),
                     (scripts) => {
-                      traceLog('start compilation for all remaining scripts')()
+                      logs.trace('start compilation for all remaining scripts')()
                       scripts.forEach(removeCompilationLog)
 
                       return compile(scripts)
@@ -132,7 +145,7 @@ function CompilationPage() {
 
               <Button
                 disabled={isAllScriptsRunning}
-                onClick={flow(clearScripts, clearCompilationLogs, traceLog('clear scripts and compilation logs'))}
+                onClick={flow(clearScripts, clearCompilationLogs, logs.trace('clear scripts and compilation logs'))}
                 startIcon={<ClearIcon />}
                 color="inherit"
               >
@@ -153,15 +166,27 @@ function CompilationPage() {
               onRemove={(scriptToRemove) => {
                 removeCompilationLog(scriptToRemove)
                 removeScripts([scriptToRemove])
-                traceLog('remove script', scriptToRemove)()
+                logs.trace('remove script', scriptToRemove)()
               }}
               onStart={async (scriptToStart) => {
-                void traceLog('start compile single script', scriptToStart)()
+                void logs.trace('start compile single script', scriptToStart)()
                 removeCompilationLog(scriptToStart)
                 await compile([scriptToStart])
+
+                trackEvent({
+                  category: 'Compilation',
+                  action: 'Start',
+                  name: 'Row',
+                })
               }}
               onClickOnError={() => {
                 setCompilationLogsDialogOpen(true)
+
+                trackEvent({
+                  category: 'Compilation',
+                  action: 'Show error',
+                  name: 'Row',
+                })
               }}
               disabled={isCheckConfQueryError(checkConf)}
             />

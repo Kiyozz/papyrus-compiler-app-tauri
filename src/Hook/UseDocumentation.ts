@@ -7,31 +7,34 @@
 
 import { open } from '@tauri-apps/api/shell'
 import useDocumentationUrl from 'App/Hook/UseDocumentationUrl'
-import { useTelemetry } from 'App/Hook/UseTelemetry'
-import { createDebugLog, createErrorLog } from 'App/Lib/CreateLog'
+import { useMatomo } from 'App/Hook/UseMatomo'
+import { createLogs } from 'App/Lib/CreateLog'
 import { E, TE } from 'App/Lib/FpTs'
 
-const debugLog = createDebugLog('useDocumentation')
-const errorLog = createErrorLog('useDocumentation')
+const logs = createLogs('useDocumentation')
 
 const openUrl = (url: string) => () => open(url)
 
 export function useDocumentation() {
-  const { send } = useTelemetry()
+  const { trackEvent } = useMatomo()
   const documentationUrl = useDocumentationUrl()
 
   const openTheDocumentation = async (
-    reason: 'enter' | 'click' | 'settings-app-bar',
+    _reason: 'enter' | 'click' | 'settings-app-bar',
   ): Promise<E.Either<Error, void>> => {
     if (!documentationUrl.data) {
-      void errorLog('cannot open documentation, environment is not set')()
+      void logs.error('cannot open documentation, environment is not set')()
 
       return E.left(new Error('Cannot open documentation, environment is not set'))
     }
 
-    send('TelemetryEvent.documentationOpenFromNav', { reason })
+    trackEvent({
+      category: 'Documentation',
+      action: 'Open',
+      name: 'Nav',
+    })
 
-    void debugLog('open documentation')()
+    void logs.debug('open documentation')()
 
     const res = await TE.tryCatch(
       openUrl(documentationUrl.data),
@@ -39,7 +42,7 @@ export function useDocumentation() {
     )()
 
     if (E.isLeft(res)) {
-      void errorLog('error open documentation')()
+      void logs.error('error open documentation')()
 
       console.error(res.left)
     }
