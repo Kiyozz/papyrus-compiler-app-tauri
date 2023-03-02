@@ -18,6 +18,7 @@ import Toolbar from '@mui/material/Toolbar'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
 import { useKey } from 'App/Hook/UseKey'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { GroupZod } from 'App/Lib/Form/GroupForm'
 import { O, pipe, S, TO } from 'App/Lib/FpTs'
@@ -43,6 +44,7 @@ const EditGroupDialog = ({
   actionsDisabled?: boolean
   actionsIsLoading?: boolean
 }) => {
+  const { trackEvent } = useMatomo()
   const {
     scripts,
     add: addScripts,
@@ -176,7 +178,14 @@ const EditGroupDialog = ({
           <SearchScriptButton
             className="mr-auto px-3 py-2"
             color="inherit"
-            onFileSelect={addScripts}
+            onFileSelect={(files, reason) => {
+              addScripts(files)
+              trackEvent({
+                category: 'Group',
+                action: 'Add scripts',
+                name: reason,
+              })
+            }}
             disabled={actionsDisabled}
           >
             {t('common.searchScripts')}

@@ -15,6 +15,7 @@ import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { O, some } from 'App/Lib/FpTs'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +23,7 @@ import { Navigate } from 'react-router-dom'
 
 function SettingsMo2Section() {
   const { t } = useTranslation()
+  const { trackEvent } = useMatomo()
   const conf = useConf()
   const updateConf = useUpdateConf()
   const checkConf = useCheckConf(O.fromNullable(conf.data))
@@ -49,13 +51,16 @@ function SettingsMo2Section() {
               onChange={(evt) => {
                 const checked = evt.currentTarget.checked
 
-                // send telemetry
-
                 updateConf.mutate({
                   mo2: {
                     use: checked,
                     instance: checked ? mo2Instance : undefined,
                   },
+                })
+                trackEvent({
+                  category: 'Conf',
+                  action: 'Use Mo2',
+                  name: checked ? 'Enable' : 'Disable',
                 })
               }}
             />

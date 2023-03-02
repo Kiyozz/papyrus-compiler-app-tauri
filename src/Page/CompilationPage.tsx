@@ -88,12 +88,11 @@ function CompilationPage() {
             ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
             className="px-3 py-2"
             color="inherit"
-            onFileSelect={flow(
-              fileScriptsToFileScriptCompilation,
-              addScripts,
-              logs.log('add scripts from file select'),
-              () => trackEvent({ category: 'Compilation', action: 'Add scripts from file select' }),
-            )}
+            onFileSelect={(files, reason) => {
+              void pipe(files, fileScriptsToFileScriptCompilation, addScripts, logs.log('add scripts from file select'))
+
+              trackEvent({ category: 'Compilation', action: 'Add scripts', name: reason })
+            }}
           >
             {t('common.searchScripts')}
           </SearchScriptButton>
@@ -109,7 +108,7 @@ function CompilationPage() {
               fileScriptsToFileScriptCompilation,
               addScripts,
               logs.log('add scripts from group'),
-              () => trackEvent({ category: 'Compilation', action: 'Add scripts from group' }),
+              () => trackEvent({ category: 'Compilation', action: 'Add scripts', name: 'Group' }),
             )}
           >
             {t('common.group')}
@@ -145,7 +144,17 @@ function CompilationPage() {
 
               <Button
                 disabled={isAllScriptsRunning}
-                onClick={flow(clearScripts, clearCompilationLogs, logs.trace('clear scripts and compilation logs'))}
+                onClick={flow(
+                  clearScripts,
+                  clearCompilationLogs,
+                  logs.trace('clear scripts and compilation logs'),
+                  () => {
+                    trackEvent({
+                      category: 'Compilation',
+                      action: 'Clear',
+                    })
+                  },
+                )}
                 startIcon={<ClearIcon />}
                 color="inherit"
               >

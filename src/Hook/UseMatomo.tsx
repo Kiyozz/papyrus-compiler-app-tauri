@@ -14,29 +14,41 @@ export const useMatomo = () => {
 
   const track = (action: () => void) => {
     if (conf.isSuccess && conf.data.telemetry.use) {
-      action()
+      try {
+        action()
+      } catch {
+        // ignore if the server is not available
+      }
     }
   }
 
   return {
-    trackPageView: (params: Parameters<typeof trackPageView>[0]) => {
-      track(() => {
+    trackPageView: (params: Parameters<typeof trackPageView>[0], { force = false }: { force?: boolean } = {}) => {
+      if (force) {
         trackPageView(params)
-      })
+      } else {
+        track(() => {
+          return trackPageView(params)
+        })
+      }
     },
-    trackEvent: (params: Parameters<typeof trackEvent>[0]) => {
-      track(() => {
+    trackEvent: (params: Parameters<typeof trackEvent>[0], { force = false }: { force?: boolean } = {}) => {
+      if (force) {
         trackEvent(params)
-      })
+      } else {
+        track(() => {
+          return trackEvent(params)
+        })
+      }
     },
     trackEvents: () => {
       track(() => {
-        trackEvents()
+        return trackEvents()
       })
     },
     trackLink: (params: Parameters<typeof trackLink>[0]) => {
       track(() => {
-        trackLink(params)
+        return trackLink(params)
       })
     },
   }

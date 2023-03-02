@@ -15,16 +15,30 @@ import SettingsMo2Section from 'App/Component/Settings/SettingsMo2Section'
 import SettingsTelemetrySection from 'App/Component/Settings/SettingsTelemetrySection'
 import SettingsThemeSection from 'App/Component/Settings/SettingsThemeSection'
 import { useRefreshConf } from 'App/Hook/Conf/UseRefreshConf'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { useTranslation } from 'react-i18next'
 
 function SettingsPage() {
   const { t } = useTranslation()
   const refreshConf = useRefreshConf()
+  const { trackEvent } = useMatomo()
 
   return (
     <div>
       <PageAppBar title={t('page.settings.appBar.title')}>
-        <Button className="px-3 py-2" color="inherit" startIcon={<RefreshIcon />} onClick={refreshConf}>
+        <Button
+          className="px-3 py-2"
+          color="inherit"
+          startIcon={<RefreshIcon />}
+          onClick={() => {
+            void refreshConf()
+            trackEvent({
+              category: 'Conf',
+              action: 'Refresh',
+              name: 'Settings',
+            })
+          }}
+        >
           {t('common.refresh')}
         </Button>
       </PageAppBar>

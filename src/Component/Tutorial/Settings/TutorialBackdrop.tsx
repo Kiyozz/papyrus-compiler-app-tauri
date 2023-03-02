@@ -48,7 +48,9 @@ const TutorialBackdrop = ({
           className="fixed top-4 left-4 z-50"
           variant="contained"
           color="info"
-          onClick={skip}
+          onClick={() => {
+            skip('skip')
+          }}
           endIcon={<CloseIcon />}
         >
           {t('common.skip')}

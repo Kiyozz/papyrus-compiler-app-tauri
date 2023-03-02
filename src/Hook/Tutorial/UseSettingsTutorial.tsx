@@ -7,7 +7,8 @@
 
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
-import { isNone, none, O, some } from 'App/Lib/FpTs'
+import { useMatomo } from 'App/Hook/UseMatomo'
+import { isNone, isSome, none, O, some } from 'App/Lib/FpTs'
 import { createContext, PropsWithChildren, useCallback, useContext, useState, RefObject, useRef, useMemo } from 'react'
 import { match } from 'ts-pattern'
 
@@ -31,7 +32,7 @@ const Context = createContext({
   changeStep: (step: TutorialStep) => {},
   refs: {} as TutorialRefs,
   scrollInto: (ref: keyof TutorialRefs) => {},
-  skip: () => {},
+  skip: (reason: 'skip' | 'end' | 'deny') => {},
   total: {
     current: 0,
     end: 8,
@@ -44,6 +45,7 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
       setStep(some(!data.tutorial.settings ? 'end' : 'welcome'))
     },
   })
+  const { trackEvent } = useMatomo()
 
   const [step, setStep] = useState<O.Option<TutorialStep>>(none)
   const gameRef = useRef<HTMLDivElement>(null)
@@ -72,6 +74,11 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
 
   const changeStep = useCallback((step: TutorialStep) => {
     setStep(some(step))
+    trackEvent({
+      category: 'Settings tutorial',
+      action: 'Change step',
+      name: step,
+    })
   }, [])
 
   const scrollInto = useCallback(
@@ -94,14 +101,25 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
     [refs],
   )
 
-  const skip = useCallback(() => {
-    changeStep('end')
-    updateConf.mutate({
-      tutorial: {
-        settings: false,
-      },
-    })
-  }, [changeStep])
+  const skip = useCallback(
+    (reason: 'skip' | 'end' | 'deny') => {
+      changeStep('end')
+      updateConf.mutate({
+        tutorial: {
+          settings: false,
+        },
+      })
+
+      if (isSome(step)) {
+        trackEvent({
+          category: 'Settings tutorial',
+          action: 'Skip',
+          name: reason,
+        })
+      }
+    },
+    [changeStep],
+  )
 
   const total = useMemo(() => {
     if (isNone(step)) return { current: 0, end: 8 }

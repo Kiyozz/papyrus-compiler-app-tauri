@@ -30,6 +30,7 @@ import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentSc
 import { useContextMenu } from 'App/Hook/UseContextMenu'
 import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useKey } from 'App/Hook/UseKey'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { pipe, A, O, flow, B, isSome, TE, isLeft } from 'App/Lib/FpTs'
@@ -48,6 +49,7 @@ function RecentScriptsDialog({
   currentScripts: FileScript[]
   onScriptsLoad: (scripts: FileScript[]) => void
 }) {
+  const { trackEvent } = useMatomo()
   const { t } = useTranslation()
   const recentScripts = useRecentScripts({
     refetchOnWindowFocus: false,
@@ -82,6 +84,10 @@ function RecentScriptsDialog({
   const handleOnLoad = () => {
     onScriptsLoad(scriptsToLoad)
     effectiveClearScriptsToLoad()
+    trackEvent({
+      category: 'Recent Scripts',
+      action: 'Load',
+    })
   }
 
   const onDialogEnter = useKey('Enter', () => {

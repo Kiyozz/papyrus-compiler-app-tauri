@@ -12,12 +12,27 @@ import Tooltip from '@mui/material/Tooltip'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 function SettingsTelemetrySection() {
   const { t } = useTranslation()
-  const conf = useConf()
+  const { trackEvent } = useMatomo()
+  const conf = useConf({
+    onSuccess: (conf) => {
+      if (conf.telemetry.use) {
+        trackEvent(
+          {
+            category: 'Conf',
+            action: 'Change telemetry',
+            name: 'Enable',
+          },
+          { force: true },
+        )
+      }
+    },
+  })
   const updateConf = useUpdateConf()
 
   if (conf.isLoading) return <>Loading...</>
@@ -41,10 +56,19 @@ function SettingsTelemetrySection() {
         control={
           <Checkbox
             checked={telemetryUse}
-            onChange={(evt) => {
+            onChange={async (evt) => {
               const checked = evt.currentTarget.checked
 
-              updateConf.mutate({
+              // If user disable telemetry, we send an event before to track it
+              if (conf.data.telemetry.use && !checked) {
+                trackEvent({
+                  category: 'Conf',
+                  action: 'Change telemetry',
+                  name: 'Disable',
+                })
+              }
+
+              await updateConf.mutateAsync({
                 telemetry: {
                   use: checked,
                 },

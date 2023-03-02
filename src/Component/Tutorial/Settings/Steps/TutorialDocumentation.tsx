@@ -24,7 +24,7 @@ const TutorialDocumentation = () => {
       }}
       onNext={() => {
         navigate('/settings')
-        skip()
+        skip('end')
         clear()
       }}
     />

@@ -22,6 +22,7 @@ import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
 import { useDialogOpen } from 'App/Hook/UseDialogOpen'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { createLogs } from 'App/Lib/CreateLog'
 import { A, flow, none, O, pipe, R, TO } from 'App/Lib/FpTs'
@@ -36,6 +37,7 @@ import { v4 } from 'uuid'
 const logs = createLogs('GroupsPage')
 
 function GroupsPage() {
+  const { trackEvent } = useMatomo()
   const location = useLocation()
   const { t } = useTranslation()
   const updateGroups = useUpdateGroups()
@@ -132,6 +134,10 @@ function GroupsPage() {
               })
 
               void closeDialogs()
+              trackEvent({
+                category: 'Group',
+                action: 'Create',
+              })
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}
@@ -163,6 +169,10 @@ function GroupsPage() {
                 }),
               )()
 
+              trackEvent({
+                category: 'Group',
+                action: 'Edit',
+              })
               void closeDialogs()
             }}
             actionsDisabled={updateGroups.isLoading}

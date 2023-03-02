@@ -14,6 +14,7 @@ import { useConf } from 'App/Hook/Conf/UseConf'
 import CompilationScriptsProvider from 'App/Hook/UseCompilationScripts'
 import DialogsProvider from 'App/Hook/UseDialogs'
 import { useMatomo } from 'App/Hook/UseMatomo'
+import { useVersion } from 'App/Hook/UseVersion'
 import CompilationPage from 'App/Page/CompilationPage'
 import GroupsPage from 'App/Page/GroupsPage'
 import SettingsPage from 'App/Page/SettingsPage'
@@ -53,6 +54,7 @@ const queryClient = new QueryClient({
 const Matomo = ({ children }: PropsWithChildren) => {
   const initialized = useRef(false)
   const { pathname } = useLocation()
+  const version = useVersion()
 
   useConf({
     onSuccess: (conf) => {
@@ -73,10 +75,16 @@ const Matomo = ({ children }: PropsWithChildren) => {
         instance.trackPageView({
           href: pathname,
         })
+        instance.trackEvent({
+          category: 'App',
+          action: 'Start',
+          name: version.data,
+        })
 
         initialized.current = true
       }
     },
+    enabled: version.isSuccess,
   })
 
   const [matomo, setMatomo] = useState<MatomoInstance>()

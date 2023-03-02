@@ -17,6 +17,7 @@ import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { GameType } from 'App/Lib/Conf/ConfDecoder'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
@@ -31,6 +32,7 @@ function SettingsGameSection() {
   const updateConf = useUpdateConf()
   const checkConf = useCheckConf(O.fromNullable(conf.data))
   const { refs } = useSettingsTutorial()
+  const { trackEvent } = useMatomo()
 
   const games: { value: GameType; label: string }[] = [
     {
@@ -73,6 +75,11 @@ function SettingsGameSection() {
             classes={{ row: 'justify-between' }}
             row
             onChange={(evt, value) => {
+              trackEvent({
+                category: 'Conf',
+                action: 'Change game',
+                name: value,
+              })
               updateConf.mutate({
                 game: {
                   type: value as GameType,

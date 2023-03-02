@@ -17,11 +17,11 @@ import { useTranslation } from 'react-i18next'
 
 const SearchScriptButton = forwardRef<
   HTMLButtonElement,
-  { onFileSelect: (files: FileScript[]) => void } & Omit<ButtonProps, 'ref'>
+  { onFileSelect: (files: FileScript[], reason: 'Drop' | 'Select') => void } & Omit<ButtonProps, 'ref'>
 >(({ onFileSelect, disabled, ...props }, ref) => {
   const { t } = useTranslation()
   useListenFileDrop({
-    onDrop: (evt) => pipe(evt.payload, pathsToFileScript, onFileSelect),
+    onDrop: (evt) => pipe(evt.payload, pathsToFileScript, (files) => onFileSelect(files, 'Drop')),
   })
 
   const [isDialogOpen, setDialogOpen] = useState(false)
@@ -49,7 +49,9 @@ const SearchScriptButton = forwardRef<
               O.fromNullable,
               O.map(pathsToFileScript),
               O.filter((files) => files.length > 0),
-              O.map(onFileSelect),
+              O.map((files) => {
+                onFileSelect(files, 'Select')
+              }),
             )
           })
           .finally(() => {

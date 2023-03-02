@@ -12,6 +12,7 @@ import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { O, pipe } from 'App/Lib/FpTs'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
@@ -30,6 +31,7 @@ function SettingsCompilationSection() {
   const conf = useConf()
   const updateConf = useUpdateConf()
   const { refs } = useSettingsTutorial()
+  const { trackEvent } = useMatomo()
 
   if (conf.isLoading) return <>Loading...</>
   if (!conf.isSuccess) return <Navigate to="/" />
@@ -65,6 +67,11 @@ function SettingsCompilationSection() {
                 compilation: {
                   concurrentScripts: newValue.value,
                 },
+              })
+              trackEvent({
+                category: 'Conf',
+                action: 'Change concurrent scripts',
+                value: newValue.value,
               })
             }
           }}

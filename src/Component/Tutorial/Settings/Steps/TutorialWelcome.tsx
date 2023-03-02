@@ -13,6 +13,7 @@ import AnchorExternal, { AnchorExternalProps } from 'App/Component/AnchorExterna
 import TutorialContent from 'App/Component/Tutorial/Settings/TutorialContent'
 import useDocumentationUrl from 'App/Hook/UseDocumentationUrl'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { useMatomo } from 'App/Hook/UseMatomo'
 import { useState } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -29,6 +30,7 @@ const AnchorWithOpenInBrowser = ({ children, ...props }: AnchorExternalProps) =>
 
 const TutorialWelcome = () => {
   const { changeStep, skip } = useSettingsTutorial()
+  const { trackEvent } = useMatomo()
   const [waiting, setWaiting] = useState(true)
   const documentationUrl = useDocumentationUrl()
   const { t } = useTranslation()
@@ -62,11 +64,21 @@ const TutorialWelcome = () => {
               onClick={() => {
                 navigate('/settings')
                 changeStep('settings-game')
+                trackEvent({
+                  category: 'Settings tutorial',
+                  action: 'Start',
+                })
               }}
             >
               {t('common.settingsTutorial.welcome.needHelpText')}
             </Button>
-            <Button disabled={waiting} color="inherit" onClick={skip}>
+            <Button
+              disabled={waiting}
+              color="inherit"
+              onClick={() => {
+                skip('deny')
+              }}
+            >
               {t('common.close')}
             </Button>
           </div>
