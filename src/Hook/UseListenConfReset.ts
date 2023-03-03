@@ -8,7 +8,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { listen } from '@tauri-apps/api/event'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { Conf, ConfDecoder } from 'App/Lib/Conf/ConfDecoder'
+import { type Conf, ConfDecoder } from 'App/Lib/Conf/ConfDecoder'
 import { isLeft } from 'App/Lib/FpTs'
 import { D } from 'App/Lib/IoTs'
 import { useEffect } from 'react'
@@ -18,7 +18,7 @@ export const useListenConfReset = () => {
   const { trackEvent } = useMatomo()
 
   useEffect(() => {
-    const unsubscribe = listen<Conf>('pca://conf_reset', async (evt) => {
+    const unsubscribe = listen<Conf>('pca://conf_reset', (evt) => {
       const conf = ConfDecoder.decode(evt.payload)
 
       if (isLeft(conf)) {
@@ -32,11 +32,13 @@ export const useListenConfReset = () => {
       })
 
       queryClient.setQueryData(['conf'], conf.right)
-      await queryClient.invalidateQueries(['conf-check', conf.right])
+      void queryClient.invalidateQueries(['conf-check', conf.right])
     })
 
     return () => {
-      unsubscribe.then((unsub) => unsub())
+      void unsubscribe.then((unsub) => {
+        unsub()
+      })
     }
-  }, [])
+  }, [queryClient, trackEvent])
 }

@@ -5,7 +5,7 @@
  *
  */
 
-import { TranslationSchema } from 'App/Type/TranslationSchema'
+import { type TranslationSchema } from 'App/Type/TranslationSchema'
 
 const fr: TranslationSchema = {
   common: {

@@ -5,7 +5,7 @@
  *
  */
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 import { createLog } from 'App/Lib/CreateLog'
 import { getVersion } from 'App/Lib/Version'
 

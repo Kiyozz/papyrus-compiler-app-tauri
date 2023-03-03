@@ -5,12 +5,12 @@
  *
  */
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { GitHubRelease } from 'App/GitHub/GitHubRelease'
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
+import { type GitHubRelease } from 'App/GitHub/GitHubRelease'
 import { createLogs } from 'App/Lib/CreateLog'
 import { isLeft } from 'App/Lib/FpTs'
 import { getLatestVersion } from 'App/Lib/Version'
-import { Response } from '@tauri-apps/api/http'
+import { type Response } from '@tauri-apps/api/http'
 
 const logs = createLogs('useLatestVersion')
 

@@ -12,8 +12,8 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { writeText as copyToClipboard } from '@tauri-apps/api/clipboard'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
-import { CompilationLog } from 'App/Lib/Compilation/CompilationLog'
-import { E, TE } from 'App/Lib/FpTs'
+import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
+import { type E, TE } from 'App/Lib/FpTs'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -25,7 +25,7 @@ const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
 
   return (
     <Paper aria-describedby={`${log.script.id}-logs`} aria-labelledby={`${log.script.id}-title`} elevation={3}>
-      <Paper elevation={3} className="sticky -top-3 rounded-bl-none rounded-br-none p-2 shadow-none">
+      <Paper elevation={3} className="sticky -top-3 rounded-b-none p-2 shadow-none">
         <Typography
           component="div"
           id={`${log.script.id}-title`}
@@ -41,7 +41,9 @@ const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
               color="inherit"
               onClick={async () => {
                 const res = await TE.tryCatch(
-                  () => copyToClipboard(`${log.script.name}\n\n${log.output.trim()}`),
+                  async () => {
+                    await copyToClipboard(`${log.script.name}\n\n${log.output.trim()}`)
+                  },
                   (reason) => new Error(`Failed to copy to clipboard: ${reason}`),
                 )()
 
@@ -62,7 +64,7 @@ const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
         </Typography>
       </Paper>
       <Paper
-        className="block w-full rounded-tr-none rounded-tl-none bg-gray-800 p-4 text-white dark:bg-black-800"
+        className="block w-full rounded-t-none bg-gray-800 p-4 text-white dark:bg-black-800"
         component="code"
         elevation={0}
         id={`${log.script.id}-logs`}

@@ -8,8 +8,17 @@
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { isNone, isSome, none, O, some } from 'App/Lib/FpTs'
-import { createContext, PropsWithChildren, useCallback, useContext, useState, RefObject, useRef, useMemo } from 'react'
+import { isNone, isSome, none, type O, some } from 'App/Lib/FpTs'
+import {
+  createContext,
+  type PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+  type RefObject,
+  useRef,
+  useMemo,
+} from 'react'
 import { match } from 'ts-pattern'
 
 export type TutorialSettingsStep = 'settings-game' | 'settings-compiler' | 'settings-concurrent' | 'settings-mo2'
@@ -30,6 +39,7 @@ export type TutorialRefs = Record<
 const Context = createContext({
   step: none as O.Option<TutorialStep>,
   changeStep: (step: TutorialStep) => {},
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   refs: {} as TutorialRefs,
   scrollInto: (ref: keyof TutorialRefs) => {},
   skip: (reason: 'skip' | 'end' | 'deny') => {},
@@ -72,14 +82,17 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
     [],
   )
 
-  const changeStep = useCallback((step: TutorialStep) => {
-    setStep(some(step))
-    trackEvent({
-      category: 'Settings tutorial',
-      action: 'Change step',
-      name: step,
-    })
-  }, [])
+  const changeStep = useCallback(
+    (step: TutorialStep) => {
+      setStep(some(step))
+      trackEvent({
+        category: 'Settings tutorial',
+        action: 'Change step',
+        name: step,
+      })
+    },
+    [trackEvent],
+  )
 
   const scrollInto = useCallback(
     (ref: keyof TutorialRefs) => {
@@ -87,7 +100,7 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
 
       const element = refs[ref].current
 
-      if (!element) return
+      if (element === null) return
 
       const offset = 140
       const sectionTop = element.getBoundingClientRect().top
@@ -118,7 +131,7 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
         })
       }
     },
-    [changeStep],
+    [changeStep, step, trackEvent, updateConf],
   )
 
   const total = useMemo(() => {

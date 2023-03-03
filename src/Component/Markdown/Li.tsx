@@ -7,7 +7,7 @@
 
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import { PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 
 const Li = ({ children }: PropsWithChildren) => (
   <ListItem>

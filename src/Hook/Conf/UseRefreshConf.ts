@@ -14,10 +14,10 @@ const logs = createLogs('useRefreshConf')
 export const useRefreshConf = () => {
   const queryClient = useQueryClient()
 
-  return useCallback(() => {
-    logs.debug('refreshing conf')()
+  return useCallback(async () => {
+    void logs.debug('refreshing conf')()
 
-    return queryClient.invalidateQueries({
+    await queryClient.invalidateQueries({
       queryKey: ['conf'],
       type: 'all',
     })

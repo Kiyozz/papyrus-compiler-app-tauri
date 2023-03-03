@@ -5,8 +5,8 @@
  *
  */
 
-import { useState, MouseEvent } from 'react'
-import { isNone, isSome, none, Option, some } from '../Lib/FpTs'
+import { useState, type MouseEvent } from 'react'
+import { isNone, isSome, none, type Option, some } from '../Lib/FpTs'
 
 export const useContextMenu = () => {
   const [contextMenu, setContextMenu] = useState<Option<{ mouseX: number; mouseY: number }>>(none)

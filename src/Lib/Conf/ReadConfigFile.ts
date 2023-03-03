@@ -7,17 +7,17 @@
 
 import { BaseDirectory, readTextFile, exists } from '@tauri-apps/api/fs'
 import { parseAndDecodeConf } from 'App/Lib/Conf/Json'
-import { flow, TE, T } from 'App/Lib/FpTs'
+import { flow, TE, type T } from 'App/Lib/FpTs'
 
 export const readConfigFile = (path: string): TE.TaskEither<Error, string> =>
   TE.tryCatch(
-    () => readTextFile(path, { dir: BaseDirectory.App }),
+    async () => await readTextFile(path, { dir: BaseDirectory.App }),
     (reason) => new Error(`Cannot read config file, error given: ${reason}`),
   )
 
 export const canReadConfigFile =
   (path: string): T.Task<boolean> =>
-  () =>
-    exists(path, { dir: BaseDirectory.App })
+  async () =>
+    await exists(path, { dir: BaseDirectory.App })
 
 export const readConfigFileJson = flow(readConfigFile, TE.chainEitherKW(parseAndDecodeConf))

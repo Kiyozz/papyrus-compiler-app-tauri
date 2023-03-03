@@ -7,7 +7,7 @@
 
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
-import Dialog, { DialogProps } from '@mui/material/Dialog'
+import Dialog, { type DialogProps } from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
@@ -56,7 +56,14 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
   }
 
   return (
-    <Dialog open={isOpen} onClose={() => setOpen(false)} onKeyDown={onDialogKeyDown} {...props}>
+    <Dialog
+      open={isOpen}
+      onClose={() => {
+        setOpen(false)
+      }}
+      onKeyDown={onDialogKeyDown}
+      {...props}
+    >
       <DialogTitle>{t('dialog.openDocumentation.title')}</DialogTitle>
       <DialogContent>
         <DialogContentText>{t('dialog.openDocumentation.text')}</DialogContentText>
@@ -74,7 +81,12 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
         </FormGroup>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setOpen(false)} color="inherit">
+        <Button
+          onClick={() => {
+            setOpen(false)
+          }}
+          color="inherit"
+        >
           {t('common.cancel')}
         </Button>
         <Button onClick={onConfirm} color="inherit" autoFocus>

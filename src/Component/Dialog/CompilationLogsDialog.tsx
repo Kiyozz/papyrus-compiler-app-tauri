@@ -7,7 +7,7 @@
 
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
-import Dialog, { DialogProps } from '@mui/material/Dialog'
+import Dialog, { type DialogProps } from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -20,7 +20,7 @@ import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSnackbar } from 'App/Hook/UseSnackbar'
 import { A, isLeft, pipe } from 'App/Lib/FpTs'
 import cx from 'classnames'
-import { KeyboardEvent } from 'react'
+import { type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'onKeyDown'>) => {
@@ -91,7 +91,6 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
                       if (isLeft(res)) {
                         console.error(res.left)
                         errorCopy(res.left)
-                        return
                       } else {
                         successCopy()
                       }
@@ -102,7 +101,12 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
           )}
         </DialogContent>
         <DialogActions>
-          <Button color="inherit" onClick={() => setOpen(false)}>
+          <Button
+            color="inherit"
+            onClick={() => {
+              setOpen(false)
+            }}
+          >
             {t('common.close')}
           </Button>
         </DialogActions>

@@ -6,7 +6,7 @@
  */
 
 import { match, P } from 'ts-pattern'
-import { CheckConfError } from './CheckConf'
+import { type CheckConfError } from './CheckConf'
 
 export type CheckConfErrorTypes =
   | 'gamePathDoesNotExist'

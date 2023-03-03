@@ -5,9 +5,9 @@
  *
  */
 
-import { useMutation, UseMutationOptions } from '@tanstack/react-query'
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { useConf } from 'App/Hook/Conf/UseConf'
-import { CompilationLog } from 'App/Lib/Compilation/CompilationLog'
+import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
 import { compileScript } from 'App/Lib/Compilation/CompileScript'
 import { isLeft } from 'App/Lib/FpTs'
 

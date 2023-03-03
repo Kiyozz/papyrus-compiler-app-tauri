@@ -5,7 +5,7 @@
  *
  */
 
-export type TranslationSchema = {
+export interface TranslationSchema {
   common: {
     back: string
     next: string

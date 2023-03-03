@@ -12,9 +12,9 @@ export const useSystemDarkPreference = (): boolean => {
   const [isUsingDark, setDark] = useState(isDark)
 
   useEffect(() => {
-    const unsubscribe = onDarkPreferenceChanges((matches) => setDark(matches))
+    const unsubscribe = onDarkPreferenceChanges((matches) => { setDark(matches); })
 
-    return () => unsubscribe()
+    return () => { unsubscribe(); }
   }, [])
 
   return isUsingDark

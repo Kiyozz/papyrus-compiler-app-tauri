@@ -7,8 +7,8 @@
 
 import { A, pipe } from 'App/Lib/FpTs'
 import { uniqObjectArrayByKeys } from 'App/Lib/UniqObjectArrayByKeys'
-import { useReducer } from 'react'
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { useCallback, useReducer } from 'react'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { match } from 'ts-pattern'
 
 type Action<T extends FileScript> =
@@ -47,12 +47,32 @@ type ScriptsReducer<T extends FileScript> = (state: T[], action: Action<T>) => T
 export const useScriptsList = <T extends FileScript>({ initialScripts = [] }: { initialScripts: T[] }) => {
   const [scripts, dispatch] = useReducer<ScriptsReducer<T>>(reducer, initialScripts)
 
+  const add = useCallback((files: T[]) => {
+    dispatch({ type: 'add', payload: files })
+  }, [])
+
+  const remove = useCallback((files: T[]) => {
+    dispatch({ type: 'remove', payload: files })
+  }, [])
+
+  const replace = useCallback((file: T) => {
+    dispatch({ type: 'replace', payload: file })
+  }, [])
+
+  const clear = useCallback(() => {
+    dispatch({ type: 'clear' })
+  }, [])
+
+  const reset = useCallback((files: T[]) => {
+    dispatch({ type: 'reset', payload: files })
+  }, [])
+
   return {
     scripts,
-    add: (files: T[]) => dispatch({ type: 'add', payload: files }),
-    remove: (files: T[]) => dispatch({ type: 'remove', payload: files }),
-    replace: (file: T) => dispatch({ type: 'replace', payload: file }),
-    clear: () => dispatch({ type: 'clear' }),
-    reset: (files: T[]) => dispatch({ type: 'reset', payload: files }),
+    add,
+    remove,
+    replace,
+    clear,
+    reset,
   }
 }

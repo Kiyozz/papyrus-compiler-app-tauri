@@ -5,7 +5,7 @@
  *
  */
 import { invoke } from '@tauri-apps/api/tauri'
-import { LogLevel } from 'App/Lib/Conf/ConfDecoder'
+import { type LogLevel } from 'App/Lib/Conf/ConfDecoder'
 import { isLeft, TE } from 'App/Lib/FpTs'
 import { stringify } from 'App/Lib/Json'
 
@@ -30,11 +30,14 @@ export const createLog =
 
     if (isLeft(json)) {
       console.log(json)
-      return Promise.reject(json.left)
+      await Promise.reject(json.left)
+      return
     }
 
     const res = await TE.tryCatch(
-      () => invoke<void>('log', { ns, message, level, args: json.right }),
+      async () => {
+        await invoke('log', { ns, message, level, args: json.right })
+      },
       (reason) => new Error(`cannot call log command. error given: ${reason}`),
     )()
 

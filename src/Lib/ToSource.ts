@@ -5,8 +5,8 @@
  *
  */
 
-import { GameSource } from 'App/Lib/GameSourceDecoder'
-import { GameType } from 'App/Lib/Conf/ConfDecoder'
+import { type GameSource } from 'App/Lib/GameSourceDecoder'
+import { type GameType } from 'App/Lib/Conf/ConfDecoder'
 import { match, P } from 'ts-pattern'
 
 export const toSource = (game: GameType): GameSource => {

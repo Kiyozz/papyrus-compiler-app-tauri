@@ -5,8 +5,8 @@
  *
  */
 
-import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
 
 export const isRunning = (fileScriptCompilation: FileScriptCompilation): boolean =>
   fileScriptCompilation.status === 'running'

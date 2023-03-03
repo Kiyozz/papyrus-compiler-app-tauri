@@ -5,7 +5,7 @@
  *
  */
 
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
 
 export const isFileScriptInArray =
   (file: FileScript) =>

@@ -1,0 +1,36 @@
+{
+  "env": {
+    "browser": true,
+    "node": false
+  },
+  "extends": [
+    "eslint:recommended",
+    "standard-with-typescript",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:tailwindcss/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "react/react-in-jsx-scope": "off",
+    "array-callback-return": "off",
+    "@typescript-eslint/no-misused-promises": ["error", {
+      "checksVoidReturn": {
+        "attributes": false
+      }
+    }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "tailwindcss": {
+      "config": "tailwind.config.cjs",
+      "callees": ["cx", "classnames"]
+    }
+  }
+}

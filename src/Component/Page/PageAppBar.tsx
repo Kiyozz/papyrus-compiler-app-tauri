@@ -7,7 +7,7 @@
 
 import { AppBar, Toolbar, Typography } from '@mui/material'
 import cx from 'classnames'
-import { PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 
 function PageAppBar({ title, className, children }: PropsWithChildren<{ title: string; className?: string }>) {
   return (

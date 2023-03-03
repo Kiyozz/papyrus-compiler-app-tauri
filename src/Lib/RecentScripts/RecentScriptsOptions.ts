@@ -5,9 +5,9 @@
  *
  */
 
-import { RecentScripts } from 'App/Lib/Conf/ConfDecoder'
+import { type RecentScripts } from 'App/Lib/Conf/ConfDecoder'
 
-export type RecentScriptsOptions = {
+export interface RecentScriptsOptions {
   fileName: string
   defaults: RecentScripts
   maxItems: number

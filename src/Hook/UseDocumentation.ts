@@ -13,7 +13,9 @@ import { E, TE } from 'App/Lib/FpTs'
 
 const logs = createLogs('useDocumentation')
 
-const openUrl = (url: string) => () => open(url)
+const openUrl = (url: string) => async () => {
+  await open(url)
+}
 
 export function useDocumentation() {
   const { trackEvent } = useMatomo()
@@ -22,7 +24,7 @@ export function useDocumentation() {
   const openTheDocumentation = async (
     _reason: 'enter' | 'click' | 'settings-app-bar',
   ): Promise<E.Either<Error, void>> => {
-    if (!documentationUrl.data) {
+    if (documentationUrl.data == null) {
       void logs.error('cannot open documentation, environment is not set')()
 
       return E.left(new Error('Cannot open documentation, environment is not set'))

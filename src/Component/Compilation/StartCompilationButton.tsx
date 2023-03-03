@@ -6,7 +6,7 @@
  */
 
 import PlayIcon from '@mui/icons-material/PlayCircleFilled'
-import Button, { ButtonProps } from '@mui/material/Button'
+import Button, { type ButtonProps } from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 
 const StartCompilationButton = ({

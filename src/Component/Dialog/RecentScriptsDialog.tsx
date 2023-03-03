@@ -9,7 +9,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
-import Dialog, { DialogProps } from '@mui/material/Dialog'
+import Dialog, { type DialogProps } from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
@@ -32,7 +32,7 @@ import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useKey } from 'App/Hook/UseKey'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { pipe, A, O, flow, B, isSome, TE, isLeft } from 'App/Lib/FpTs'
 import { isFileScriptInArray } from 'App/Lib/IsFileScriptInArray'
 import cx from 'classnames'
@@ -97,18 +97,19 @@ function RecentScriptsDialog({
   })
 
   const removeScriptFromRecentScripts = async (script: FileScript) => {
-    if (!recentScripts.data) return
+    if (recentScripts.data == null) return
 
     const res = await TE.tryCatch(
-      () =>
-        updateRecentScripts.mutateAsync({
+      async () => {
+        await updateRecentScripts.mutateAsync({
           recentScripts: pipe(
             recentScripts.data,
             A.filter((s) => s.path !== script.path),
             A.map((s) => s.path),
           ),
           override: true,
-        }),
+        })
+      },
       (reason) => new Error(t('common.removeRecentScriptsError', { error: reason })),
     )()
 
@@ -138,7 +139,14 @@ function RecentScriptsDialog({
                 O.map(A.isEmpty),
                 O.getOrElse(() => false),
               )}
-              control={<Checkbox checked={isMoreDetails} onChange={() => setMoreDetails((v) => !v)} />}
+              control={
+                <Checkbox
+                  checked={isMoreDetails}
+                  onChange={() => {
+                    setMoreDetails((v) => !v)
+                  }}
+                />
+              }
               label={t('dialog.recentFiles.actions.moreDetails')}
             />
           </FormGroup>
@@ -237,8 +245,12 @@ function RecentScriptsDialog({
                                 pipe(
                                   isAlreadyAddedInScriptsToLoad,
                                   B.fold(
-                                    () => addScriptsToLoad([script]),
-                                    () => removeScriptToLoad([script]),
+                                    () => {
+                                      addScriptsToLoad([script])
+                                    },
+                                    () => {
+                                      removeScriptToLoad([script])
+                                    },
                                   ),
                                 )
                               }}

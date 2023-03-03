@@ -7,7 +7,7 @@
 
 import cx from 'classnames'
 import { forwardRef } from 'react'
-import { NavLink, NavLinkProps } from 'react-router-dom'
+import { NavLink, type NavLinkProps } from 'react-router-dom'
 
 type ActiveLinkProps = NavLinkProps & {
   to: string

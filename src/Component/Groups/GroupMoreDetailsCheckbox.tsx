@@ -24,7 +24,14 @@ const GroupMoreDetailsCheckbox = ({
   return (
     <FormGroup className={className}>
       <FormControlLabel
-        control={<Checkbox checked={checked} onChange={(evt) => onChange(evt.currentTarget.checked)} />}
+        control={
+          <Checkbox
+            checked={checked}
+            onChange={(evt) => {
+              onChange(evt.currentTarget.checked)
+            }}
+          />
+        }
         label={t('common.moreDetails')}
       />
     </FormGroup>

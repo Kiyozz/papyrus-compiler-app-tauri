@@ -7,8 +7,8 @@
 
 import { pipe } from 'App/Lib/FpTs'
 import { D } from 'App/Lib/IoTs'
-import { Id } from 'App/Type/Id'
-import { Decoder } from 'io-ts/Decoder'
+import { type Id } from 'App/Type/Id'
+import { type Decoder } from 'io-ts/Decoder'
 
 export const MiscDecoder = D.struct({
   drawerOpen: D.boolean,

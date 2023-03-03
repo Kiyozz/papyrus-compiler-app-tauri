@@ -5,11 +5,11 @@
  *
  */
 
-import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
-import { Conf } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type Conf } from 'App/Lib/Conf/ConfDecoder'
 import { invokeCompileScript } from 'App/Lib/InvokeCompileScript'
 import { E, TE } from '../FpTs'
-import { CompilationLog } from './CompilationLog'
+import { type CompilationLog } from './CompilationLog'
 
 export const compileScript =
   (conf: Conf) =>

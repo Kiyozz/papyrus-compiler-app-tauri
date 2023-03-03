@@ -5,7 +5,7 @@
  *
  */
 
-import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query'
+import { useMutation, type UseMutationOptions, useQueryClient } from '@tanstack/react-query'
 import { writeConfig } from 'App/Lib/Conf/Conf'
 import { createLogs } from 'App/Lib/CreateLog'
 import { E } from 'App/Lib/FpTs'

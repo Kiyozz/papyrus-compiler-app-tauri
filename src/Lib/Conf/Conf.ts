@@ -6,9 +6,9 @@
  */
 import { join } from '@tauri-apps/api/path'
 import deepmerge from 'deepmerge'
-import { PartialDeep } from 'type-fest'
-import { ConfOptions } from 'App/Lib/Conf/ConfOptions'
-import { Conf } from 'App/Lib/Conf/ConfDecoder'
+import { type PartialDeep } from 'type-fest'
+import { type ConfOptions } from 'App/Lib/Conf/ConfOptions'
+import { type Conf } from 'App/Lib/Conf/ConfDecoder'
 import { canReadConfigFile, readConfigFileJson } from 'App/Lib/Conf/ReadConfigFile'
 import { writeConfigFile } from 'App/Lib/Conf/WriteConfigFile'
 import { pipe, TE, T, TO } from 'App/Lib/FpTs'
@@ -33,7 +33,7 @@ const readConfigOrUseDefaultConfig = (options: ConfOptions<Conf>) =>
 
 const defaultOptions: ConfOptions<Conf> = {
   projectVersion: '7.0.0',
-  configName: 'settings',
+  configName: 'conf',
   defaults: {
     game: {
       type: 'Skyrim SE',

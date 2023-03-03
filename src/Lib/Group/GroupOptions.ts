@@ -5,9 +5,9 @@
  *
  */
 
-import { Groups } from '../Conf/ConfDecoder'
+import { type Groups } from '../Conf/ConfDecoder'
 
-export type GroupOptions = {
+export interface GroupOptions {
   fileName: string
   defaults: Groups
 }

@@ -16,7 +16,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import { O } from 'App/Lib/FpTs'
+import { isSome, O } from 'App/Lib/FpTs'
 
 const GroupsListItemSecondaryAction = ({
   groupId,
@@ -49,8 +49,8 @@ const GroupsListItemSecondaryAction = ({
   return (
     <div className={cx('relative', className)}>
       <IconButton
-        aria-controls={anchor ? `${groupId}-group-button-menu` : undefined}
-        aria-expanded={anchor ? 'true' : undefined}
+        aria-controls={isSome(anchor) ? `${groupId}-group-button-menu` : undefined}
+        aria-expanded={isSome(anchor) ? 'true' : undefined}
         aria-haspopup="true"
         id={`${groupId}-group-opener`}
         onClick={onOpen}
@@ -63,7 +63,9 @@ const GroupsListItemSecondaryAction = ({
         }}
         anchorEl={O.toNullable(anchor)}
         id={`${groupId}-group-button-menu`}
-        onClose={() => setAnchor(O.none)}
+        onClose={() => {
+          setAnchor(O.none)
+        }}
         open={O.isSome(anchor)}
       >
         <MenuItem aria-label={t('common.edit')} onClick={handleClickEdit}>

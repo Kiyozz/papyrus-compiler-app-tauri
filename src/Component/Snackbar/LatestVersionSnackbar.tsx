@@ -24,7 +24,7 @@ const LatestVersionSnackbar = () => {
   const latestVersion = useLatestVersion({
     retry: 1,
     onSuccess: (data) => {
-      if (!version.data) return
+      if (version.data === undefined) return
 
       setSnackOpen(!isNewerVersion(version.data, data.data.tag_name) || manualUpdateCheck)
     },
@@ -40,7 +40,7 @@ const LatestVersionSnackbar = () => {
   useListenCheckForUpdates({
     onCheckForUpdates: () => {
       setManualUpdateCheck(true)
-      latestVersion.refetch()
+      void latestVersion.refetch()
     },
   })
 
@@ -48,7 +48,9 @@ const LatestVersionSnackbar = () => {
     <>
       <ChangelogDialog
         open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        onClose={() => {
+          setDialogOpen(false)
+        }}
         markdownNotes={latestVersion.data?.data.body ?? ''}
         version={latestVersion.data?.data.tag_name ?? ''}
       />
@@ -77,7 +79,13 @@ const LatestVersionSnackbar = () => {
                   Notes de mise à jour
                 </Button>
               )}
-              <IconButton color="inherit" size="small" onClick={() => setSnackOpen(false)}>
+              <IconButton
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setSnackOpen(false)
+                }}
+              >
                 <CloseIcon />
               </IconButton>
             </>

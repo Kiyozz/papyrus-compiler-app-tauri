@@ -5,7 +5,7 @@
  *
  */
 
-import { FileScript, FileScriptDecoder } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript, FileScriptDecoder } from 'App/Lib/Conf/ConfDecoder'
 import { A, E, pipe } from 'App/Lib/FpTs'
 import { isPscFile } from 'App/Lib/IsPscFile'
 import { getLastPartOfPath } from 'App/Lib/Path'

@@ -21,7 +21,7 @@ import { pipe, TE } from 'App/Lib/FpTs'
 export const invokeCompileScript = (compilerPath: string, args: string[], scriptName: string, from: string) => {
   return pipe(
     TE.tryCatch(
-      () => invoke<string>('compile_script', { compilerPath, args, scriptName, from }),
+      async () => await invoke<string>('compile_script', { compilerPath, args, scriptName, from }),
       (reason) => {
         // should return fatal error only because compiler path does not exist or is not executable or something like that
         return new Error(`fatal error compile script, error given: ${reason}`)

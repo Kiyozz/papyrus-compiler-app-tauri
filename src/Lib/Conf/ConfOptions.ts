@@ -5,7 +5,7 @@
  *
  */
 
-export type ConfOptions<T = unknown> = {
+export interface ConfOptions<T = unknown> {
   readonly projectVersion: string
   readonly configName: string
   readonly defaults: T

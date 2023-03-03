@@ -5,12 +5,12 @@
  *
  */
 
-import { Groups } from 'App/Lib/Conf/ConfDecoder'
+import { type Groups } from 'App/Lib/Conf/ConfDecoder'
 import { A, pipe, R, TE, TO } from 'App/Lib/FpTs'
-import { GroupOptions } from 'App/Lib/Group/GroupOptions'
+import { type GroupOptions } from 'App/Lib/Group/GroupOptions'
 import { canReadGroupsFile, readGroupsFileJson } from 'App/Lib/Group/ReadGroupsFile'
 import { writeGroupsFile } from 'App/Lib/Group/WriteGroupsFile'
-import { Id } from 'App/Type/Id'
+import { type Id } from 'App/Type/Id'
 
 const writeGroupsIfNotExists = (options: GroupOptions) => {
   return pipe(

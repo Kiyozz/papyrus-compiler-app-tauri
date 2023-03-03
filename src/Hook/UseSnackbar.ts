@@ -9,7 +9,7 @@ import { useReducer } from 'react'
 import { match, P } from 'ts-pattern'
 
 type Action = { type: 'error'; payload: Error } | { type: 'success' } | { type: 'close' } | { type: 'empty' }
-type State = {
+interface State {
   open: boolean
   message: string
   status: 'error' | 'success'
@@ -49,10 +49,10 @@ export const useSnackbar = ({
   )
 
   return {
-    empty: () => dispatch({ type: 'empty' }),
-    close: () => dispatch({ type: 'close' }),
-    error: (error: Error) => dispatch({ type: 'error', payload: error }),
-    success: () => dispatch({ type: 'success' }),
+    empty: () => { dispatch({ type: 'empty' }); },
+    close: () => { dispatch({ type: 'close' }); },
+    error: (error: Error) => { dispatch({ type: 'error', payload: error }); },
+    success: () => { dispatch({ type: 'success' }); },
     snackbar,
   }
 }

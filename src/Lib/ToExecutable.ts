@@ -5,8 +5,8 @@
  *
  */
 
-import { GameExecutable } from 'App/Lib/GameExecutableDecoder'
-import { GameType } from 'App/Lib/Conf/ConfDecoder'
+import { type GameExecutable } from 'App/Lib/GameExecutableDecoder'
+import { type GameType } from 'App/Lib/Conf/ConfDecoder'
 import { match } from 'ts-pattern'
 
 export const toExecutable = (game: GameType): GameExecutable =>

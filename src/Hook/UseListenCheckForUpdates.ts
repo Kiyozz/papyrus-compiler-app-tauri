@@ -5,7 +5,7 @@
  *
  */
 
-import { listen, Event } from '@tauri-apps/api/event'
+import { listen, type Event } from '@tauri-apps/api/event'
 import { useEffect } from 'react'
 
 export const useListenCheckForUpdates = ({
@@ -14,10 +14,13 @@ export const useListenCheckForUpdates = ({
   onCheckForUpdates: (event: Event<void>) => void
 }) => {
   useEffect(() => {
-    const unsubscribe = listen<void>('pca://check_for_updates', onCheckForUpdates)
+    const unsubscribe = listen('pca://check_for_updates', onCheckForUpdates)
 
     return () => {
-      unsubscribe.then((unsub) => unsub())
+      void unsubscribe.then((unsub) => {
+        unsub()
+      })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }

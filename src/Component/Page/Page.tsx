@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import cx from 'classnames'
-import { PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 
 function Page({ children, className }: PropsWithChildren<{ className?: string }>) {
   const conf = useConf()

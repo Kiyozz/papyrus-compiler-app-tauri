@@ -7,49 +7,79 @@
 
 import { useMatomo as useTrackerMatomo } from '@datapunt/matomo-tracker-react'
 import { useConf } from 'App/Hook/Conf/UseConf'
+import { useCallback } from 'react'
 
 export const useMatomo = () => {
   const conf = useConf()
-  const { trackPageView, trackEvent, trackEvents, trackLink } = useTrackerMatomo()
+  const {
+    trackPageView: trackPageViewMatomo,
+    trackEvent: trackEventMatomo,
+    trackEvents: trackEventsMatomo,
+    trackLink: trackLinkMatomo,
+  } = useTrackerMatomo()
 
-  const track = (action: () => void) => {
-    if (conf.isSuccess && conf.data.telemetry.use) {
-      try {
-        action()
-      } catch {
-        // ignore if the server is not available
+  const track = useCallback(
+    (action: () => void) => {
+      if (conf.isSuccess && conf.data.telemetry.use) {
+        try {
+          action()
+        } catch {
+          // ignore if the server is not available
+        }
       }
-    }
-  }
+    },
+    [conf.isSuccess, conf.data?.telemetry.use],
+  )
+
+  const trackPageView = useCallback(
+    (params: Parameters<typeof trackPageViewMatomo>[0], { force = false }: { force?: boolean } = {}) => {
+      if (force) {
+        trackPageViewMatomo(params)
+      } else {
+        track(() => {
+          return trackPageViewMatomo(params)
+        })
+      }
+    },
+    [trackPageViewMatomo, track],
+  )
+
+  const trackEvent = useCallback(
+    (params: Parameters<typeof trackEventMatomo>[0], { force = false }: { force?: boolean } = {}) => {
+      if (force) {
+        trackEventMatomo(params)
+      } else {
+        track(() => {
+          return trackEventMatomo(params)
+        })
+      }
+    },
+    [trackEventMatomo, track],
+  )
+
+  const trackEvents = useCallback(() => {
+    track(() => {
+      return trackEventsMatomo()
+    })
+  }, [track, trackEventsMatomo])
+
+  const trackLink = useCallback(
+    (params: Parameters<typeof trackLinkMatomo>[0], { force = false }: { force?: boolean } = {}) => {
+      if (force) {
+        trackLinkMatomo(params)
+      } else {
+        track(() => {
+          return trackLinkMatomo(params)
+        })
+      }
+    },
+    [trackLinkMatomo, track],
+  )
 
   return {
-    trackPageView: (params: Parameters<typeof trackPageView>[0], { force = false }: { force?: boolean } = {}) => {
-      if (force) {
-        trackPageView(params)
-      } else {
-        track(() => {
-          return trackPageView(params)
-        })
-      }
-    },
-    trackEvent: (params: Parameters<typeof trackEvent>[0], { force = false }: { force?: boolean } = {}) => {
-      if (force) {
-        trackEvent(params)
-      } else {
-        track(() => {
-          return trackEvent(params)
-        })
-      }
-    },
-    trackEvents: () => {
-      track(() => {
-        return trackEvents()
-      })
-    },
-    trackLink: (params: Parameters<typeof trackLink>[0]) => {
-      track(() => {
-        return trackLink(params)
-      })
-    },
+    trackPageView,
+    trackEvent,
+    trackEvents,
+    trackLink,
   }
 }

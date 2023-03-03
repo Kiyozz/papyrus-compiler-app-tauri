@@ -23,11 +23,11 @@ import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
 import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { createLogs } from 'App/Lib/CreateLog'
 import { A, flow, none, O, pipe, R, TO } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
-import { GroupWithId } from 'App/Type/GroupWithId'
+import { type GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
@@ -81,7 +81,7 @@ function GroupsPage() {
       O.map(({ scripts }) => scripts),
       (scripts) => {
         if (O.isSome(scripts)) {
-          logs.debug('add group from compilation page scripts list')()
+          void logs.debug('add group from compilation page scripts list')()
           openAddGroupDialog(scripts.value)
         }
       },
@@ -103,7 +103,9 @@ function GroupsPage() {
         onConfirm={async () => {
           await pipe(
             groupToRemove,
-            O.map((group) => removeGroup.mutateAsync(group.id)),
+            O.map(async (group) => {
+              await removeGroup.mutateAsync(group.id)
+            }),
             TO.fromOption,
           )()
 
@@ -154,8 +156,8 @@ function GroupsPage() {
                 groupToEdit,
                 TO.fromOption,
                 TO.chain((group) => {
-                  return TO.tryCatch(() =>
-                    updateGroups.mutateAsync({
+                  return TO.tryCatch(async () => {
+                    await updateGroups.mutateAsync({
                       [group.id]: {
                         name,
                         scripts: scripts.map(({ id, name, path }) => ({
@@ -164,8 +166,8 @@ function GroupsPage() {
                           path,
                         })),
                       },
-                    }),
-                  )
+                    })
+                  })
                 }),
               )()
 
@@ -219,7 +221,9 @@ function GroupsPage() {
                           <GroupMoreDetailsCheckbox
                             className="ml-auto"
                             checked={isMoreDetails}
-                            onChange={(checked) => setMoreDetails(checked)}
+                            onChange={(checked) => {
+                              setMoreDetails(checked)
+                            }}
                           />
                         </Toolbar>
                         <GroupsList

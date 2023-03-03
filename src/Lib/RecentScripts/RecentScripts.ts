@@ -5,10 +5,10 @@
  *
  */
 
-import { RecentScript, RecentScripts } from 'App/Lib/Conf/ConfDecoder'
+import { type RecentScript, type RecentScripts } from 'App/Lib/Conf/ConfDecoder'
 import { A, pipe, S, TE, TO } from 'App/Lib/FpTs'
 import { canReadRecentScriptsFile, readRecentScriptsFileJson } from 'App/Lib/RecentScripts/ReadRecentScriptsFile'
-import { RecentScriptsOptions } from 'App/Lib/RecentScripts/RecentScriptsOptions'
+import { type RecentScriptsOptions } from 'App/Lib/RecentScripts/RecentScriptsOptions'
 import { writeRecentScriptsFile } from 'App/Lib/RecentScripts/WriteRecentScriptsFile'
 
 const writeRecentScriptsIfNotExists = (options: RecentScriptsOptions) =>

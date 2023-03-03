@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper'
 import { CompilationIcon } from 'App/Component/CompilationIcon'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { isDone, isFileScriptCompilation, isRunning } from 'App/Lib/FileScriptCompilation'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +26,7 @@ function FileScriptsList<T extends FileScript>({
   onStart,
   onRemove,
   onClickOnError,
-  disabled,
+  disabled = false,
   className,
 }: {
   scripts: T[]
@@ -58,7 +58,9 @@ function FileScriptsList<T extends FileScript>({
                   aria-label={t('common.remove')}
                   color="error"
                   disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
-                  onClick={() => onRemove(script)}
+                  onClick={() => {
+                    onRemove(script)
+                  }}
                 >
                   <DeleteOutlinedIcon />
                 </IconButton>
@@ -69,7 +71,7 @@ function FileScriptsList<T extends FileScript>({
                 <ListItemIcon>
                   <IconButton
                     disabled={disabled || isRunning(script)}
-                    onClick={() => onStart?.(script)}
+                    onClick={async () => await onStart?.(script)}
                     className="text-primary-400"
                     edge="end"
                     size="small"

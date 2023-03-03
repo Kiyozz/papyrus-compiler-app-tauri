@@ -5,11 +5,11 @@
  *
  */
 
-import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query'
+import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { checkConf, CheckConfError } from 'App/Lib/Conf/CheckConf'
-import { CheckConfErrorTypes, isCheckConfError } from 'App/Lib/Conf/CheckConfTypes'
-import { Conf } from 'App/Lib/Conf/ConfDecoder'
+import { checkConf, type CheckConfError } from 'App/Lib/Conf/CheckConf'
+import { type CheckConfErrorTypes, isCheckConfError } from 'App/Lib/Conf/CheckConfTypes'
+import { type Conf } from 'App/Lib/Conf/ConfDecoder'
 import { E, isNone, O } from 'App/Lib/FpTs'
 import invariant from 'tiny-invariant'
 
@@ -23,7 +23,7 @@ export const isCheckConfQueryError = <T extends CheckConfErrorTypes>(
   query: UseQueryResult<O.Option<CheckConfError>>,
   type: O.Option<T[]> = O.none,
 ): query is UseQueryResult<O.Some<CheckConfError<T>>> & { isSuccess: true } => {
-  if (!query.data || isNone(query.data)) {
+  if (query.data == null || isNone(query.data)) {
     return false
   }
 

@@ -5,8 +5,8 @@
  *
  */
 
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
-import { FileScriptCompilation } from './Compilation/FileScriptCompilationDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScriptCompilation } from './Compilation/FileScriptCompilationDecoder'
 
 export const fileScriptsToFileScriptCompilation = (scripts: FileScript[]) => {
   return scripts.map(

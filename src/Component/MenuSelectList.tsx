@@ -5,7 +5,7 @@
  *
  */
 
-import Menu, { MenuProps } from '@mui/material/Menu'
+import Menu, { type MenuProps } from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Divider from '@mui/material/Divider'
 import { flow } from 'App/Lib/FpTs'
@@ -43,7 +43,7 @@ export const MenuSelectList = ({
       <MenuItem onClick={flow(props.onClose, onInvert)} disabled={disabled.invert}>
         {t('common.select.invert')}
       </MenuItem>
-      {children && <Divider />}
+      {children != null && <Divider />}
       {children}
     </Menu>
   )

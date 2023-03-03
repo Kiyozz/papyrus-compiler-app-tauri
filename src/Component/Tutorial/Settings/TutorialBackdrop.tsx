@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import Backdrop from '@mui/material/Backdrop'
 import Button from '@mui/material/Button'
 import TutorialArrows from 'App/Component/Tutorial/Settings/TutorialArrows'
-import { TutorialRefs, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { type TutorialRefs, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { isSome } from 'App/Lib/FpTs'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -38,7 +38,7 @@ const TutorialBackdrop = ({
     return () => {
       window.removeEventListener('scroll', onScroll, { capture: true })
     }
-  }, [])
+  }, [scrollInto, tutorialRef])
 
   return (
     <Backdrop open className="items-end pb-6" timeout={{ enter: 0 }}>

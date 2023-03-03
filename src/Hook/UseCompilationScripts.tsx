@@ -6,9 +6,10 @@
  */
 
 import { useScriptsList } from 'App/Hook/UseScriptsList'
-import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
-import { createContext, PropsWithChildren, useContext } from 'react'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { createContext, type PropsWithChildren, useContext } from 'react'
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 const Context = createContext({} as ReturnType<typeof useScriptsList<FileScriptCompilation>>)
 
 const CompilationScriptsProvider = ({ children }: PropsWithChildren) => {

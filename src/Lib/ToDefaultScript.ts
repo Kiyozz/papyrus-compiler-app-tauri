@@ -5,7 +5,7 @@
  *
  */
 
-import { GameType } from 'App/Lib/Conf/ConfDecoder'
+import { type GameType } from 'App/Lib/Conf/ConfDecoder'
 
 export type DefaultScript = 'Base/Actor.psc' | 'Actor.psc'
 

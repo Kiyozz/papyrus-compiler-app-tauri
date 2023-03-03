@@ -6,7 +6,7 @@
  */
 
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
-import { Conf } from 'App/Lib/Conf/ConfDecoder'
+import { type Conf } from 'App/Lib/Conf/ConfDecoder'
 import { stringify } from 'App/Lib/Json'
 import { TE, pipe } from 'App/Lib/FpTs'
 
@@ -17,7 +17,7 @@ export const writeConfigFile = (path: string) => (contents: Conf) =>
     TE.fromEither,
     TE.chainW((json) =>
       TE.tryCatch(
-        () => writeTextFile({ path, contents: json }, { dir: BaseDirectory.App }),
+        async () => { await writeTextFile({ path, contents: json }, { dir: BaseDirectory.App }); },
         (reason) => new Error(`Cannot write config file, error given: ${reason}`),
       ),
     ),

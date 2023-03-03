@@ -6,13 +6,13 @@
  */
 
 import Button from '@mui/material/Button'
-import Dialog, { DialogProps } from '@mui/material/Dialog'
+import Dialog, { type DialogProps } from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { O, pipe } from 'App/Lib/FpTs'
-import { GroupWithId } from 'App/Type/GroupWithId'
+import { type GroupWithId } from 'App/Type/GroupWithId'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 

@@ -8,7 +8,7 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
-import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { match } from 'ts-pattern'
 
 export const CompilationIcon = ({ script }: { script: FileScriptCompilation }) => {

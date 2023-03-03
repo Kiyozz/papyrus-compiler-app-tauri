@@ -5,8 +5,8 @@
  *
  */
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { Conf } from 'App/Lib/Conf/ConfDecoder'
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
+import { type Conf } from 'App/Lib/Conf/ConfDecoder'
 import { readConfig } from 'App/Lib/Conf/Conf'
 import { E } from 'App/Lib/FpTs'
 import { createLogs } from 'App/Lib/CreateLog'

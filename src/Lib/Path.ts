@@ -7,16 +7,16 @@
 import { invoke } from '@tauri-apps/api/tauri'
 import { O } from './FpTs'
 
-export const getLastPartOfPath = (path: string): string => path.split(/([^\/]*)\/*$/)[1]
+export const getLastPartOfPath = (path: string): string => path.split(/([^/]*)\/*$/)[1]
 
-export const exists = (path: string, extras: { from?: string } = {}) =>
-  invoke<boolean>('path_exists', { path, ...extras })
-export const allExists = (paths: string[], extras: { from?: string } = {}) =>
-  invoke<boolean>('paths_exists', { paths, ...extras })
-export const isFile = (path: string, extras: { from?: string } = {}) =>
-  invoke<boolean>('is_file', { path, ...extras })
+export const exists = async (path: string, extras: { from?: string } = {}) =>
+  await invoke<boolean>('path_exists', { path, ...extras })
+export const allExists = async (paths: string[], extras: { from?: string } = {}) =>
+  await invoke<boolean>('paths_exists', { paths, ...extras })
+export const isFile = async (path: string, extras: { from?: string } = {}) =>
+  await invoke<boolean>('is_file', { path, ...extras })
 
-type GlobOptions = {
+interface GlobOptions {
   caseSensitive: boolean
   requireLiteralSeparator: boolean
   requireLiteralLeadingDot: boolean
@@ -29,8 +29,12 @@ type GlobOptions = {
  * @param options
  * @param extras
  */
-export const glob = (patterns: string[], options: O.Option<GlobOptions> = O.none, extras: { from?: string } = {}) => {
-  return invoke<string[]>('get_scripts_in_paths', {
+export const glob = async (
+  patterns: string[],
+  options: O.Option<GlobOptions> = O.none,
+  extras: { from?: string } = {},
+) => {
+  return await invoke<string[]>('get_scripts_in_paths', {
     patterns,
     options: O.toUndefined(options),
     from: extras.from,

@@ -5,8 +5,8 @@
  *
  */
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { Environment } from 'App/Lib/Environment/Environment'
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
+import { type Environment } from 'App/Lib/Environment/Environment'
 import { isLeft, TE } from 'App/Lib/FpTs'
 import { invoke } from '@tauri-apps/api'
 
@@ -18,7 +18,7 @@ export const useCurrentEnvironment = ({
     queryKey: ['environment', 'current'],
     queryFn: async () => {
       const res = await TE.tryCatch(
-        () => invoke<Environment>('current_environment', { from }),
+        async () => await invoke<Environment>('current_environment', { from }),
         (reason) => new Error(`Cannot get current environment, error given: ${reason}`),
       )()
 

@@ -5,7 +5,7 @@
  *
  */
 import { open as openExternal } from '@tauri-apps/api/shell'
-import { ComponentProps, forwardRef, PropsWithChildren } from 'react'
+import { type ComponentProps, forwardRef, type PropsWithChildren } from 'react'
 
 const AnchorExternal = forwardRef<
   HTMLAnchorElement,

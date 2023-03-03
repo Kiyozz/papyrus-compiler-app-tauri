@@ -23,7 +23,7 @@ const TutorialCompilationAddScripts = () => {
       changeStep('settings-mo2')
       scrollInto('settings-mo2')
     }
-  }, [location])
+  }, [changeStep, location, scrollInto])
 
   return (
     <TutorialBackdrop

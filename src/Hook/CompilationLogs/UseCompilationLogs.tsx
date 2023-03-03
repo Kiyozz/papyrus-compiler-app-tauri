@@ -5,13 +5,13 @@
  *
  */
 
-import { CompilationLog } from 'App/Lib/Compilation/CompilationLog'
-import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { A } from 'App/Lib/FpTs'
-import { createContext, PropsWithChildren, useContext, useReducer } from 'react'
+import { createContext, type PropsWithChildren, useCallback, useContext, useReducer } from 'react'
 import { match, P } from 'ts-pattern'
 
-type ContextShape = {
+interface ContextShape {
   logs: CompilationLog[]
   add: (log: CompilationLog) => void
   remove: (script: FileScriptCompilation) => void
@@ -41,18 +41,31 @@ const reducer = (state: CompilationLog[], action: Action) => {
     .exhaustive()
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 const Context = createContext({} as ContextShape)
 
 const CompilationLogsProvider = ({ children }: PropsWithChildren) => {
   const [logs, dispatch] = useReducer(reducer, [])
 
+  const add = useCallback((log: CompilationLog) => {
+    dispatch({ type: 'add', payload: log })
+  }, [])
+
+  const remove = useCallback((script: FileScriptCompilation) => {
+    dispatch({ type: 'removeByScript', payload: script })
+  }, [])
+
+  const clear = useCallback(() => {
+    dispatch({ type: 'clear' })
+  }, [])
+
   return (
     <Context.Provider
       value={{
         logs,
-        add: (log: CompilationLog) => dispatch({ type: 'add', payload: log }),
-        remove: (log: FileScriptCompilation) => dispatch({ type: 'removeByScript', payload: log }),
-        clear: () => dispatch({ type: 'clear' }),
+        add,
+        remove,
+        clear,
         hasAnyError: logs.some((log) => log.status === 'error'),
         hasAllSuccess: A.isNonEmpty(logs) && logs.every((log) => log.status === 'success'),
       }}

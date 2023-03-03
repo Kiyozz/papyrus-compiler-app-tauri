@@ -17,7 +17,7 @@ pub trait ConfPath {
 impl ConfPath for PathResolver {
     fn app_conf(&self) -> PathBuf {
         let mut path = self.app_config_dir().unwrap();
-        path.push("settings.json");
+        path.push("conf.json");
 
         path
     }

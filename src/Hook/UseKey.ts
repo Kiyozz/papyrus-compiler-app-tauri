@@ -5,7 +5,7 @@
  *
  */
 
-import { KeyboardEvent } from 'react'
+import { type KeyboardEvent } from 'react'
 
 type SupportedKeys = 'Enter'
 

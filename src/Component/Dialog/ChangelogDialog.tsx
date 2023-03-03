@@ -59,10 +59,10 @@ const ChangelogDialog = ({
           <IconButton
             size="small"
             className="ml-2"
-            disabled={!documentationUrl.data}
+            disabled={documentationUrl.data === undefined}
             aria-label={t('common.openInBrowser')}
             onClick={() => {
-              if (!documentationUrl.data) return
+              if (documentationUrl.data === undefined) return
 
               void openExternal(`${documentationUrl.data}/changelogs/${version.replace('v', '')}`)
             }}

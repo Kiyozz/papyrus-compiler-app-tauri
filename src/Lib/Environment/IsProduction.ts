@@ -5,6 +5,6 @@
  *
  */
 
-import { Environment } from 'App/Lib/Environment/Environment'
+import { type Environment } from 'App/Lib/Environment/Environment'
 
 export const isProduction = (environment: Environment) => environment === 'release'

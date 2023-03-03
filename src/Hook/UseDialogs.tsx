@@ -5,13 +5,14 @@
  *
  */
 
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
+import { createContext, type Dispatch, type PropsWithChildren, type SetStateAction, useContext, useState } from 'react'
 
-type ContextType = {
+interface ContextType {
   compilationLogs: [boolean, Dispatch<SetStateAction<boolean>>]
   openDocumentation: [boolean, Dispatch<SetStateAction<boolean>>]
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 const Context = createContext<ContextType>({} as ContextType)
 
 function DialogsProvider({ children }: PropsWithChildren) {

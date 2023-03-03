@@ -11,7 +11,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
 import GroupsListItemSecondaryAction from 'App/Component/Groups/GroupsListItemSecondaryAction'
 import { A, flow, O, pipe } from 'App/Lib/FpTs'
-import { GroupWithId } from 'App/Type/GroupWithId'
+import { type GroupWithId } from 'App/Type/GroupWithId'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -55,8 +55,12 @@ function GroupsList({
             secondaryAction={
               <GroupsListItemSecondaryAction
                 groupId={group.id}
-                onTryRemove={() => onTryRemove(group)}
-                onClickEdit={() => onClickEdit(group)}
+                onTryRemove={() => {
+                  onTryRemove(group)
+                }}
+                onClickEdit={() => {
+                  onClickEdit(group)
+                }}
               />
             }
             variant="outlined"

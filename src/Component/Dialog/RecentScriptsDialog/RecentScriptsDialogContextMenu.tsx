@@ -8,8 +8,8 @@
 import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import { MenuSelectList } from 'App/Component/MenuSelectList'
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
-import { ComponentProps } from 'react'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const RecentScriptsDialogContextMenu = ({

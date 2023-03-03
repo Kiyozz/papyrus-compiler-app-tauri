@@ -5,11 +5,11 @@
  *
  */
 
-import Paper, { PaperProps } from '@mui/material/Paper'
-import Typography, { TypographyProps } from '@mui/material/Typography'
+import Paper, { type PaperProps } from '@mui/material/Paper'
+import Typography, { type TypographyProps } from '@mui/material/Typography'
 import is from '@sindresorhus/is'
 import cx from 'classnames'
-import { forwardRef, ReactNode } from 'react'
+import { forwardRef, type ReactNode } from 'react'
 
 const SettingsSection = forwardRef<
   HTMLDivElement,

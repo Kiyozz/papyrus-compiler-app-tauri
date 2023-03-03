@@ -8,7 +8,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoadingButton } from '@mui/lab'
 import Button from '@mui/material/Button'
-import Dialog, { DialogProps } from '@mui/material/Dialog'
+import Dialog, { type DialogProps } from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
@@ -22,7 +22,7 @@ import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { GroupZod } from 'App/Lib/Form/GroupForm'
 import { O, pipe, S, TO } from 'App/Lib/FpTs'
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
 import cx from 'classnames'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -58,7 +58,7 @@ const AddGroupDialog = ({
     if (O.isSome(defaultScripts)) {
       resetScripts(defaultScripts.value)
     }
-  }, [defaultScripts])
+  }, [defaultScripts, resetScripts])
 
   const onDialogEnter = useKey('Enter', () => {
     if (actionsDisabled || actionsIsLoading || !formState.isValid) {
@@ -71,7 +71,11 @@ const AddGroupDialog = ({
       name,
       O.fromPredicate((name) => !S.isEmpty(name)),
       TO.fromOption,
-      TO.chain((name) => TO.tryCatch(() => onSubmit(scripts, name))),
+      TO.chain((name) =>
+        TO.tryCatch(async () => {
+          await onSubmit(scripts, name)
+        }),
+      ),
       TO.map(resetDialog),
     )
   })
@@ -118,7 +122,7 @@ const AddGroupDialog = ({
             data.name,
             O.fromPredicate((name) => name.length > 0),
             O.map((name) => {
-              onSubmit(scripts, name)
+              void onSubmit(scripts, name)
               resetDialog()
             }),
           )
@@ -144,7 +148,9 @@ const AddGroupDialog = ({
             <FileScriptsList
               className="w-full"
               scripts={scripts}
-              onRemove={(scriptToRemove) => removeScripts([scriptToRemove])}
+              onRemove={(scriptToRemove) => {
+                removeScripts([scriptToRemove])
+              }}
             />
           ) : (
             <DialogContentText className="py-12">{t('dialog.group.dropScripts')}</DialogContentText>
@@ -166,7 +172,13 @@ const AddGroupDialog = ({
           >
             {t('common.searchScripts')}
           </SearchScriptButton>
-          <Button disabled={actionsDisabled} onClick={() => handleDialogClose()} color="inherit">
+          <Button
+            disabled={actionsDisabled}
+            onClick={() => {
+              handleDialogClose()
+            }}
+            color="inherit"
+          >
             {t('common.cancel')}
           </Button>
           <LoadingButton

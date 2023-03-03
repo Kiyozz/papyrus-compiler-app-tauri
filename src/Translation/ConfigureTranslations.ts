@@ -4,7 +4,7 @@
  * All rights reserved.
  *
  */
-import { TranslationSchema } from 'App/Type/TranslationSchema'
+import { type TranslationSchema } from 'App/Type/TranslationSchema'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
@@ -20,8 +20,8 @@ declare module 'i18next' {
   }
 }
 
-export function configureTranslations() {
-  return i18next
+export async function configureTranslations() {
+  return await i18next
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({

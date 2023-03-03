@@ -18,7 +18,7 @@ import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { GameType } from 'App/Lib/Conf/ConfDecoder'
+import { type GameType } from 'App/Lib/Conf/ConfDecoder'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { toExecutable } from 'App/Lib/ToExecutable'
@@ -34,7 +34,7 @@ function SettingsGameSection() {
   const { refs } = useSettingsTutorial()
   const { trackEvent } = useMatomo()
 
-  const games: { value: GameType; label: string }[] = [
+  const games: Array<{ value: GameType; label: string }> = [
     {
       value: 'Skyrim LE',
       label: t('page.settings.sections.game.games.le'),

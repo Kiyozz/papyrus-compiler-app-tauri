@@ -7,12 +7,12 @@
 
 import is from '@sindresorhus/is'
 import { open as openDialog } from '@tauri-apps/api/dialog'
-import FormControl, { FormControlProps } from '@mui/material/FormControl'
+import FormControl, { type FormControlProps } from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import InputLabel from '@mui/material/InputLabel'
-import OutlinedInput, { OutlinedInputProps } from '@mui/material/OutlinedInput'
-import React, { forwardRef, ReactNode, useState } from 'react'
+import OutlinedInput, { type OutlinedInputProps } from '@mui/material/OutlinedInput'
+import React, { forwardRef, type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import FolderIcon from '@mui/icons-material/Folder'
@@ -75,9 +75,13 @@ const TextFieldDialog = forwardRef<
             <IconButton
               edge="start"
               onClick={onClickInput}
-              onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)}
-              color={props.error ? 'error' : 'inherit'}
+              onMouseEnter={() => {
+                setHover(true)
+              }}
+              onMouseLeave={() => {
+                setHover(false)
+              }}
+              color={props.error === true ? 'error' : 'inherit'}
             >
               {isHover ? <FolderOpenIcon /> : <FolderIcon />}
             </IconButton>

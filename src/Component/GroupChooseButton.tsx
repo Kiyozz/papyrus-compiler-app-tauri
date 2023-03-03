@@ -6,13 +6,13 @@
  */
 
 import AddIcon from '@mui/icons-material/Add'
-import Button, { ButtonProps } from '@mui/material/Button'
+import Button, { type ButtonProps } from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { Groups } from 'App/Lib/Conf/ConfDecoder'
+import { type Groups } from 'App/Lib/Conf/ConfDecoder'
 import { A, O, pipe } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
-import { GroupWithId } from 'App/Type/GroupWithId'
+import { type GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
 
 function GroupChooseButton({
@@ -37,7 +37,9 @@ function GroupChooseButton({
           aria-expanded={isOpen ? 'true' : undefined}
           aria-haspopup="true"
           startIcon={<AddIcon />}
-          onClick={(e) => setAnchor(O.some(e.currentTarget))}
+          onClick={(e) => {
+            setAnchor(O.some(e.currentTarget))
+          }}
           {...props}
         />
       )}
@@ -52,7 +54,9 @@ function GroupChooseButton({
           list: 'min-w-[100px]',
         }}
         open={isOpen}
-        onClose={() => setAnchor(O.none)}
+        onClose={() => {
+          setAnchor(O.none)
+        }}
       >
         {pipe(
           nonEmptyGroups,

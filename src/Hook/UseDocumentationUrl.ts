@@ -5,7 +5,7 @@
  *
  */
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 import { documentationUrl } from 'App/Constant/Documentation'
 import { useCurrentEnvironment } from 'App/Hook/UseCurrentEnvironment'
 import { isProduction } from 'App/Lib/Environment/IsProduction'
@@ -16,7 +16,7 @@ const useDocumentationUrl = (options: UseQueryOptions<string> = {}) => {
   return useQuery({
     queryKey: ['app', 'documentation', 'url'],
     queryFn: () => {
-      if (!currentEnvironment.data) {
+      if (currentEnvironment.data == null) {
         return ''
       }
 

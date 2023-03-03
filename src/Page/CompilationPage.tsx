@@ -31,14 +31,14 @@ import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { createLogs } from 'App/Lib/CreateLog'
-import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
 import { A, flow, O, pipe, R } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
 import { toExecutable } from 'App/Lib/ToExecutable'
-import { RefObject, useState } from 'react'
+import { type RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const logs = createLogs('CompilationPage')
@@ -63,20 +63,26 @@ function CompilationPage() {
     <div>
       <RecentScriptsDialog
         open={isRecentFilesDialogOpen}
-        onClose={() => setRecentFilesDialogOpen(false)}
+        onClose={() => {
+          setRecentFilesDialogOpen(false)
+        }}
         currentScripts={scripts}
         onScriptsLoad={flow(
           pathsToFileScript,
           fileScriptsToFileScriptCompilation,
           addScripts,
           logs.log('add scripts from recent scripts'),
-          () => setRecentFilesDialogOpen(false),
+          () => {
+            setRecentFilesDialogOpen(false)
+          },
         )}
       />
 
       <PageAppBar title={t('page.compilation.appBar.title')}>
         <Button
-          onClick={() => setRecentFilesDialogOpen(true)}
+          onClick={() => {
+            setRecentFilesDialogOpen(true)
+          }}
           className="px-3 py-2"
           color="inherit"
           startIcon={<HistoryIcon />}
@@ -108,7 +114,9 @@ function CompilationPage() {
               fileScriptsToFileScriptCompilation,
               addScripts,
               logs.log('add scripts from group'),
-              () => trackEvent({ category: 'Compilation', action: 'Add scripts', name: 'Group' }),
+              () => {
+                trackEvent({ category: 'Compilation', action: 'Add scripts', name: 'Group' })
+              },
             )}
           >
             {t('common.group')}
@@ -131,11 +139,11 @@ function CompilationPage() {
                   await pipe(
                     scripts,
                     A.filter((script) => script.status !== 'running'),
-                    (scripts) => {
-                      logs.trace('start compilation for all remaining scripts')()
+                    async (scripts) => {
+                      void logs.trace('start compilation for all remaining scripts')()
                       scripts.forEach(removeCompilationLog)
 
-                      return compile(scripts)
+                      return await compile(scripts)
                     },
                   )
                 }}
@@ -175,7 +183,7 @@ function CompilationPage() {
               onRemove={(scriptToRemove) => {
                 removeCompilationLog(scriptToRemove)
                 removeScripts([scriptToRemove])
-                logs.trace('remove script', scriptToRemove)()
+                void logs.trace('remove script', scriptToRemove)()
               }}
               onStart={async (scriptToStart) => {
                 void logs.trace('start compile single script', scriptToStart)()

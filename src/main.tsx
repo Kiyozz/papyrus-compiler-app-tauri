@@ -6,7 +6,7 @@
  */
 
 import { createInstance, MatomoProvider } from '@datapunt/matomo-tracker-react'
-import { MatomoInstance } from '@datapunt/matomo-tracker-react/es/types'
+import { type MatomoInstance } from '@datapunt/matomo-tracker-react/es/types'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import CompilationLogsProvider from 'App/Hook/CompilationLogs/UseCompilationLogs'
@@ -19,7 +19,7 @@ import CompilationPage from 'App/Page/CompilationPage'
 import GroupsPage from 'App/Page/GroupsPage'
 import SettingsPage from 'App/Page/SettingsPage'
 import { configureTranslations } from 'App/Translation/ConfigureTranslations'
-import React, { PropsWithChildren, useRef, useState } from 'react'
+import React, { type PropsWithChildren, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { useUpdateEffect } from 'usehooks-ts'
@@ -29,11 +29,12 @@ import './style.css'
 
 declare global {
   interface Error {
-    toJSON(): { type: string; message: string }
+    toJSON: () => { type: string; message: string }
   }
 }
 
 // Serialize the error to JSON for IPC
+// eslint-disable-next-line no-extend-native
 Error.prototype.toJSON = function () {
   return {
     type: this.name,
@@ -89,7 +90,7 @@ const Matomo = ({ children }: PropsWithChildren) => {
 
   const [matomo, setMatomo] = useState<MatomoInstance>()
 
-  if (!matomo) return null
+  if (matomo == null) return null
 
   // @ts-expect-error - d.ts is invalid
   return <MatomoProvider value={matomo}>{children}</MatomoProvider>

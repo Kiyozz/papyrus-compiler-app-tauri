@@ -5,9 +5,9 @@
  *
  */
 
-import { FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 
-export type CompilationLog = {
+export interface CompilationLog {
   status: 'success' | 'error'
   output: string
   script: FileScriptCompilation

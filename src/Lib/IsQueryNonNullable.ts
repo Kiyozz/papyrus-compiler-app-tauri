@@ -5,7 +5,7 @@
  *
  */
 
-import { UseQueryResult, QueryObserverSuccessResult } from '@tanstack/react-query'
+import { type UseQueryResult, type QueryObserverSuccessResult } from '@tanstack/react-query'
 
 export const isQueryNonNullable = <TData, TError>(
   query: UseQueryResult<TData, TError>,

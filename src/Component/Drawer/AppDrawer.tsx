@@ -16,7 +16,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import AppDrawerLink from 'App/Component/Drawer/AppDrawerLink'
-import { TutorialTooltipProps } from 'App/Component/Tutorial/Settings/TutorialTooltip'
+import { type TutorialTooltipProps } from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
@@ -25,7 +25,7 @@ import { useDocumentation } from 'App/Hook/UseDocumentation'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import cx from 'classnames'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type DrawerLink = {
@@ -119,7 +119,7 @@ function AppDrawer() {
       onClick: () => {
         updateConf.mutate({
           misc: {
-            drawerOpen: !conf.data!.misc.drawerOpen,
+            drawerOpen: !conf.data.misc.drawerOpen,
           },
         })
       },
@@ -136,7 +136,7 @@ function AppDrawer() {
       }}
       classes={{
         paper: cx(
-          'overflow-x-hidden transition-[width] ease-sharp duration-[225ms]',
+          'overflow-x-hidden transition-[width] duration-[225ms] ease-sharp',
           conf.data.misc.drawerOpen ? 'w-48' : 'w-14',
         ),
       }}

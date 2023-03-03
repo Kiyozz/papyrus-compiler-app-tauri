@@ -5,10 +5,10 @@
  *
  */
 
-import Tooltip, { TooltipProps } from '@mui/material/Tooltip'
-import { TutorialStep, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import Tooltip, { type TooltipProps } from '@mui/material/Tooltip'
+import { type TutorialStep, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { isSome } from 'App/Lib/FpTs'
-import { ComponentProps, forwardRef } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 
 export type TutorialTooltipProps = ComponentProps<typeof TutorialTooltip>
 

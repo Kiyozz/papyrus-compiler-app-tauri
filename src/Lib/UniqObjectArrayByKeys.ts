@@ -7,7 +7,7 @@
 
 export const uniqObjectArrayByKeys =
   <T>(arrayInput: T[] = []) =>
-  (keys: (keyof T)[] = []): T[] => {
+  (keys: Array<keyof T> = []): T[] => {
     if (!Array.isArray(arrayInput)) {
       throw new TypeError(`Expected an array for arrayInput, got ${typeof arrayInput}`)
     }

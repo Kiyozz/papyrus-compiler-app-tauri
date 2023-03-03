@@ -7,9 +7,9 @@
 
 import { open as openFileDialog } from '@tauri-apps/api/dialog'
 import SearchIcon from '@mui/icons-material/Search'
-import Button, { ButtonProps } from '@mui/material/Button'
+import Button, { type ButtonProps } from '@mui/material/Button'
 import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
-import { FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
 import { O, pipe } from 'App/Lib/FpTs'
 import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
 import { forwardRef, useState } from 'react'
@@ -18,10 +18,14 @@ import { useTranslation } from 'react-i18next'
 const SearchScriptButton = forwardRef<
   HTMLButtonElement,
   { onFileSelect: (files: FileScript[], reason: 'Drop' | 'Select') => void } & Omit<ButtonProps, 'ref'>
->(({ onFileSelect, disabled, ...props }, ref) => {
+>(({ onFileSelect, disabled = false, ...props }, ref) => {
   const { t } = useTranslation()
   useListenFileDrop({
-    onDrop: (evt) => pipe(evt.payload, pathsToFileScript, (files) => onFileSelect(files, 'Drop')),
+    onDrop: (evt) => {
+      pipe(evt.payload, pathsToFileScript, (files) => {
+        onFileSelect(files, 'Drop')
+      })
+    },
   })
 
   const [isDialogOpen, setDialogOpen] = useState(false)

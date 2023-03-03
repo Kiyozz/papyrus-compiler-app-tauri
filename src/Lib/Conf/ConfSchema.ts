@@ -5,7 +5,7 @@
  *
  */
 
-import { JSONSchema as TypedJSONSchema } from 'json-schema-typed'
+import { type JSONSchema as TypedJSONSchema } from 'json-schema-typed'
 
 export type ConfSchema<T> = {
   [Property in keyof T]: TypedJSONSchema

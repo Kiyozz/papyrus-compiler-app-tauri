@@ -5,7 +5,7 @@
  *
  */
 
-export type GitHubRelease = {
+export interface GitHubRelease {
   url: string
   assets_url: string
   upload_url: string
@@ -19,14 +19,14 @@ export type GitHubRelease = {
   prerelease: boolean
   created_at: string
   published_at: string
-  assets: {
+  assets: Array<{
     url: string
     name: string
     size: number
     created_at: string
     updated_at: string
     browser_download_url: string
-  }[]
+  }>
   tarball_url: string
   zipball_url: string
   body: string
