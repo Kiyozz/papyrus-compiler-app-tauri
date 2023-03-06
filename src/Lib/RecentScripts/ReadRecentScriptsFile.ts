@@ -6,18 +6,23 @@
  */
 
 import { BaseDirectory, readTextFile, exists } from '@tauri-apps/api/fs'
-import { flow, TE, type T } from 'App/Lib/FpTs'
-import { parseAndDecodeRecentScripts } from 'App/Lib/RecentScripts/Json'
+import { parseRecentScriptsJson } from 'App/Lib/RecentScripts/Json'
+import { Result } from 'ts-results'
 
-export const readRecentScriptsFile = (path: string): TE.TaskEither<Error, string> =>
-  TE.tryCatch(
-    async () => await readTextFile(path, { dir: BaseDirectory.App }),
-    (reason) => new Error(`Cannot read recent scripts file, error given: ${reason}`),
+export const readRecentScriptsFile = async (path: string): Promise<Result<string, Error>> => {
+  const res = await Result.wrapAsync(async () => await readTextFile(path, { dir: BaseDirectory.App }))
+
+  return res.mapErr((reason) => new Error(`Cannot read recent scripts file, error given: ${reason}`))
+}
+
+export const isRecentScriptsFileExists = async (path: string): Promise<Result<boolean, Error>> => {
+  return await Result.wrapAsync(async () => await exists(path, { dir: BaseDirectory.App })).then((res) =>
+    res.mapErr((reason) => new Error(`Cannot check if ${path} exists, error given: ${reason}`)),
   )
+}
 
-export const canReadRecentScriptsFile =
-  (path: string): T.Task<boolean> =>
-  async () =>
-    await exists(path, { dir: BaseDirectory.App })
+export const readRecentScriptsFileJson = async (path: string): Promise<Result<string[], Error>> => {
+  const res = await readRecentScriptsFile(path)
 
-export const readRecentScriptsFileJson = flow(readRecentScriptsFile, TE.chainEitherKW(parseAndDecodeRecentScripts))
+  return res.andThen(parseRecentScriptsJson)
+}

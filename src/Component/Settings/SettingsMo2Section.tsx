@@ -16,17 +16,19 @@ import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { O, some } from 'App/Lib/FpTs'
+import { type CheckConfErrorTypes } from 'App/Lib/Conf/CheckConfTypes'
 import { toExecutable } from 'App/Lib/ToExecutable'
+import { fromNullable } from 'App/Lib/TsResults'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
+import { Some } from 'ts-results'
 
 function SettingsMo2Section() {
   const { t } = useTranslation()
   const { trackEvent } = useMatomo()
   const conf = useConf()
   const updateConf = useUpdateConf()
-  const checkConf = useCheckConf(O.fromNullable(conf.data))
+  const checkConf = useCheckConf(fromNullable(conf.data))
   const { refs } = useSettingsTutorial()
 
   if (conf.isLoading) return <>Loading...</>
@@ -36,7 +38,7 @@ function SettingsMo2Section() {
   const mo2Instance = conf.data.mo2.instance
   const hasAnyMo2Error = isCheckConfQueryError(
     checkConf,
-    some(['mo2InstanceDoesNotExist', 'mo2InstanceIsNotSet', 'mo2InstanceNoModsFolder']),
+    Some(['mo2InstanceDoesNotExist', 'mo2InstanceIsNotSet', 'mo2InstanceNoModsFolder'] satisfies CheckConfErrorTypes[]),
   )
 
   return (
@@ -89,7 +91,7 @@ function SettingsMo2Section() {
       {hasAnyMo2Error && (
         <Alert severity="error" className="mt-3 dark:bg-red-400/10">
           {t<string>('common.confCheckError', {
-            context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.value.type,
+            context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
             gameExe: toExecutable(conf.data.game.type),
           })}
         </Alert>

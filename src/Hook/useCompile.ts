@@ -9,10 +9,9 @@ import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
 import { compileScript } from 'App/Lib/Compilation/CompileScript'
-import { isLeft } from 'App/Lib/FpTs'
 
 export const useCompile = (
-  options: UseMutationOptions<CompilationLog, Error, Parameters<ReturnType<typeof compileScript>>[0]> = {},
+  options: UseMutationOptions<CompilationLog, Error, Parameters<typeof compileScript>[1]> = {},
 ) => {
   const conf = useConf()
 
@@ -22,13 +21,13 @@ export const useCompile = (
         throw new Error('conf is not loaded')
       }
 
-      const res = await compileScript(conf.data)(script)()
+      const res = await compileScript(conf.data, script)
 
-      if (isLeft(res)) {
-        throw res.left
+      if (res.err) {
+        throw res.val
       }
 
-      return res.right
+      return res.val
     },
     ...options,
   })

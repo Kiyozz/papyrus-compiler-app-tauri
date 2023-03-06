@@ -9,25 +9,26 @@ import AddIcon from '@mui/icons-material/Add'
 import Button, { type ButtonProps } from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { type Groups } from 'App/Lib/Conf/ConfDecoder'
-import { A, O, pipe } from 'App/Lib/FpTs'
+import { type Groups } from 'App/Lib/Conf/ConfZod'
+import { A, pipe } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
+import { None, type Option, Some } from 'ts-results'
 
 function GroupChooseButton({
   onGroupClick,
   groups,
   ...props
 }: Omit<ButtonProps, 'onClick'> & { groups: Groups; onGroupClick: (group: GroupWithId) => void }) {
-  const [anchor, setAnchor] = useState<O.Option<HTMLElement>>(O.none)
+  const [anchor, setAnchor] = useState<Option<HTMLElement>>(None)
 
   const nonEmptyGroups = pipe(
     groupRecordToArray(groups),
     A.filter((group) => A.isNonEmpty(group.scripts)),
   )
 
-  const isOpen = O.isSome(anchor)
+  const isOpen = anchor.some
 
   return (
     <>
@@ -38,14 +39,14 @@ function GroupChooseButton({
           aria-haspopup="true"
           startIcon={<AddIcon />}
           onClick={(e) => {
-            setAnchor(O.some(e.currentTarget))
+            setAnchor(Some(e.currentTarget))
           }}
           {...props}
         />
       )}
       <Menu
         id="group-loader-menu"
-        anchorEl={O.toNullable(anchor)}
+        anchorEl={anchor.unwrapOr(null)}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'left',
@@ -55,7 +56,7 @@ function GroupChooseButton({
         }}
         open={isOpen}
         onClose={() => {
-          setAnchor(O.none)
+          setAnchor(None)
         }}
       >
         {pipe(
@@ -66,7 +67,7 @@ function GroupChooseButton({
               className="justify-center"
               onClick={() => {
                 onGroupClick(group)
-                setAnchor(O.none)
+                setAnchor(None)
               }}
             >
               {group.name}

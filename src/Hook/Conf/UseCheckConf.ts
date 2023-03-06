@@ -9,9 +9,8 @@ import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/r
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { checkConf, type CheckConfError } from 'App/Lib/Conf/CheckConf'
 import { type CheckConfErrorTypes, isCheckConfError } from 'App/Lib/Conf/CheckConfTypes'
-import { type Conf } from 'App/Lib/Conf/ConfDecoder'
-import { E, isNone, O } from 'App/Lib/FpTs'
-import invariant from 'tiny-invariant'
+import { type Conf } from 'App/Lib/Conf/ConfZod'
+import { None, type Option, Some } from 'ts-results'
 
 /**
  * If the Query contains a check error.
@@ -20,36 +19,35 @@ import invariant from 'tiny-invariant'
  * @param type
  */
 export const isCheckConfQueryError = <T extends CheckConfErrorTypes>(
-  query: UseQueryResult<O.Option<CheckConfError>>,
-  type: O.Option<T[]> = O.none,
-): query is UseQueryResult<O.Some<CheckConfError<T>>> & { isSuccess: true } => {
-  if (query.data == null || isNone(query.data)) {
+  query: UseQueryResult<Option<CheckConfError>>,
+  type: Option<readonly T[]> = None,
+): query is UseQueryResult<Some<CheckConfError<T>>> & { isSuccess: true } => {
+  if (query.data == null || query.data.none) {
     return false
   }
 
-  if (isNone(type)) {
-    return isCheckConfError(query.data.value)
+  if (type.none) {
+    return isCheckConfError(query.data.val)
   }
 
-  return isCheckConfError(query.data.value) && (type.value as CheckConfErrorTypes[]).includes(query.data.value.type)
+  return isCheckConfError(query.data.val) && (type.val as readonly CheckConfErrorTypes[]).includes(query.data.val.type)
 }
 
-export const useCheckConf = (conf: O.Option<Conf>, options: UseQueryOptions<O.Option<CheckConfError>> = {}) => {
+export const useCheckConf = (conf: Option<Conf>, options: UseQueryOptions<Option<CheckConfError>> = {}) => {
   const { step } = useSettingsTutorial()
 
   return useQuery({
     queryKey: ['conf-check', conf],
     queryFn: async () => {
-      invariant(O.isSome(conf), 'Conf is None') // should never occur
-      const configChecked = await checkConf(conf.value)()
+      const configChecked = await checkConf(conf.expect('Conf is None'))
 
-      if (E.isLeft(configChecked)) {
-        return O.some(configChecked.left)
+      if (configChecked.err) {
+        return Some(configChecked.val)
       }
 
-      return O.none
+      return None
     },
-    enabled: O.isSome(conf) && O.isSome(step) && step.value === 'end',
+    enabled: conf.some && step.some && step.val === 'end',
     retry: false,
     cacheTime: 0,
     staleTime: 60 * 1000 * 5, // 5 minutes

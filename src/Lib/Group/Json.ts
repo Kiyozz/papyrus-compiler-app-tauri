@@ -5,7 +5,7 @@
  *
  */
 
-import { GroupsDecoder } from 'App/Lib/Conf/ConfDecoder'
-import { parseAndDecode } from 'App/Lib/Json'
+import { GroupsZod } from 'App/Lib/Conf/ConfZod'
+import { parseJson } from 'App/Lib/Json'
 
-export const parseAndDecodeGroups = parseAndDecode(GroupsDecoder)
+export const parseGroupsJson = (contents: string) => parseJson(GroupsZod, contents)

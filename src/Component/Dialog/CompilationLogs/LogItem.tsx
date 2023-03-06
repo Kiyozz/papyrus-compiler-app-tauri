@@ -13,11 +13,11 @@ import Typography from '@mui/material/Typography'
 import { writeText as copyToClipboard } from '@tauri-apps/api/clipboard'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
-import { type E, TE } from 'App/Lib/FpTs'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
+import { Result } from 'ts-results'
 
-const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res: E.Either<Error, void>) => void }) => {
+const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res: Result<void, Error>) => void }) => {
   const { t } = useTranslation()
   const { remove } = useCompilationLogs()
   const isSuccessful = log.status === 'success'
@@ -40,14 +40,11 @@ const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
             <Button
               color="inherit"
               onClick={async () => {
-                const res = await TE.tryCatch(
-                  async () => {
-                    await copyToClipboard(`${log.script.name}\n\n${log.output.trim()}`)
-                  },
-                  (reason) => new Error(`Failed to copy to clipboard: ${reason}`),
-                )()
+                const res = await Result.wrapAsync(async () => {
+                  await copyToClipboard(`${log.script.name}\n\n${log.output.trim()}`)
+                })
 
-                onClickCopy(res)
+                onClickCopy(res.mapErr((reason) => new Error(`Failed to copy to clipboard: ${reason}`)))
               }}
             >
               {t('common.copy')}

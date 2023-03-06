@@ -25,7 +25,7 @@ export function useCompilation() {
   const compileMutation = useCompile()
   const compile = useCallback(
     async (scripts: FileScriptCompilation[]) => {
-      void logs.trace('compile', scripts)()
+      logs.trace('compile', scripts)()
 
       const res = pipe(
         TE.sequenceArray(
@@ -38,7 +38,7 @@ export function useCompilation() {
                     status: 'running',
                   })
 
-                  void logs.trace('start compile', script)()
+                  logs.trace('start compile', script)()
 
                   return await compileMutation.mutateAsync(script)
                 },
@@ -47,7 +47,7 @@ export function useCompilation() {
                 },
               ),
               TE.mapLeft((reason) => {
-                void logs.error('error compile script', script, reason)()
+                logs.error('error compile script', script, reason)()
                 console.error('compile', reason)
 
                 replace({
@@ -63,7 +63,7 @@ export function useCompilation() {
                   status: log.status === 'error' ? 'error' : 'done',
                 })
 
-                void logs.trace('add compilation log', log)()
+                logs.trace('add compilation log', log)()
 
                 addCompilationLog(log)
 
@@ -79,7 +79,7 @@ export function useCompilation() {
         TE.chain((compilationLogs) => {
           return TE.tryCatch(
             async () => {
-              void logs.trace(
+              logs.trace(
                 'add scripts to recent scripts',
                 compilationLogs.map((l) => l.script),
               )()
@@ -89,7 +89,7 @@ export function useCompilation() {
               })
             },
             (reason) => {
-              void logs.error('error update recent scripts', reason)()
+              logs.error('error update recent scripts', reason)()
 
               return new Error(`failed to update recent scripts: ${reason}`)
             },

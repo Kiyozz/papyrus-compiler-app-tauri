@@ -9,13 +9,16 @@ import { open } from '@tauri-apps/api/shell'
 import useDocumentationUrl from 'App/Hook/UseDocumentationUrl'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { createLogs } from 'App/Lib/CreateLog'
-import { E, TE } from 'App/Lib/FpTs'
+import { Err, Result } from 'ts-results'
 
 const logs = createLogs('useDocumentation')
 
-const openUrl = (url: string) => async () => {
-  await open(url)
-}
+const openUrl = async (url: string): Promise<Result<void, Error>> =>
+  (
+    await Result.wrapAsync(async () => {
+      await open(url)
+    })
+  ).mapErr((reason) => new Error(`Cannot open url, error given: ${reason}`))
 
 export function useDocumentation() {
   const { trackEvent } = useMatomo()
@@ -23,11 +26,11 @@ export function useDocumentation() {
 
   const openTheDocumentation = async (
     _reason: 'enter' | 'click' | 'settings-app-bar',
-  ): Promise<E.Either<Error, void>> => {
+  ): Promise<Result<void, Error>> => {
     if (documentationUrl.data == null) {
-      void logs.error('cannot open documentation, environment is not set')()
+      logs.error('cannot open documentation, environment is not set')()
 
-      return E.left(new Error('Cannot open documentation, environment is not set'))
+      return Err(new Error('Cannot open documentation, environment is not set'))
     }
 
     trackEvent({
@@ -36,17 +39,14 @@ export function useDocumentation() {
       name: 'Nav',
     })
 
-    void logs.debug('open documentation')()
+    logs.debug('open documentation')()
 
-    const res = await TE.tryCatch(
-      openUrl(documentationUrl.data),
-      (errReason) => new Error(`Failed to open documentation, error given: ${errReason}`),
-    )()
+    const res = await openUrl(documentationUrl.data)
 
-    if (E.isLeft(res)) {
-      void logs.error('error open documentation')()
+    if (res.err) {
+      logs.error('error open documentation')()
 
-      console.error(res.left)
+      console.error(res.val)
     }
 
     return res

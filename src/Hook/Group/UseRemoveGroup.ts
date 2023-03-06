@@ -7,7 +7,6 @@
 
 import { useMutation, type UseMutationOptions, useQueryClient } from '@tanstack/react-query'
 import { createLogs } from 'App/Lib/CreateLog'
-import { E } from 'App/Lib/FpTs'
 import { removeDefaultGroup } from 'App/Lib/Group/Group'
 
 const logs = createLogs('useRemoveGroup')
@@ -19,17 +18,17 @@ export const useRemoveGroup = (
 
   return useMutation({
     mutationFn: async (groupId) => {
-      void logs.debug('remove group', groupId)()
+      logs.debug('remove group', groupId)()
 
-      const res = await removeDefaultGroup(groupId)()
+      const res = await removeDefaultGroup(groupId)
 
-      if (E.isLeft(res)) {
-        void logs.error('error remove group', res.left)()
+      if (res.err) {
+        logs.error('error remove group', res.val)()
 
-        throw res.left
+        throw res.val
       }
 
-      return res.right
+      return res.val
     },
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['groups'], type: 'all' })

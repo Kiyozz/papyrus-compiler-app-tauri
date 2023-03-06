@@ -8,9 +8,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { listen } from '@tauri-apps/api/event'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { type Conf, ConfDecoder } from 'App/Lib/Conf/ConfDecoder'
-import { isLeft } from 'App/Lib/FpTs'
-import { D } from 'App/Lib/IoTs'
+import { type Conf, ConfZod } from 'App/Lib/Conf/ConfZod'
 import { useEffect } from 'react'
 
 export const useListenConfReset = () => {
@@ -19,10 +17,10 @@ export const useListenConfReset = () => {
 
   useEffect(() => {
     const unsubscribe = listen<Conf>('pca://conf_reset', (evt) => {
-      const conf = ConfDecoder.decode(evt.payload)
+      const conf = ConfZod.safeParse(evt.payload)
 
-      if (isLeft(conf)) {
-        throw new Error(`Cannot decode conf, error given: ${D.draw(conf.left)}`)
+      if (!conf.success) {
+        throw new Error(`Cannot parse conf, error given: ${conf.error.message}`)
       }
 
       trackEvent({
@@ -31,8 +29,8 @@ export const useListenConfReset = () => {
         name: 'App menu',
       })
 
-      queryClient.setQueryData(['conf'], conf.right)
-      void queryClient.invalidateQueries(['conf-check', conf.right])
+      queryClient.setQueryData(['conf'], conf.data)
+      void queryClient.invalidateQueries(['conf-check', conf.data])
     })
 
     return () => {

@@ -7,7 +7,7 @@
 
 export interface ConfOptions<T = unknown> {
   readonly projectVersion: string
-  readonly configName: string
+  readonly confName: string
   readonly defaults: T
   readonly migrations?: any
 }

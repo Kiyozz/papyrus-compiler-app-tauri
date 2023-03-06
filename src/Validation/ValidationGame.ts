@@ -6,7 +6,7 @@
  */
 
 import is from '@sindresorhus/is'
-import { type GameType, type Game } from 'App/Lib/Conf/ConfDecoder'
+import { type GameType, type Game } from 'App/Lib/Conf/ConfZod'
 
 export function validationGameType(gameType: unknown): gameType is GameType {
   if (is.undefined(gameType)) return false

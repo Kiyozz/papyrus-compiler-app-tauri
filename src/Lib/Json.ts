@@ -6,27 +6,22 @@
  */
 
 import jsonStringify from 'safe-json-stringify'
-import { E, flow, J, pipe } from 'App/Lib/FpTs'
-import { D } from 'App/Lib/IoTs'
+import { Err, Ok, Result } from 'ts-results'
+import { type ZodType } from 'zod'
 
-export const parseAndDecode =
-  <T>(decoder: D.Decoder<unknown, T>) =>
-  (text: string) =>
-    pipe(
-      pipe(
-        J.parse(text),
-        E.mapLeft((reason) => new Error(`Cannot parse json, error given: ${reason}`)),
-      ),
-      E.chain(
-        flow(
-          decoder.decode,
-          E.mapLeft((errors: D.DecodeError) => new Error(`Cannot decode json, error given: ${D.draw(errors)}`)),
-        ),
-      ),
-    )
+export const parseJson = <T>(decoder: ZodType<T>, text: string): Result<T, Error> => {
+  return Result.wrap(() => JSON.parse(text))
+    .mapErr((reason) => new Error(`Cannot parse json, error given: ${reason}`))
+    .andThen((json) => {
+      const obj = decoder.safeParse(json)
 
-export const stringify = (contents: object): E.Either<Error, string> =>
-  E.tryCatch(
-    () => jsonStringify(contents, undefined, 2),
+      if (!obj.success) return Err(new Error(`Cannot decode json, error given: ${obj.error.message}`))
+
+      return Ok(obj.data)
+    })
+}
+
+export const stringify = (contents: object): Result<string, Error> =>
+  Result.wrap(() => jsonStringify(contents, undefined, 2)).mapErr(
     (reason) => new Error(`Cannot stringify json, error given: ${reason}`),
   )

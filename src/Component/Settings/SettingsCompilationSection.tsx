@@ -6,25 +6,22 @@
  */
 
 import TextField from '@mui/material/TextField'
-import is from '@sindresorhus/is'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { O, pipe } from 'App/Lib/FpTs'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
-
-const safeParseInt = (v: string): O.Option<number> =>
-  pipe(
-    v,
-    (v) => parseInt(v, 10),
-    (v) => (Number.isNaN(v) ? O.none : O.some(v)),
-  )
+import { z } from 'zod'
 
 const hardMaxConcurrentCompilationScripts = 100
+
+const ConcurrentScriptsZod = z.preprocess(
+  (a) => parseInt(z.string().parse(a), 10),
+  z.number().min(1).max(hardMaxConcurrentCompilationScripts),
+)
 
 function SettingsCompilationSection() {
   const { t } = useTranslation()
@@ -53,25 +50,18 @@ function SettingsCompilationSection() {
           label={t('page.settings.sections.compilation.concurrentScripts.label')}
           name="compilation-concurrentScripts"
           onChange={(v) => {
-            const newValue = pipe(
-              v.currentTarget.value,
-              (v) => (is.emptyString(v) ? '0' : v),
-              O.fromPredicate(is.numericString),
-              O.chain(safeParseInt),
-              O.map((v) => (v > hardMaxConcurrentCompilationScripts ? hardMaxConcurrentCompilationScripts : v)),
-              O.map((v) => (v < 0 ? 1 : v)),
-            )
+            const nV = ConcurrentScriptsZod.safeParse(v.currentTarget.value)
 
-            if (O.isSome(newValue)) {
+            if (nV.success) {
               updateConf.mutate({
                 compilation: {
-                  concurrentScripts: newValue.value,
+                  concurrentScripts: nV.data,
                 },
               })
               trackEvent({
                 category: 'Conf',
                 action: 'Change concurrent scripts',
-                value: newValue.value,
+                value: nV.data,
               })
             }
           }}

@@ -34,10 +34,11 @@ import { createLogs } from 'App/Lib/CreateLog'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 import { isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
-import { A, flow, O, pipe, R } from 'App/Lib/FpTs'
+import { A, flow, pipe, R } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
-import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
+import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
 import { toExecutable } from 'App/Lib/ToExecutable'
+import { fromNullable } from 'App/Lib/TsResults'
 import { type RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -55,7 +56,7 @@ function CompilationPage() {
   const groups = useGroups()
   const conf = useConf()
   const { refs } = useSettingsTutorial()
-  const checkConf = useCheckConf(O.fromNullable(conf.data))
+  const checkConf = useCheckConf(fromNullable(conf.data))
 
   const isAllScriptsRunning = scripts.every(isRunning)
 
@@ -68,7 +69,7 @@ function CompilationPage() {
         }}
         currentScripts={scripts}
         onScriptsLoad={flow(
-          pathsToFileScript,
+          pathsToFileScriptAndFilterPscFile,
           fileScriptsToFileScriptCompilation,
           addScripts,
           logs.log('add scripts from recent scripts'),
@@ -95,8 +96,9 @@ function CompilationPage() {
             className="px-3 py-2"
             color="inherit"
             onFileSelect={(files, reason) => {
-              void pipe(files, fileScriptsToFileScriptCompilation, addScripts, logs.log('add scripts from file select'))
-
+              const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
+              addScripts(scriptsCompilation)
+              logs.log('add scripts from file select')()
               trackEvent({ category: 'Compilation', action: 'Add scripts', name: reason })
             }}
           >
@@ -110,7 +112,7 @@ function CompilationPage() {
             groups={groups.data}
             onGroupClick={flow(
               (group) => group.scripts.map((script) => script.path),
-              pathsToFileScript,
+              pathsToFileScriptAndFilterPscFile,
               fileScriptsToFileScriptCompilation,
               addScripts,
               logs.log('add scripts from group'),
@@ -140,7 +142,7 @@ function CompilationPage() {
                     scripts,
                     A.filter((script) => script.status !== 'running'),
                     async (scripts) => {
-                      void logs.trace('start compilation for all remaining scripts')()
+                      logs.trace('start compilation for all remaining scripts')()
                       scripts.forEach(removeCompilationLog)
 
                       return await compile(scripts)
@@ -183,10 +185,10 @@ function CompilationPage() {
               onRemove={(scriptToRemove) => {
                 removeCompilationLog(scriptToRemove)
                 removeScripts([scriptToRemove])
-                void logs.trace('remove script', scriptToRemove)()
+                logs.trace('remove script', scriptToRemove)()
               }}
               onStart={async (scriptToStart) => {
-                void logs.trace('start compile single script', scriptToStart)()
+                logs.trace('start compile single script', scriptToStart)()
                 removeCompilationLog(scriptToStart)
                 await compile([scriptToStart])
 
@@ -225,7 +227,7 @@ function CompilationPage() {
           {conf.isSuccess &&
             isCheckConfQueryError(checkConf) &&
             t<string>('common.confCheckError', {
-              context: checkConf.data.value.type,
+              context: checkConf.data?.some ? checkConf.data.val.type : undefined,
               gameExe: toExecutable(conf.data.game.type),
             })}
         </Alert>

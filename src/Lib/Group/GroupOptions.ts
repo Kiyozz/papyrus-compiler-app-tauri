@@ -5,7 +5,7 @@
  *
  */
 
-import { type Groups } from '../Conf/ConfDecoder'
+import { type Groups } from '../Conf/ConfZod'
 
 export interface GroupOptions {
   fileName: string

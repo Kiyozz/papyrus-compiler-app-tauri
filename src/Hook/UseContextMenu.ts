@@ -6,20 +6,20 @@
  */
 
 import { useState, type MouseEvent } from 'react'
-import { isNone, isSome, none, type Option, some } from '../Lib/FpTs'
+import { None, type Option, Some } from 'ts-results'
 
 export const useContextMenu = () => {
-  const [contextMenu, setContextMenu] = useState<Option<{ mouseX: number; mouseY: number }>>(none)
+  const [contextMenu, setContextMenu] = useState<Option<{ mouseX: number; mouseY: number }>>(None)
 
   return {
     contextMenu,
     handleContextMenu: (event: MouseEvent) => {
       event.preventDefault()
-      setContextMenu(isNone(contextMenu) ? some({ mouseX: event.clientX - 2, mouseY: event.clientY - 4 }) : none)
+      setContextMenu(contextMenu.none ? Some({ mouseX: event.clientX - 2, mouseY: event.clientY - 4 }) : None)
     },
     handleClose: () => {
-      setContextMenu(none)
+      setContextMenu(None)
     },
-    open: isSome(contextMenu),
+    open: contextMenu.some,
   }
 }

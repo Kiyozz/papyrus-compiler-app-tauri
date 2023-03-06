@@ -6,34 +6,27 @@
  */
 
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
-import { type Conf } from 'App/Lib/Conf/ConfDecoder'
+import { type Conf } from 'App/Lib/Conf/ConfZod'
 import { invokeCompileScript } from 'App/Lib/InvokeCompileScript'
-import { E, TE } from '../FpTs'
+import { Ok, type Result } from 'ts-results'
 import { type CompilationLog } from './CompilationLog'
 
-export const compileScript =
-  (conf: Conf) =>
-  (script: FileScriptCompilation): TE.TaskEither<Error, CompilationLog> => {
-    return TE.tryCatch(
-      async () => {
-        // TODO: construct the args, with mo2 support
-        const compileCommand = await invokeCompileScript(
-          conf.compilation.compilerPath,
-          [], // TODO: add args, with mo2 support
-          script.path,
-          'compileScript',
-        )()
+export const compileScript = async (
+  conf: Conf,
+  script: FileScriptCompilation,
+): Promise<Result<CompilationLog, Error>> => {
+  const compileCommand = await invokeCompileScript(
+    conf.compilation.compilerPath,
+    [], // TODO: add args, with mo2 support
+    script.path,
+    'compileScript',
+  )
 
-        if (E.isLeft(compileCommand)) {
-          throw compileCommand.left
-        }
+  if (compileCommand.err) return compileCommand
 
-        return {
-          script,
-          status: compileCommand.right === 'Succeeded' ? 'success' : 'error',
-          output: compileCommand.right.replace(/Batch compile of \d+ files finished\. \d+ failed\./, ''),
-        }
-      },
-      (reason) => new Error(`fatal error compile script, error given: ${reason}`),
-    )
-  }
+  return Ok({
+    script,
+    status: compileCommand.val === 'Succeeded' ? 'success' : 'error',
+    output: compileCommand.val.replace(/Batch compile of \d+ files finished\. \d+ failed\./, ''),
+  })
+}

@@ -5,23 +5,22 @@
  *
  */
 
-import { type RecentScript, type RecentScripts } from 'App/Lib/Conf/ConfDecoder'
-import { A, pipe, S, TE, TO } from 'App/Lib/FpTs'
-import { canReadRecentScriptsFile, readRecentScriptsFileJson } from 'App/Lib/RecentScripts/ReadRecentScriptsFile'
+import { type RecentScript, type RecentScripts } from 'App/Lib/Conf/ConfZod'
+import { A, S } from 'App/Lib/FpTs'
+import { isRecentScriptsFileExists, readRecentScriptsFileJson } from 'App/Lib/RecentScripts/ReadRecentScriptsFile'
 import { type RecentScriptsOptions } from 'App/Lib/RecentScripts/RecentScriptsOptions'
 import { writeRecentScriptsFile } from 'App/Lib/RecentScripts/WriteRecentScriptsFile'
+import { Ok, type Result } from 'ts-results'
 
-const writeRecentScriptsIfNotExists = (options: RecentScriptsOptions) =>
-  pipe(
-    canReadRecentScriptsFile(options.fileName),
-    TE.fromTask,
-    TE.filterOrElse(
-      (canReadGroups) => !canReadGroups,
-      () => new Error('Groups file already exists'),
-    ),
-    TE.chain(() => writeRecentScriptsFile(options.fileName)(options.defaults)),
-    TO.fromTaskEither,
-  )
+const writeRecentScriptsIfNotExists = async (options: RecentScriptsOptions): Promise<Result<void, Error>> => {
+  const needWrite = (await isRecentScriptsFileExists(options.fileName)).unwrap()
+
+  if (!needWrite) {
+    return Ok(undefined)
+  }
+
+  return await writeRecentScriptsFile(options.fileName, options.defaults)
+}
 
 const defaultOptions: RecentScriptsOptions = {
   fileName: 'recent_scripts.json',
@@ -29,40 +28,52 @@ const defaultOptions: RecentScriptsOptions = {
   maxItems: 20,
 }
 
-const readRecentScriptsOrUseDefaultRecentScripts = (options: RecentScriptsOptions) =>
-  readRecentScriptsFileJson(options.fileName)
+const readRecentScriptsOrUseDefaultRecentScripts = async (options: RecentScriptsOptions) =>
+  await readRecentScriptsFileJson(options.fileName)
 
-export const readRecentScripts = readRecentScriptsOrUseDefaultRecentScripts(defaultOptions)
+export const readRecentScripts = async () => await readRecentScriptsOrUseDefaultRecentScripts(defaultOptions)
 
-export const writeRecentScripts =
-  (options: RecentScriptsOptions) =>
-  ({ recentScripts, override = false }: { recentScripts: RecentScripts; override?: boolean }) =>
-    pipe(
-      readRecentScripts,
-      TE.map((currentRecentScripts) => {
-        if (override) {
-          return A.takeLeft(options.maxItems)(recentScripts)
-        }
+export const writeRecentScripts = async (
+  options: RecentScriptsOptions,
+  { recentScripts, override = false }: { recentScripts: RecentScripts; override?: boolean },
+) => {
+  let recentScriptsToUse: Result<RecentScripts, Error>
 
-        return pipe(recentScripts, A.concat(A.takeLeft(options.maxItems)(currentRecentScripts)), A.uniq(S.Eq))
-      }),
-      TE.chain(writeRecentScriptsFile(options.fileName)),
-    )
+  if (override) {
+    recentScriptsToUse = Ok(A.takeLeft(options.maxItems)(recentScripts))
+  } else {
+    recentScriptsToUse = (await readRecentScripts()).map((scripts) => {
+      return A.uniq(S.Eq)(A.concat(A.takeLeft(options.maxItems)(scripts))(recentScripts))
+    })
+  }
 
-export const removeRecentScript = (options: RecentScriptsOptions) => (recentScript: RecentScript) =>
-  pipe(
-    readRecentScripts,
-    TE.map((currentRecentScripts) =>
-      pipe(
-        currentRecentScripts,
-        A.filter((currentRecentScript) => currentRecentScript !== recentScript),
-      ),
-    ),
-    TE.chain(writeRecentScriptsFile(options.fileName)),
+  if (recentScriptsToUse.err) return recentScriptsToUse
+
+  return await writeRecentScriptsFile(options.fileName, recentScriptsToUse.val)
+}
+
+export const removeRecentScript = async (
+  options: RecentScriptsOptions,
+  recentScript: RecentScript,
+): Promise<Result<void, Error>> => {
+  const currentRecentScripts = (await readRecentScripts()).map((currentRecentScripts) =>
+    currentRecentScripts.filter((currentRecentScript) => currentRecentScript !== recentScript),
   )
 
-export const removeDefaultRecentScripts = removeRecentScript(defaultOptions)
+  if (currentRecentScripts.err) return currentRecentScripts
 
-export const writeDefaultRecentScripts = writeRecentScripts(defaultOptions)
+  return await writeRecentScriptsFile(options.fileName, currentRecentScripts.val)
+}
 
-await writeRecentScriptsIfNotExists(defaultOptions)()
+export const removeDefaultRecentScripts = async (recentScript: RecentScript) =>
+  await removeRecentScript(defaultOptions, recentScript)
+
+export const writeDefaultRecentScripts = async ({
+  recentScripts,
+  override,
+}: {
+  recentScripts: RecentScripts
+  override?: boolean
+}) => await writeRecentScripts(defaultOptions, { recentScripts, override })
+
+await writeRecentScriptsIfNotExists(defaultOptions)

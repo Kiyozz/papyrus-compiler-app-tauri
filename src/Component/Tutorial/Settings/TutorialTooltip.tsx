@@ -7,7 +7,6 @@
 
 import Tooltip, { type TooltipProps } from '@mui/material/Tooltip'
 import { type TutorialStep, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { isSome } from 'App/Lib/FpTs'
 import { type ComponentProps, forwardRef } from 'react'
 
 export type TutorialTooltipProps = ComponentProps<typeof TutorialTooltip>
@@ -19,7 +18,7 @@ const TutorialTooltip = forwardRef<HTMLDivElement, Omit<TooltipProps, 'open' | '
     return (
       <Tooltip
         arrow
-        open={isSome(currentStep) && currentStep.value === step}
+        open={currentStep.some && currentStep.val === step}
         classes={{ tooltip: 'text-sm px-4 py-2' }}
         ref={ref}
         {...props}

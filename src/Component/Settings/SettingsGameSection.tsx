@@ -18,19 +18,20 @@ import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { type GameType } from 'App/Lib/Conf/ConfDecoder'
+import { type GameType } from 'App/Lib/Conf/ConfZod'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
-import { O, some } from 'App/Lib/FpTs'
+import { fromNullable } from 'App/Lib/TsResults'
+import { Some } from 'ts-results'
 
 function SettingsGameSection() {
   const { t } = useTranslation()
   const conf = useConf()
   const updateConf = useUpdateConf()
-  const checkConf = useCheckConf(O.fromNullable(conf.data))
+  const checkConf = useCheckConf(fromNullable(conf.data))
   const { refs } = useSettingsTutorial()
   const { trackEvent } = useMatomo()
 
@@ -60,7 +61,7 @@ function SettingsGameSection() {
   const gameType = conf.data.game.type
   const gamePath = conf.data.game.path
   const gameCompilerPath = conf.data.compilation.compilerPath
-  const isGameExeError = isCheckConfQueryError(checkConf, some(['gameExeDoesNotExist']))
+  const isGameExeError = isCheckConfQueryError(checkConf, Some(['gameExeDoesNotExist'] as const))
 
   return (
     <SettingsSection id="game-section" sectionTitle={t('page.settings.sections.game.title')} gutterTop={false}>
@@ -132,7 +133,7 @@ function SettingsGameSection() {
             })
           }}
           type="folder"
-          error={isCheckConfQueryError(checkConf, some(['gamePathDoesNotExist']))}
+          error={isCheckConfQueryError(checkConf, Some(['gamePathDoesNotExist'] as const))}
         />
       </div>
 
@@ -164,17 +165,17 @@ function SettingsGameSection() {
               })
             }}
             placeholder={t('common.select.file')}
-            error={isCheckConfQueryError(checkConf, some(['compilerPathDoesNotExist']))}
+            error={isCheckConfQueryError(checkConf, Some(['compilerPathDoesNotExist'] as const))}
           />
         </TutorialTooltip>
       </div>
       {isCheckConfQueryError(
         checkConf,
-        some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist']),
+        Some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist'] as const),
       ) && (
         <Alert severity="error" className="mt-3 dark:bg-red-400/10">
           {t<string>('common.confCheckError', {
-            context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.value.type,
+            context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
             gameExe: toExecutable(conf.data.game.type),
           })}
         </Alert>

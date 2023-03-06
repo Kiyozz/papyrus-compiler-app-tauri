@@ -21,12 +21,13 @@ import { useKey } from 'App/Hook/UseKey'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { GroupZod } from 'App/Lib/Form/GroupForm'
-import { O, pipe, S, TO } from 'App/Lib/FpTs'
-import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import cx from 'classnames'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
+import is from '@sindresorhus/is'
+import { type Option } from 'ts-results'
 
 const AddGroupDialog = ({
   onClose,
@@ -41,7 +42,7 @@ const AddGroupDialog = ({
   onSubmit: (scripts: FileScript[], name: string) => Promise<void>
   actionsDisabled?: boolean
   actionsIsLoading?: boolean
-  defaultScripts: O.Option<FileScript[]>
+  defaultScripts: Option<FileScript[]>
 }) => {
   const { trackEvent } = useMatomo()
   const {
@@ -55,8 +56,8 @@ const AddGroupDialog = ({
   })
 
   useEffect(() => {
-    if (O.isSome(defaultScripts)) {
-      resetScripts(defaultScripts.value)
+    if (defaultScripts.some) {
+      resetScripts(defaultScripts.val)
     }
   }, [defaultScripts, resetScripts])
 
@@ -67,17 +68,9 @@ const AddGroupDialog = ({
 
     const name = getValues('name')
 
-    pipe(
-      name,
-      O.fromPredicate((name) => !S.isEmpty(name)),
-      TO.fromOption,
-      TO.chain((name) =>
-        TO.tryCatch(async () => {
-          await onSubmit(scripts, name)
-        }),
-      ),
-      TO.map(resetDialog),
-    )
+    if (is.emptyString(name)) return
+
+    onSubmit(scripts, name).finally(resetDialog)
   })
 
   const { t } = useTranslation()
@@ -118,14 +111,9 @@ const AddGroupDialog = ({
         onSubmit={handleSubmit((data, evt) => {
           evt?.stopPropagation()
 
-          pipe(
-            data.name,
-            O.fromPredicate((name) => name.length > 0),
-            O.map((name) => {
-              void onSubmit(scripts, name)
-              resetDialog()
-            }),
-          )
+          if (is.emptyString(data.name)) return
+
+          onSubmit(scripts, data.name).finally(resetDialog)
         })}
       >
         <Toolbar className="p-0">

@@ -5,18 +5,14 @@
  *
  */
 
-import { FileScriptDecoder } from 'App/Lib/Conf/ConfDecoder'
-import { pipe } from 'App/Lib/FpTs'
-import { D } from '../IoTs'
+import { FileScriptZod } from 'App/Lib/Conf/ConfZod'
+import { z } from 'zod'
 
-export const FileScriptCompilationDecoder = pipe(
-  FileScriptDecoder,
-  D.intersect(
-    D.struct({
-      status: D.union(D.literal('idle'), D.literal('running'), D.literal('done'), D.literal('error')),
-    }),
-  ),
+export const FileScriptCompilationDecoder = z.intersection(
+  FileScriptZod,
+  z.object({
+    status: z.union([z.literal('idle'), z.literal('running'), z.literal('done'), z.literal('error')]),
+  }),
 )
 
-export type FileScriptCompilation = D.TypeOf<typeof FileScriptCompilationDecoder>
-export type FileScriptCompilationStatus = FileScriptCompilation['status']
+export type FileScriptCompilation = z.infer<typeof FileScriptCompilationDecoder>

@@ -5,7 +5,7 @@
  *
  */
 
-import { ConfDecoder } from 'App/Lib/Conf/ConfDecoder'
-import { parseAndDecode } from 'App/Lib/Json'
+import { ConfZod } from 'App/Lib/Conf/ConfZod'
+import { parseJson } from 'App/Lib/Json'
 
-export const parseAndDecodeConf = parseAndDecode(ConfDecoder)
+export const parseConfJson = (contents: string) => parseJson(ConfZod, contents)

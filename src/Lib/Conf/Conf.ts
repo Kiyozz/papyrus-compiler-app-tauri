@@ -6,34 +6,35 @@
  */
 import { join } from '@tauri-apps/api/path'
 import deepmerge from 'deepmerge'
+import { Ok, type Result } from 'ts-results'
 import { type PartialDeep } from 'type-fest'
 import { type ConfOptions } from 'App/Lib/Conf/ConfOptions'
-import { type Conf } from 'App/Lib/Conf/ConfDecoder'
-import { canReadConfigFile, readConfigFileJson } from 'App/Lib/Conf/ReadConfigFile'
+import { type Conf } from 'App/Lib/Conf/ConfZod'
+import { isConfFileExists, readConfigFileJson } from 'App/Lib/Conf/ReadConfigFile'
 import { writeConfigFile } from 'App/Lib/Conf/WriteConfigFile'
-import { pipe, TE, T, TO } from 'App/Lib/FpTs'
 
-const suffixExt = (suffix: string) => (text: string) => `${text}.${suffix}`
-const writeDefaultConfig = (options: ConfOptions<Conf>) => {
-  return pipe(
-    T.of({ configName: pipe(options.configName, suffixExt('json')) }),
-    T.bind('canReadConfig', ({ configName }) => canReadConfigFile(configName)),
-    TE.fromTask,
-    TE.filterOrElse(
-      ({ canReadConfig }) => !canReadConfig,
-      () => new Error('Config file already exists'),
-    ),
-    TE.chain(({ configName }) => writeConfigFile(configName)(options.defaults)),
-    TO.fromTaskEither,
-  )
+/**
+ * Write the default conf if the conf file doesn't exist
+ *
+ * @param options
+ */
+const writeDefaultConfIfFileNotExists = async (options: ConfOptions<Conf>): Promise<Result<void, Error>> => {
+  const needWrite = (await isConfFileExists(options.confName)).unwrap()
+
+  if (!needWrite) {
+    return Ok(undefined)
+  }
+
+  return await writeConfigFile(options.confName, options.defaults)
 }
 
-const readConfigOrUseDefaultConfig = (options: ConfOptions<Conf>) =>
-  pipe(TE.of(pipe(options.configName, suffixExt('json'))), TE.chain(readConfigFileJson))
+const readConfigOrUseDefaultConfig = async (options: ConfOptions<Conf>): Promise<Result<Conf, Error>> => {
+  return await readConfigFileJson(options.confName)
+}
 
 const defaultOptions: ConfOptions<Conf> = {
   projectVersion: '7.0.0',
-  configName: 'conf',
+  confName: 'conf.json',
   defaults: {
     game: {
       type: 'Skyrim SE',
@@ -70,13 +71,17 @@ const defaultOptions: ConfOptions<Conf> = {
   },
 }
 
-export const readConfig = readConfigOrUseDefaultConfig(defaultOptions)
+export const readConfig = async () => await readConfigOrUseDefaultConfig(defaultOptions)
 
-export const writeConfig = (partialConfig: PartialDeep<Conf>) =>
-  pipe(
-    readConfig,
-    TE.map((currentConfig) => deepmerge(currentConfig as Partial<Conf>, partialConfig)),
-    TE.chain(writeConfigFile(pipe(defaultOptions.configName, suffixExt('json')))),
-  )
+export const writeConfig = async (partialConfig: PartialDeep<Conf>): Promise<Result<Conf, Error>> => {
+  const conf = await readConfig()
+  const finalConf = conf.map((conf) => deepmerge(conf as Partial<Conf>, partialConfig))
 
-await writeDefaultConfig(defaultOptions)()
+  if (finalConf.err) return finalConf
+
+  await writeConfigFile(defaultOptions.confName, finalConf.val)
+
+  return finalConf
+}
+
+await writeDefaultConfIfFileNotExists(defaultOptions)

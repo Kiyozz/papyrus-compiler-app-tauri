@@ -5,7 +5,7 @@
  *
  */
 
-import { type Group } from 'App/Lib/Conf/ConfDecoder'
+import { type Group } from 'App/Lib/Conf/ConfZod'
 import { A, pipe, R } from 'App/Lib/FpTs'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 

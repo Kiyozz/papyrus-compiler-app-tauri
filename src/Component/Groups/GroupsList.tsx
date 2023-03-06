@@ -10,10 +10,11 @@ import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
 import GroupsListItemSecondaryAction from 'App/Component/Groups/GroupsListItemSecondaryAction'
-import { A, flow, O, pipe } from 'App/Lib/FpTs'
+import { A } from 'App/Lib/FpTs'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
+import { None, Some } from 'ts-results'
 
 function GroupsList({
   groups,
@@ -33,19 +34,14 @@ function GroupsList({
   return (
     <List className={cx('flex flex-col gap-2', className)}>
       {groups.map((group) => {
-        const secondaryText = pipe(
-          !isMoreDetails ? O.none : O.some(group.scripts),
-          O.map(
+        const secondaryText = (!isMoreDetails ? None : Some(group.scripts))
+          .map(
             A.match(
               () => (isMoreDetails ? t('common.noScripts') : undefined),
-              flow(
-                A.map((s) => s.name),
-                (scripts) => scripts.join(', '),
-              ),
+              (s) => s.map((s) => s.name).join(', '),
             ),
-          ),
-          O.toUndefined,
-        )
+          )
+          .unwrapOr(undefined)
 
         return (
           <ListItem

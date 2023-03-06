@@ -5,8 +5,8 @@
  *
  */
 
-import { D } from './IoTs'
+import { z } from 'zod'
 
-export const GameSourceDecoder = D.union(D.literal('Scripts/Source'), D.literal('Source/Scripts'))
+export const GameSourceDecoder = z.union([z.literal('Scripts/Source'), z.literal('Source/Scripts')])
 
-export type GameSource = D.TypeOf<typeof GameSourceDecoder>
+export type GameSource = z.infer<typeof GameSourceDecoder>

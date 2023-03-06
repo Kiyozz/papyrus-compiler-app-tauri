@@ -5,7 +5,7 @@
  *
  */
 
-import { RecentScriptsDecoder } from 'App/Lib/Conf/ConfDecoder'
-import { parseAndDecode } from 'App/Lib/Json'
+import { RecentScriptsZod } from 'App/Lib/Conf/ConfZod'
+import { parseJson } from 'App/Lib/Json'
 
-export const parseAndDecodeRecentScripts = parseAndDecode(RecentScriptsDecoder)
+export const parseRecentScriptsJson = (text: string) => parseJson(RecentScriptsZod, text)

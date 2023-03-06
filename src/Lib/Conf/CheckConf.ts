@@ -8,12 +8,13 @@
 import { join, normalize } from '@tauri-apps/api/path'
 import { createLogs } from 'App/Lib/CreateLog'
 import { allExists, exists, glob, isFile } from 'App/Lib/Path'
-import { type Conf } from 'App/Lib/Conf/ConfDecoder'
+import { type Conf } from 'App/Lib/Conf/ConfZod'
 import { toDefaultScript } from 'App/Lib/ToDefaultScript'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { toOtherSource } from 'App/Lib/ToOtherSource'
 import { toSource } from 'App/Lib/ToSource'
-import { E, O, pipe, T, TE } from '../FpTs'
+import { catchErr, fromNullable } from 'App/Lib/TsResults'
+import { Err, Ok, type Result, None } from 'ts-results'
 import { type CheckConfErrorTypes, isCheckConfError } from './CheckConfTypes'
 
 export interface CheckConfError<T extends CheckConfErrorTypes = CheckConfErrorTypes> {
@@ -34,98 +35,101 @@ const onRejected = (reason: unknown): CheckConfError => {
   }
 }
 
-const check = (
+const checkPathsExists = async (
   value: string | string[],
   type: CheckConfErrorTypes,
   message: string,
-): TE.TaskEither<CheckConfError, void> =>
-  TE.tryCatch(async () => {
-    const isPathsOrPathExists = Array.isArray(value)
-      ? await allExists(value, { from: 'checkConf' })
-      : await exists(value, { from: 'checkConf' })
+): Promise<Result<void, CheckConfError>> => {
+  const isPathsOrPathExists = (
+    Array.isArray(value) ? await allExists(value, { from: 'checkConf' }) : await exists(value, { from: 'checkConf' })
+  ).expect('fatal error: cannot check if path exists')
 
-    if (!isPathsOrPathExists) {
-      throw {
-        type,
-        message,
-      } satisfies CheckConfError
-    }
-  }, onRejected)
+  if (!isPathsOrPathExists) {
+    return Err({
+      type,
+      message,
+    } satisfies CheckConfError)
+  }
+
+  return Ok(undefined)
+}
 
 /**
  * Check if the game exe exists for the given conf
  * @param conf
  */
-const checkGameExe = (conf: Conf) =>
-  pipe(
-    T.of({
-      exe: toExecutable(conf.game.type),
-    }),
-    T.bind('exeAbsolute', ({ exe }) => {
-      return async () => await join(conf.game.path, exe)
-    }),
-    TE.fromTask,
-    TE.chain(({ exeAbsolute, exe }) =>
-      check(exeAbsolute, 'gameExeDoesNotExist', `game exe "${exe}" does not exist in: ${conf.game.path}`),
-    ),
+const checkGameExe = async (conf: Conf): Promise<Result<void, CheckConfError>> => {
+  const exe = toExecutable(conf.game.type)
+  const exeAbsolute = await join(conf.game.path, exe)
+
+  return await checkPathsExists(
+    exeAbsolute,
+    'gameExeDoesNotExist',
+    `game exe "${exe}" does not exist in: ${conf.game.path}`,
   )
+}
 
 /**
  * Check if the game path exists for the given conf
  * @param conf
  */
-const checkGamePath = (conf: Conf) =>
-  check(conf.game.path, 'gamePathDoesNotExist', `game path does not exist: ${conf.game.path}`)
+const checkGamePath = async (conf: Conf): Promise<Result<void, CheckConfError>> =>
+  await checkPathsExists(conf.game.path, 'gamePathDoesNotExist', `game path does not exist: ${conf.game.path}`)
 
 /**
  * Check if the compiler path exists for the given conf
  * @param conf
  */
-const checkCompiler = (conf: Conf) =>
-  pipe(
-    check(
-      conf.compilation.compilerPath,
-      'compilerPathDoesNotExist',
-      `compiler path does not exist: ${conf.compilation.compilerPath}`,
-    ),
-    TE.chain(() =>
-      TE.tryCatch(async () => {
-        const isPathIsFile = await isFile(conf.compilation.compilerPath, { from: 'checkConf' })
-
-        if (!isPathIsFile) {
-          throw {
-            type: 'compilerPathIsNotAFile',
-            message: `compiler path is not a file: ${conf.compilation.compilerPath}`,
-          } satisfies CheckConfError
-        }
-      }, onRejected),
-    ),
+const checkCompiler = async (conf: Conf): Promise<Result<void, CheckConfError>> => {
+  const compiler = await checkPathsExists(
+    conf.compilation.compilerPath,
+    'compilerPathDoesNotExist',
+    `compiler path does not exist: ${conf.compilation.compilerPath}`,
   )
+
+  if (compiler.err) return compiler
+
+  const isPathIsFile = (await isFile(conf.compilation.compilerPath, { from: 'checkConf' })).expect(
+    'fatal error: cannot check if path is a file',
+  )
+
+  if (!isPathIsFile) {
+    return Err({
+      type: 'compilerPathIsNotAFile',
+      message: `compiler path is not a file: ${conf.compilation.compilerPath}`,
+    } satisfies CheckConfError)
+  }
+
+  return Ok(undefined)
+}
 
 /**
  * Check if the mo2 instance is properly configured for the given conf
  * @param conf
  */
-const checkMo2 = (conf: Conf): TE.TaskEither<CheckConfError, void> =>
-  pipe(
-    conf.mo2.instance,
-    O.fromNullable,
-    O.fold(
-      () => TE.left({ type: 'mo2InstanceIsNotSet', message: 'mo2 instance is not set' } satisfies CheckConfError),
-      (instance) =>
-        pipe(
-          check(instance, 'mo2InstanceDoesNotExist', `mo2 instance does not exist: ${instance}`),
-          TE.chain(() => TE.fromTask(async () => await join(instance, conf.mo2.modsFolderRelativeToInstance))),
-          TE.chain((modsFolder) =>
-            check(
-              modsFolder,
-              'mo2InstanceNoModsFolder',
-              `mo2 instance ${conf.mo2.modsFolderRelativeToInstance} folder does not exist: ${modsFolder}`,
-            ),
-          ),
-        ),
-    ),
+const checkMo2 = async (conf: Conf): Promise<Result<void, CheckConfError>> => {
+  const instance = fromNullable(conf.mo2.instance)
+
+  if (instance.none) {
+    return Err({ type: 'mo2InstanceIsNotSet', message: 'mo2 instance is not set' } satisfies CheckConfError)
+  }
+
+  const mo2Exists = await checkPathsExists(
+    instance.val,
+    'mo2InstanceDoesNotExist',
+    `mo2 instance does not exist: ${instance.val}`,
   )
+
+  if (mo2Exists.err) return mo2Exists
+
+  const modsFolder = await join(instance.val, conf.mo2.modsFolderRelativeToInstance)
+
+  return await checkPathsExists(
+    modsFolder,
+    'mo2InstanceNoModsFolder',
+    `mo2 instance ${conf.mo2.modsFolderRelativeToInstance} folder does not exist: ${modsFolder}`,
+  )
+}
 
 /**
  * Check if creation kit is installed for the given conf
@@ -134,26 +138,23 @@ const checkMo2 = (conf: Conf): TE.TaskEither<CheckConfError, void> =>
  *
  * @param conf
  */
-const checkCreationKitScriptExistsInGameDataFolder = (conf: Conf) => {
+const checkCreationKitScriptExistsInGameDataFolder = async (conf: Conf): Promise<Result<void, CheckConfError>> => {
   const defaultScript = toDefaultScript(conf.game.type)
+  const defaultScriptAbsolute = await join(conf.game.path, 'Data', toSource(conf.game.type), defaultScript)
+  const checkDefaultScript = await checkPathsExists(
+    defaultScriptAbsolute,
+    'creationKitScriptDoesNotExist',
+    `creation kit script does not exist: ${defaultScriptAbsolute}`,
+  )
 
-  return pipe(
-    async () => await join(conf.game.path, 'Data', toSource(conf.game.type), defaultScript),
-    TE.fromTask,
-    TE.chain((script) => {
-      return pipe(
-        check(script, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${script}`),
-        TE.alt(() => {
-          return pipe(
-            async () => await join(conf.game.path, 'Data', toOtherSource(conf.game.type), defaultScript),
-            TE.fromTask,
-            TE.chain((script) =>
-              check(script, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${script}`),
-            ),
-          )
-        }),
-      )
-    }),
+  if (checkDefaultScript.err) return checkDefaultScript
+
+  const defaultOtherScriptAbsolute = await join(conf.game.path, 'Data', toOtherSource(conf.game.type), defaultScript)
+
+  return await checkPathsExists(
+    defaultOtherScriptAbsolute,
+    'creationKitScriptDoesNotExist',
+    `creation kit script does not exist: ${defaultOtherScriptAbsolute}`,
   )
 }
 
@@ -164,42 +165,37 @@ const checkCreationKitScriptExistsInGameDataFolder = (conf: Conf) => {
  *
  * @param conf
  */
-const checkCreationKitScriptExistsInMo2 = (conf: Conf) => {
+const checkCreationKitScriptExistsInMo2 = async (conf: Conf): Promise<Result<void, CheckConfError | Error>> => {
   const defaultScript = toDefaultScript(conf.game.type)
-  const mo2Instance = O.fromNullable(conf.mo2.instance)
+  const mo2Instance = fromNullable(conf.mo2.instance)
 
-  if (O.isNone(mo2Instance)) {
-    return checkCreationKitScriptExistsInGameDataFolder(conf)
+  if (mo2Instance.none) {
+    return await checkCreationKitScriptExistsInGameDataFolder(conf)
   }
 
-  return async () => {
-    const sources = {
-      sources: toSource(conf.game.type),
-      otherSources: toOtherSource(conf.game.type),
-    }
-    const modsFolder = await join(mo2Instance.value, conf.mo2.modsFolderRelativeToInstance)
-    const pathsToCheck = await Promise.all(
-      [
-        await join(modsFolder, '**', sources.sources, defaultScript),
-        await join(modsFolder, '**', sources.otherSources, defaultScript),
-        await join(mo2Instance.value, 'overwrite', sources.sources, defaultScript),
-        await join(mo2Instance.value, 'overwrite', sources.otherSources, defaultScript),
-      ].map(normalize),
-    )
-
-    return await pipe(
-      TE.tryCatch(async () => await glob(pathsToCheck, O.none, { from: 'checkConf' }), onRejected),
-      TE.chain((paths) =>
-        check(paths, 'creationKitScriptDoesNotExist', `creation kit script does not exist: ${paths.join(', ')}`),
-      ),
-    )()
+  const sources = {
+    sources: toSource(conf.game.type),
+    otherSources: toOtherSource(conf.game.type),
   }
-}
+  const modsFolder = await join(mo2Instance.val, conf.mo2.modsFolderRelativeToInstance)
+  const pathsToCheck = await Promise.all(
+    [
+      await join(modsFolder, '**', sources.sources, defaultScript),
+      await join(modsFolder, '**', sources.otherSources, defaultScript),
+      await join(mo2Instance.val, 'overwrite', sources.sources, defaultScript),
+      await join(mo2Instance.val, 'overwrite', sources.otherSources, defaultScript),
+    ].map(normalize),
+  )
 
-const unwrap = (either: E.Either<CheckConfError, unknown>) => {
-  if (E.isLeft(either)) {
-    throw either.left
-  }
+  const paths = await glob(pathsToCheck, None, { from: 'checkConf' })
+
+  if (paths.err) return paths
+
+  return await checkPathsExists(
+    paths.val,
+    'creationKitScriptDoesNotExist',
+    `creation kit script does not exist: ${paths.val.join(', ')}`,
+  )
 }
 
 /**
@@ -207,33 +203,28 @@ const unwrap = (either: E.Either<CheckConfError, unknown>) => {
  *
  * @param conf
  */
-export const checkConf = (conf: Conf): TE.TaskEither<CheckConfError, Conf> =>
-  TE.tryCatch(
-    async () => {
-      void logs.debug('checking conf', conf)()
+export const checkConf = async (conf: Conf): Promise<Result<Conf, CheckConfError>> => {
+  logs.debug('checking conf', conf)()
 
-      unwrap(
-        await pipe(
-          checkGamePath(conf),
-          TE.chain(() => checkGameExe(conf)),
-          TE.chain(() => checkCompiler(conf)),
-          TE.chain(() => (conf.mo2.use ? checkMo2(conf) : TE.right(undefined))),
-          TE.chain(() =>
-            conf.mo2.use ? checkCreationKitScriptExistsInMo2(conf) : checkCreationKitScriptExistsInGameDataFolder(conf),
-          ),
-        )(),
+  return (
+    await catchErr(async () => {
+      ;(await checkGamePath(conf)).qm()
+      ;(await checkGameExe(conf)).qm()
+      ;(await checkCompiler(conf)).qm()
+
+      if (conf.mo2.use) {
+        ;(await checkMo2(conf)).qm()
+      }
+
+      ;(
+        await (conf.mo2.use
+          ? checkCreationKitScriptExistsInMo2(conf)
+          : checkCreationKitScriptExistsInGameDataFolder(conf))
       )
+        .mapErr(onRejected)
+        .qm()
 
-      return conf
-    },
-    (reason) => {
-      if (isCheckConfError(reason)) {
-        return reason
-      }
-
-      return {
-        type: 'fatalError',
-        message: `checkConf error: ${reason}`,
-      }
-    },
-  )
+      return Ok(conf)
+    })
+  ).mapErr(onRejected)
+}

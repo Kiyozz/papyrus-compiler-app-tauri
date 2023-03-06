@@ -8,7 +8,6 @@
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { isNone, isSome, none, type O, some } from 'App/Lib/FpTs'
 import {
   createContext,
   type PropsWithChildren,
@@ -20,6 +19,7 @@ import {
   useMemo,
 } from 'react'
 import { match } from 'ts-pattern'
+import { None, type Option, Some } from 'ts-results'
 
 export type TutorialSettingsStep = 'settings-game' | 'settings-compiler' | 'settings-concurrent' | 'settings-mo2'
 
@@ -37,7 +37,7 @@ export type TutorialRefs = Record<
 
 // noinspection JSUnusedLocalSymbols
 const Context = createContext({
-  step: none as O.Option<TutorialStep>,
+  step: None as Option<TutorialStep>,
   changeStep: (step: TutorialStep) => {},
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   refs: {} as TutorialRefs,
@@ -52,12 +52,12 @@ const Context = createContext({
 const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
   useConf({
     onSuccess: (data) => {
-      setStep(some(!data.tutorial.settings ? 'end' : 'welcome'))
+      setStep(Some(!data.tutorial.settings ? ('end' as const) : ('welcome' as const)))
     },
   })
   const { trackEvent } = useMatomo()
 
-  const [step, setStep] = useState<O.Option<TutorialStep>>(none)
+  const [step, setStep] = useState<Option<TutorialStep>>(None)
   const gameRef = useRef<HTMLDivElement>(null)
   const compilerRef = useRef<HTMLDivElement>(null)
   const concurrentRef = useRef<HTMLDivElement>(null)
@@ -84,7 +84,7 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
 
   const changeStep = useCallback(
     (step: TutorialStep) => {
-      setStep(some(step))
+      setStep(Some(step))
       trackEvent({
         category: 'Settings tutorial',
         action: 'Change step',
@@ -123,7 +123,7 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
         },
       })
 
-      if (isSome(step)) {
+      if (step.some) {
         trackEvent({
           category: 'Settings tutorial',
           action: 'Skip',
@@ -135,9 +135,9 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
   )
 
   const total = useMemo(() => {
-    if (isNone(step)) return { current: 0, end: 8 }
+    if (step.none) return { current: 0, end: 8 }
 
-    return match(step.value)
+    return match(step.val)
       .with('welcome', () => ({ current: 0, end: 8 }))
       .with('settings-game', () => ({ current: 1, end: 8 }))
       .with('settings-compiler', () => ({ current: 2, end: 8 }))

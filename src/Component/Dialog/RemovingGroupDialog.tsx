@@ -11,10 +11,10 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import { O, pipe } from 'App/Lib/FpTs'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { type Option } from 'ts-results'
 
 const RemovingGroupDialog = ({
   groupToRemove,
@@ -22,7 +22,7 @@ const RemovingGroupDialog = ({
   onCancel,
   ...props
 }: Omit<DialogProps, 'onClose'> & {
-  groupToRemove: O.Option<GroupWithId>
+  groupToRemove: Option<GroupWithId>
   onConfirm: () => void
   onCancel: () => void
 }) => {
@@ -35,16 +35,7 @@ const RemovingGroupDialog = ({
       </DialogTitle>
       <DialogContent dividers id="group-content">
         <DialogContentText className="py-12">
-          {t(
-            'dialog.group.removing.content',
-            pipe(
-              groupToRemove,
-              O.map((group) => ({
-                name: group.name,
-              })),
-              O.getOrElse(() => ({})),
-            ),
-          )}
+          {t('dialog.group.removing.content', groupToRemove.map((g) => ({ name: g.name })).unwrapOr({}))}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

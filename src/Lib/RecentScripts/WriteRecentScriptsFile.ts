@@ -6,19 +6,16 @@
  */
 
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
-import { type RecentScripts } from 'App/Lib/Conf/ConfDecoder'
+import { type RecentScripts } from 'App/Lib/Conf/ConfZod'
 import { stringify } from 'App/Lib/Json'
-import { TE, pipe } from 'App/Lib/FpTs'
+import { Result } from 'ts-results'
 
-export const writeRecentScriptsFile = (path: string) => (contents: RecentScripts) =>
-  pipe(
-    contents,
-    stringify,
-    TE.fromEither,
-    TE.chainW((json) =>
-      TE.tryCatch(
-        async () => { await writeTextFile({ path, contents: json }, { dir: BaseDirectory.App }); },
-        (reason) => new Error(`Cannot write recent scripts file, error given: ${reason}`),
-      ),
-    ),
-  )
+export const writeRecentScriptsFile = async (path: string, contents: RecentScripts): Promise<Result<void, Error>> => {
+  const asStringJson = stringify(contents).unwrap()
+
+  const res = await Result.wrapAsync(async () => {
+    await writeTextFile({ path, contents: asStringJson }, { dir: BaseDirectory.App })
+  })
+
+  return res.mapErr((reason) => new Error(`Cannot write recent scripts file, error given: ${reason}`))
+}

@@ -5,8 +5,8 @@
  *
  */
 
-import { D } from './IoTs'
+import { z } from 'zod'
 
-export const ThemeDecoder = D.union(D.literal('system'), D.literal('light'), D.literal('dark'))
+export const ThemeDecoder = z.union([z.literal('system'), z.literal('light'), z.literal('dark')])
 
-export type Theme = D.TypeOf<typeof ThemeDecoder>
+export type Theme = z.infer<typeof ThemeDecoder>

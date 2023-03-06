@@ -5,9 +5,9 @@
  *
  */
 import { invoke } from '@tauri-apps/api/tauri'
-import { type LogLevel } from 'App/Lib/Conf/ConfDecoder'
-import { isLeft, TE } from 'App/Lib/FpTs'
+import { type LogLevel } from 'App/Lib/Conf/ConfZod'
 import { stringify } from 'App/Lib/Json'
+import { Result } from 'ts-results'
 
 export const createDebugLog = (ns: string) => createLog(ns, 'debug')
 export const createTraceLog = (ns: string) => createLog(ns, 'trace')
@@ -25,23 +25,14 @@ export const createLogs = (ns: string) => ({
 export const createLog =
   (ns: string, level: LogLevel = 'info') =>
   (message: string, ...args: unknown[]) =>
-  async (): Promise<void> => {
-    const json = stringify(args)
+  () => {
+    const json = stringify(args).unwrap()
 
-    if (isLeft(json)) {
-      console.log(json)
-      await Promise.reject(json.left)
-      return
-    }
-
-    const res = await TE.tryCatch(
-      async () => {
-        await invoke('log', { ns, message, level, args: json.right })
-      },
-      (reason) => new Error(`cannot call log command. error given: ${reason}`),
-    )()
-
-    if (isLeft(res)) {
-      console.error(res.left)
-    }
+    void Result.wrapAsync(async () => {
+      await invoke('log', { ns, message, level, args: json })
+    })
+      .then((res) => res.mapErr((reason) => new Error(`cannot call log command. error given: ${reason}`)))
+      .then((res) => {
+        res.err && console.error(res.val)
+      })
   }

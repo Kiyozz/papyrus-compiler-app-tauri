@@ -6,7 +6,7 @@
  */
 
 import { type GameSource } from 'App/Lib/GameSourceDecoder'
-import { type GameType } from 'App/Lib/Conf/ConfDecoder'
+import { type GameType } from 'App/Lib/Conf/ConfZod'
 import { match, P } from 'ts-pattern'
 
 export const toSource = (game: GameType): GameSource => {

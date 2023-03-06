@@ -15,15 +15,14 @@ import TutorialSettingsMo2 from 'App/Component/Tutorial/Settings/Steps/Settings/
 import TutorialDocumentation from 'App/Component/Tutorial/Settings/Steps/TutorialDocumentation'
 import TutorialWelcome from 'App/Component/Tutorial/Settings/Steps/TutorialWelcome'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { isNone } from 'App/Lib/FpTs'
 import { match } from 'ts-pattern'
 
 const SettingsTutorial = () => {
   const { step } = useSettingsTutorial()
 
-  if (isNone(step) || step.value === 'end') return null
+  if (step.none || step.val === 'end') return null
 
-  return match(step.value)
+  return match(step.val)
     .with('welcome', () => <TutorialWelcome />)
     .with('settings-game', () => <TutorialSettingsGame />)
     .with('settings-compiler', () => <TutorialSettingsCompiler />)

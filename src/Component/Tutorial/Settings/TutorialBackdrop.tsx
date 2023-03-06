@@ -10,7 +10,6 @@ import Backdrop from '@mui/material/Backdrop'
 import Button from '@mui/material/Button'
 import TutorialArrows from 'App/Component/Tutorial/Settings/TutorialArrows'
 import { type TutorialRefs, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { isSome } from 'App/Lib/FpTs'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -43,7 +42,7 @@ const TutorialBackdrop = ({
   return (
     <Backdrop open className="items-end pb-6" timeout={{ enter: 0 }}>
       <TutorialArrows onBack={onBack} onNext={onNext} />
-      {isSome(step) && step.value !== 'documentation' && (
+      {step.some && step.val !== 'documentation' && (
         <Button
           className="fixed top-4 left-4 z-50"
           variant="contained"

@@ -15,22 +15,23 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
+import is from '@sindresorhus/is'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
 import { useKey } from 'App/Hook/UseKey'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { GroupZod } from 'App/Lib/Form/GroupForm'
-import { O, pipe, S, TO } from 'App/Lib/FpTs'
-import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import cx from 'classnames'
 import { useLayoutEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
+import { None, type Option } from 'ts-results'
 
 const EditGroupDialog = ({
-  group = O.none,
+  group = None,
   onClose,
   onSubmit,
   actionsDisabled = false,
@@ -38,7 +39,7 @@ const EditGroupDialog = ({
   TransitionProps,
   ...props
 }: Omit<DialogProps, 'onSubmit' | 'onKeyDown'> & {
-  group: O.Option<GroupWithId>
+  group: Option<GroupWithId>
   onClose: () => void
   onSubmit: (scripts: FileScript[], name: string) => Promise<void>
   actionsDisabled?: boolean
@@ -51,11 +52,7 @@ const EditGroupDialog = ({
     remove: removeScripts,
     clear: clearScripts,
   } = useScriptsList({
-    initialScripts: pipe(
-      group,
-      O.map((group) => group.scripts),
-      O.getOrElse(() => [] as FileScript[]),
-    ),
+    initialScripts: group.map((g) => g.scripts).unwrapOr([] as FileScript[]),
   })
 
   const onDialogPressEnter = useKey('Enter', () => {
@@ -65,43 +62,28 @@ const EditGroupDialog = ({
 
     const name = getValues('name')
 
-    pipe(
-      name,
-      O.fromPredicate((name) => !S.isEmpty(name)),
-      TO.fromOption,
-      TO.chain((name) =>
-        TO.tryCatch(async () => {
-          await onSubmit(scripts, name)
-        }),
-      ),
-      TO.map(resetDialog),
-    )
+    if (is.emptyString(name)) return
+
+    onSubmit(scripts, name).finally(resetDialog)
   })
 
   const { t } = useTranslation()
   const { register, reset, handleSubmit, formState, getValues } = useForm({
-    defaultValues: pipe(
-      group,
-      O.map((group) => ({
-        name: group.name,
-      })),
-      O.toUndefined,
-    ),
+    defaultValues: group.map((g) => ({ name: g.name })).unwrapOr(undefined),
     resolver: zodResolver(GroupZod),
   })
   const textFieldNameRef = useRef<HTMLInputElement>(null)
 
   useLayoutEffect(() => {
-    pipe(
-      group,
-      O.map((group) => {
-        reset({
-          name: group.name,
-        })
-        clearScripts()
-        addScripts(group.scripts)
-      }),
-    )
+    if (group.some) {
+      const g = group.val
+
+      reset({
+        name: g.name,
+      })
+      clearScripts()
+      addScripts(g.scripts)
+    }
   }, [addScripts, clearScripts, group, reset])
 
   const resetDialog = () => {
@@ -136,19 +118,11 @@ const EditGroupDialog = ({
       <form
         className="flex h-full flex-col"
         onSubmit={handleSubmit((data) => {
-          pipe(
-            O.Do,
-            O.bind('name', () => {
-              return pipe(
-                data.name,
-                O.fromPredicate((name) => name.length > 0),
-              )
-            }),
-            O.map(async ({ name }) => {
-              await onSubmit(scripts, name)
-              resetDialog()
-            }),
-          )
+          const name = data.name
+
+          if (is.emptyString(name)) return
+
+          onSubmit(scripts, name).finally(resetDialog)
         })}
       >
         <Toolbar className="p-0">

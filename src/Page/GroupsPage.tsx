@@ -23,14 +23,16 @@ import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
 import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { createLogs } from 'App/Lib/CreateLog'
-import { A, flow, none, O, pipe, R, TO } from 'App/Lib/FpTs'
+import { A, pipe, R } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
+import { fromNullable } from 'App/Lib/TsResults'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
+import { None, type Option, Result } from 'ts-results'
 import { useEffectOnce } from 'usehooks-ts'
 import { v4 } from 'uuid'
 
@@ -53,7 +55,7 @@ function GroupsPage() {
     close: closeRemoveGroupDialog,
     TransitionProps: removeDialogTransitionProps,
   } = useDialogOpen({
-    defaultState: none as O.Option<GroupWithId>,
+    defaultState: None as Option<GroupWithId>,
   })
   const {
     isOpen: isEditGroupDialogOpen,
@@ -62,7 +64,7 @@ function GroupsPage() {
     close: closeEditGroupDialog,
     TransitionProps: editDialogTransitionProps,
   } = useDialogOpen({
-    defaultState: none as O.Option<GroupWithId>,
+    defaultState: None as Option<GroupWithId>,
   })
   const {
     isOpen: isAddGroupDialogOpen,
@@ -71,29 +73,24 @@ function GroupsPage() {
     close: closeAddGroupDialog,
     TransitionProps: addDialogTransitionProps,
   } = useDialogOpen({
-    defaultState: none as O.Option<FileScript[]>,
+    defaultState: None as Option<FileScript[]>,
   })
 
   useEffectOnce(() => {
-    pipe(
-      location.state as { scripts: FileScript[] },
-      O.fromNullable,
-      O.map(({ scripts }) => scripts),
-      (scripts) => {
-        if (O.isSome(scripts)) {
-          void logs.debug('add group from compilation page scripts list')()
-          openAddGroupDialog(scripts.value)
-        }
-      },
-    )
+    const scripts = fromNullable(location.state as { scripts: FileScript[] }).map(({ scripts }) => scripts)
+
+    if (scripts.some) {
+      logs.debug('add group from compilation page scripts list')()
+      openAddGroupDialog(scripts.val)
+    }
   })
 
-  const closeDialogs = flow(
-    closeAddGroupDialog,
-    closeRemoveGroupDialog,
-    closeEditGroupDialog,
-    logs.trace('closeDialogs'),
-  )
+  const closeDialogs = () => {
+    closeAddGroupDialog()
+    closeRemoveGroupDialog()
+    closeEditGroupDialog()
+    logs.trace('closeDialogs')()
+  }
 
   return (
     <>
@@ -101,15 +98,19 @@ function GroupsPage() {
         open={isRemoveGroupDialogOpen}
         groupToRemove={groupToRemove}
         onConfirm={async () => {
-          await pipe(
-            groupToRemove,
-            O.map(async (group) => {
-              await removeGroup.mutateAsync(group.id)
-            }),
-            TO.fromOption,
-          )()
+          if (groupToRemove.some) {
+            const res = await Result.wrapAsync(async () => {
+              await removeGroup.mutateAsync(groupToRemove.val.id)
+            })
 
-          void closeDialogs()
+            if (res.err) {
+              logs.error('cannot remove group', res.val)()
+
+              console.error(res.val)
+            }
+          }
+
+          closeDialogs()
         }}
         onCancel={closeDialogs}
         TransitionProps={removeDialogTransitionProps}
@@ -122,7 +123,7 @@ function GroupsPage() {
             defaultScripts={addGroupDefaultScripts}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
-              void logs.debug('add group', name)()
+              logs.debug('add group', name)()
 
               await updateGroups.mutateAsync({
                 [v4()]: {
@@ -135,7 +136,7 @@ function GroupsPage() {
                 },
               })
 
-              void closeDialogs()
+              closeDialogs()
               trackEvent({
                 category: 'Group',
                 action: 'Create',
@@ -150,32 +151,35 @@ function GroupsPage() {
             group={groupToEdit}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
-              void logs.debug('edit group', name)()
+              logs.debug('edit group', name)()
 
-              await pipe(
-                groupToEdit,
-                TO.fromOption,
-                TO.chain((group) => {
-                  return TO.tryCatch(async () => {
-                    await updateGroups.mutateAsync({
-                      [group.id]: {
+              if (groupToEdit.some) {
+                const res = await Result.wrapAsync(async () => {
+                  await updateGroups.mutateAsync({
+                    [groupToEdit.val.id]: {
+                      name,
+                      scripts: scripts.map(({ id, name, path }) => ({
+                        id,
                         name,
-                        scripts: scripts.map(({ id, name, path }) => ({
-                          id,
-                          name,
-                          path,
-                        })),
-                      },
-                    })
+                        path,
+                      })),
+                    },
                   })
-                }),
-              )()
+                })
 
-              trackEvent({
-                category: 'Group',
-                action: 'Edit',
-              })
-              void closeDialogs()
+                if (res.err) {
+                  logs.error('cannot edit group', res.val)()
+
+                  console.error(res.val)
+                }
+
+                trackEvent({
+                  category: 'Group',
+                  action: 'Edit',
+                })
+              }
+
+              closeDialogs()
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}

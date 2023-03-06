@@ -8,7 +8,7 @@
 import { A, pipe } from 'App/Lib/FpTs'
 import { uniqObjectArrayByKeys } from 'App/Lib/UniqObjectArrayByKeys'
 import { useCallback, useReducer } from 'react'
-import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { match } from 'ts-pattern'
 
 type Action<T extends FileScript> =

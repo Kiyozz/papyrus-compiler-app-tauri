@@ -5,8 +5,8 @@
  *
  */
 
-import { D } from '../IoTs'
+import { z } from 'zod'
 
-export const EnvironmentDecoder = D.union(D.literal('release'), D.literal('debug'))
+export const EnvironmentDecoder = z.union([z.literal('release'), z.literal('debug')])
 
-export type Environment = D.TypeOf<typeof EnvironmentDecoder>
+export type Environment = z.infer<typeof EnvironmentDecoder>

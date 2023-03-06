@@ -5,15 +5,18 @@
  *
  */
 
+import is from '@sindresorhus/is'
 import { open as openFileDialog } from '@tauri-apps/api/dialog'
 import SearchIcon from '@mui/icons-material/Search'
 import Button, { type ButtonProps } from '@mui/material/Button'
 import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
-import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
-import { O, pipe } from 'App/Lib/FpTs'
-import { pathsToFileScript } from 'App/Lib/PathsToFileScript'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
+import { pipe } from 'App/Lib/FpTs'
+import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
+import { fromNullable } from 'App/Lib/TsResults'
 import { forwardRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { None, Some } from 'ts-results'
 
 const SearchScriptButton = forwardRef<
   HTMLButtonElement,
@@ -22,7 +25,7 @@ const SearchScriptButton = forwardRef<
   const { t } = useTranslation()
   useListenFileDrop({
     onDrop: (evt) => {
-      pipe(evt.payload, pathsToFileScript, (files) => {
+      pipe(evt.payload, pathsToFileScriptAndFilterPscFile, (files) => {
         onFileSelect(files, 'Drop')
       })
     },
@@ -48,15 +51,13 @@ const SearchScriptButton = forwardRef<
           multiple: true,
         })
           .then((files) => {
-            pipe(
-              files as string[] | null,
-              O.fromNullable,
-              O.map(pathsToFileScript),
-              O.filter((files) => files.length > 0),
-              O.map((files) => {
-                onFileSelect(files, 'Select')
-              }),
-            )
+            const scripts = fromNullable(files as string[] | null)
+              .map(pathsToFileScriptAndFilterPscFile)
+              .andThen((files) => (is.nonEmptyArray(files) ? Some(files) : None))
+
+            if (scripts.some) {
+              onFileSelect(scripts.unwrap(), 'Select')
+            }
           })
           .finally(() => {
             setDialogOpen(false)

@@ -5,7 +5,7 @@
  *
  */
 
-import { type RecentScripts } from 'App/Lib/Conf/ConfDecoder'
+import { type RecentScripts } from 'App/Lib/Conf/ConfZod'
 
 export interface RecentScriptsOptions {
   fileName: string

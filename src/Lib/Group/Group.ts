@@ -5,58 +5,60 @@
  *
  */
 
-import { type Groups } from 'App/Lib/Conf/ConfDecoder'
-import { A, pipe, R, TE, TO } from 'App/Lib/FpTs'
+import { type Groups } from 'App/Lib/Conf/ConfZod'
+import { A, flow, R } from 'App/Lib/FpTs'
 import { type GroupOptions } from 'App/Lib/Group/GroupOptions'
-import { canReadGroupsFile, readGroupsFileJson } from 'App/Lib/Group/ReadGroupsFile'
+import { isGroupsFileExists, readGroupsFileJson } from 'App/Lib/Group/ReadGroupsFile'
 import { writeGroupsFile } from 'App/Lib/Group/WriteGroupsFile'
 import { type Id } from 'App/Type/Id'
+import { Ok, type Result } from 'ts-results'
 
-const writeGroupsIfNotExists = (options: GroupOptions) => {
-  return pipe(
-    canReadGroupsFile(options.fileName),
-    TE.fromTask,
-    TE.filterOrElse(
-      (canReadGroups) => !canReadGroups,
-      () => new Error('Groups file already exists'),
-    ),
-    TE.chain(() => writeGroupsFile(options.fileName)(options.defaults)),
-    TO.fromTaskEither,
-  )
+const writeDefaultGroupsIfNotExists = async (options: GroupOptions): Promise<Result<void, Error>> => {
+  const needWrite = (await isGroupsFileExists(options.fileName)).unwrap()
+
+  if (!needWrite) {
+    return Ok(undefined)
+  }
+
+  return await writeGroupsFile(options.fileName, options.defaults)
 }
 
-const readGroupsOrUseDefaultGroups = (options: GroupOptions) => readGroupsFileJson(options.fileName)
+const readGroupsOrUseDefaultGroups = async (options: GroupOptions): Promise<Result<Groups, Error>> =>
+  await readGroupsFileJson(options.fileName)
 
 const defaultOptions: GroupOptions = {
   fileName: 'groups.json',
   defaults: {},
 }
 
-export const readGroups = readGroupsOrUseDefaultGroups(defaultOptions)
+export const readGroups = async () => await readGroupsOrUseDefaultGroups(defaultOptions)
 
-export const writeGroups = (options: GroupOptions) => (groups: Groups) =>
-  pipe(
-    readGroups,
-    TE.map((currentGroups) => ({ ...currentGroups, ...groups })),
-    TE.chain(writeGroupsFile(options.fileName)),
-  )
+export const writeGroups = async (options: GroupOptions, groups: Groups): Promise<Result<Groups, Error>> => {
+  const finalGroups = (await readGroups()).map((currentGroups) => ({ ...currentGroups, ...groups }))
 
-export const writeDefaultGroups = writeGroups(defaultOptions)
+  if (finalGroups.err) return finalGroups
 
-export const removeGroup = (options: GroupOptions) => (groupId: Id) =>
-  pipe(
-    readGroups,
-    TE.map((groups) =>
-      pipe(
-        groups,
-        R.toEntries,
-        A.filter(([id]) => id !== groupId),
-        R.fromEntries,
-      ),
+  await writeGroupsFile(options.fileName, finalGroups.val)
+
+  return finalGroups
+}
+
+export const writeDefaultGroups = async (groups: Groups) => await writeGroups(defaultOptions, groups)
+
+export const removeGroup = async (options: GroupOptions, groupId: Id) => {
+  const currentGroups = (await readGroups()).map(
+    flow(
+      R.toEntries,
+      A.filter(([id]) => id !== groupId),
+      R.fromEntries,
     ),
-    TE.chain((groups: Groups) => pipe(groups, writeGroupsFile(options.fileName))),
   )
 
-export const removeDefaultGroup = removeGroup(defaultOptions)
+  if (currentGroups.err) return currentGroups
 
-await writeGroupsIfNotExists(defaultOptions)()
+  return await writeGroupsFile(options.fileName, currentGroups.val)
+}
+
+export const removeDefaultGroup = async (groupId: Id) => await removeGroup(defaultOptions, groupId)
+
+await writeDefaultGroupsIfNotExists(defaultOptions)

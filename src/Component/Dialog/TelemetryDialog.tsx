@@ -13,7 +13,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { isNone } from 'App/Lib/FpTs'
 import { useTranslation } from 'react-i18next'
 
 const TelemetryDialog = () => {
@@ -34,7 +33,7 @@ const TelemetryDialog = () => {
   }
 
   return (
-    <Dialog open={(isNone(step) || step.value === 'end') && conf.isSuccess && conf.data.tutorial.telemetry}>
+    <Dialog open={(step.none || step.val === 'end') && conf.isSuccess && conf.data.tutorial.telemetry}>
       <DialogTitle>{t('common.telemetry.title')}</DialogTitle>
       <DialogContent>{t('common.telemetry.text')}</DialogContent>
       <DialogActions>

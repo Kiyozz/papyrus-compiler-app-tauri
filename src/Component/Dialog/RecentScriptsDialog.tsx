@@ -32,12 +32,14 @@ import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useKey } from 'App/Hook/UseKey'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
-import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
-import { pipe, A, O, flow, B, isSome, TE, isLeft } from 'App/Lib/FpTs'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
+import { pipe, A, flow } from 'App/Lib/FpTs'
 import { isFileScriptInArray } from 'App/Lib/IsFileScriptInArray'
+import { fromNullable } from 'App/Lib/TsResults'
 import cx from 'classnames'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { None, Result } from 'ts-results'
 
 function RecentScriptsDialog({
   currentScripts,
@@ -71,7 +73,7 @@ function RecentScriptsDialog({
     initialScripts: [] as FileScript[],
   })
   const { open, isOpen, close, TransitionProps, state } = useDialogOpen<Error>({
-    defaultState: O.none,
+    defaultState: None,
   })
 
   const effectiveClearScriptsToLoad = flow(recentScripts.refetch, clearScriptsToLoad)
@@ -99,8 +101,8 @@ function RecentScriptsDialog({
   const removeScriptFromRecentScripts = async (script: FileScript) => {
     if (recentScripts.data == null) return
 
-    const res = await TE.tryCatch(
-      async () => {
+    const res = (
+      await Result.wrapAsync(async () => {
         await updateRecentScripts.mutateAsync({
           recentScripts: pipe(
             recentScripts.data,
@@ -109,12 +111,11 @@ function RecentScriptsDialog({
           ),
           override: true,
         })
-      },
-      (reason) => new Error(t('common.removeRecentScriptsError', { error: reason })),
-    )()
+      })
+    ).mapErr((reason) => new Error(t('common.removeRecentScriptsError', { error: reason })))
 
-    if (isLeft(res)) {
-      open(res.left)
+    if (res.err) {
+      open(res.val)
     }
   }
 
@@ -134,11 +135,7 @@ function RecentScriptsDialog({
           </DialogTitle>
           <FormGroup id="recent-scripts-content">
             <FormControlLabel
-              disabled={pipe(
-                O.fromNullable(recentScripts.data),
-                O.map(A.isEmpty),
-                O.getOrElse(() => false),
-              )}
+              disabled={fromNullable(recentScripts.data).map(A.isEmpty).unwrapOr(false)}
               control={
                 <Checkbox
                   checked={isMoreDetails}
@@ -152,9 +149,8 @@ function RecentScriptsDialog({
           </FormGroup>
         </Toolbar>
         <DialogContent className={cx(recentScripts.data?.length !== 0 && 'p-0')} dividers>
-          {pipe(
-            O.fromNullable(recentScripts.data),
-            O.map(
+          {fromNullable(recentScripts.data)
+            .map(
               A.match(
                 () => <DialogContentText>{t('dialog.recentFiles.noRecentFiles')}</DialogContentText>,
                 flow((recentScripts) => {
@@ -167,9 +163,7 @@ function RecentScriptsDialog({
                       <RecentScriptsDialogContextMenu
                         open={isContextMenuOpen}
                         anchorPosition={
-                          isSome(contextMenu)
-                            ? { top: contextMenu.value.mouseY, left: contextMenu.value.mouseX }
-                            : undefined
+                          contextMenu.some ? { top: contextMenu.val.mouseY, left: contextMenu.val.mouseX } : undefined
                         }
                         onClose={handleCloseContextMenu}
                         onAll={() => {
@@ -242,17 +236,11 @@ function RecentScriptsDialog({
                               disableRipple
                               disabled={isAlreadyAddedInCurrentScripts}
                               onClick={() => {
-                                pipe(
-                                  isAlreadyAddedInScriptsToLoad,
-                                  B.fold(
-                                    () => {
-                                      addScriptsToLoad([script])
-                                    },
-                                    () => {
-                                      removeScriptToLoad([script])
-                                    },
-                                  ),
-                                )
+                                if (isAlreadyAddedInScriptsToLoad) {
+                                  removeScriptToLoad([script])
+                                } else {
+                                  addScriptsToLoad([script])
+                                }
                               }}
                               role="checkbox"
                               tabIndex={1}
@@ -282,9 +270,8 @@ function RecentScriptsDialog({
                   )
                 }),
               ),
-            ),
-            O.toNullable,
-          )}
+            )
+            .unwrapOr(null)}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleOnClose} tabIndex={4} color="inherit">
@@ -296,7 +283,7 @@ function RecentScriptsDialog({
         </DialogActions>
       </Dialog>
       <Snackbar TransitionProps={TransitionProps} open={isOpen} onClose={close} autoHideDuration={2_000}>
-        <Alert severity="error">{isSome(state) && state.value.message}</Alert>
+        <Alert severity="error">{state.some && state.val.message}</Alert>
       </Snackbar>
     </>
   )

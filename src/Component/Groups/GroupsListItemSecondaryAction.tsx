@@ -16,7 +16,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import { isSome, O } from 'App/Lib/FpTs'
+import { None, type Option, Some } from 'ts-results'
 
 const GroupsListItemSecondaryAction = ({
   groupId,
@@ -30,27 +30,27 @@ const GroupsListItemSecondaryAction = ({
   onClickEdit: () => void
 }) => {
   const { t } = useTranslation()
-  const [anchor, setAnchor] = useState<O.Option<HTMLElement>>(O.none)
+  const [anchor, setAnchor] = useState<Option<HTMLElement>>(None)
 
   const onOpen = (e: React.MouseEvent<HTMLElement>) => {
-    setAnchor(O.some(e.currentTarget))
+    setAnchor(Some(e.currentTarget))
   }
 
   const handleClickEdit = () => {
-    setAnchor(O.none)
+    setAnchor(None)
     onClickEdit()
   }
 
   const onClickRemove = () => {
-    setAnchor(O.none)
+    setAnchor(None)
     onTryRemove()
   }
 
   return (
     <div className={cx('relative', className)}>
       <IconButton
-        aria-controls={isSome(anchor) ? `${groupId}-group-button-menu` : undefined}
-        aria-expanded={isSome(anchor) ? 'true' : undefined}
+        aria-controls={anchor.some ? `${groupId}-group-button-menu` : undefined}
+        aria-expanded={anchor.some ? 'true' : undefined}
         aria-haspopup="true"
         id={`${groupId}-group-opener`}
         onClick={onOpen}
@@ -61,12 +61,12 @@ const GroupsListItemSecondaryAction = ({
         MenuListProps={{
           'aria-labelledby': `${groupId}-group-opener`,
         }}
-        anchorEl={O.toNullable(anchor)}
+        anchorEl={anchor.unwrapOr(null)}
         id={`${groupId}-group-button-menu`}
         onClose={() => {
-          setAnchor(O.none)
+          setAnchor(None)
         }}
-        open={O.isSome(anchor)}
+        open={anchor.some}
       >
         <MenuItem aria-label={t('common.edit')} onClick={handleClickEdit}>
           <ListItemIcon>

@@ -6,9 +6,8 @@
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
-import { type Conf } from 'App/Lib/Conf/ConfDecoder'
+import { type Conf } from 'App/Lib/Conf/ConfZod'
 import { readConfig } from 'App/Lib/Conf/Conf'
-import { E } from 'App/Lib/FpTs'
 import { createLogs } from 'App/Lib/CreateLog'
 
 const logs = createLogs('useConf')
@@ -17,19 +16,19 @@ export const useConf = (options: UseQueryOptions<Conf> = {}) => {
   return useQuery({
     queryKey: ['conf'],
     queryFn: async () => {
-      void logs.debug('read config')()
+      logs.debug('read config')()
 
       const config = await readConfig()
 
-      void logs.trace('config read')()
+      logs.trace('config read')()
 
-      if (E.isLeft(config)) {
-        void logs.error('config read failed', config.left)()
+      if (config.err) {
+        logs.error('config read failed', config.val)()
 
-        throw config.left
+        throw config.val
       }
 
-      return config.right
+      return config.val
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     ...options,

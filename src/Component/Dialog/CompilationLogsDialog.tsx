@@ -18,7 +18,7 @@ import LogItem from 'App/Component/Dialog/CompilationLogs/LogItem'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSnackbar } from 'App/Hook/UseSnackbar'
-import { A, isLeft, pipe } from 'App/Lib/FpTs'
+import { A, pipe } from 'App/Lib/FpTs'
 import cx from 'classnames'
 import { type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -88,9 +88,9 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
                     key={log.script.id}
                     log={log}
                     onClickCopy={(res) => {
-                      if (isLeft(res)) {
-                        console.error(res.left)
-                        errorCopy(res.left)
+                      if (res.err) {
+                        console.error(res.val)
+                        errorCopy(res.val)
                       } else {
                         successCopy()
                       }

@@ -5,7 +5,7 @@
  *
  */
 
-import { type Group } from 'App/Lib/Conf/ConfDecoder'
+import { type Group } from 'App/Lib/Conf/ConfZod'
 import { type Id } from 'App/Type/Id'
 
 export type GroupWithId = Group & { id: Id }

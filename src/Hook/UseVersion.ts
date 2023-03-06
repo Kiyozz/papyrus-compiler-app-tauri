@@ -19,7 +19,7 @@ export const useVersion = (options: UseQueryOptions<Version> = {}) => {
     queryFn: async () => {
       const version = await getVersion()
 
-      void log('app version', version)()
+      log('app version', version)()
 
       return version
     },

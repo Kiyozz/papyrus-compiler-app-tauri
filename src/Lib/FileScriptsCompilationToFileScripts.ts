@@ -5,7 +5,7 @@
  *
  */
 
-import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
 
 export const fileScriptsCompilationToFileScripts = (scripts: FileScriptCompilation[]) => {

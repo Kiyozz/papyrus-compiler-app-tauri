@@ -5,13 +5,13 @@
  *
  */
 
-import { D } from './IoTs'
+import { z } from 'zod'
 
-export const GameExecutableDecoder = D.union(
-  D.literal('SkyrimSE.exe'),
-  D.literal('TESV.exe'),
-  D.literal('SkyrimVR.exe'),
-  D.literal('Fallout4.exe'),
-)
+export const GameExecutableDecoder = z.union([
+  z.literal('SkyrimSE.exe'),
+  z.literal('TESV.exe'),
+  z.literal('SkyrimVR.exe'),
+  z.literal('Fallout4.exe'),
+])
 
-export type GameExecutable = D.TypeOf<typeof GameExecutableDecoder>
+export type GameExecutable = z.infer<typeof GameExecutableDecoder>

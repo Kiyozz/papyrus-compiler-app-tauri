@@ -8,7 +8,7 @@
 import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import { MenuSelectList } from 'App/Component/MenuSelectList'
-import { type FileScript } from 'App/Lib/Conf/ConfDecoder'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { type ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 

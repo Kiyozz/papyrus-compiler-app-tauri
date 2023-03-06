@@ -8,7 +8,6 @@
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 import { type GitHubRelease } from 'App/GitHub/GitHubRelease'
 import { createLogs } from 'App/Lib/CreateLog'
-import { isLeft } from 'App/Lib/FpTs'
 import { getLatestVersion } from 'App/Lib/Version'
 import { type Response } from '@tauri-apps/api/http'
 
@@ -18,17 +17,17 @@ export const useLatestVersion = (options: UseQueryOptions<Response<GitHubRelease
   return useQuery({
     queryKey: ['app', 'latest-version'],
     queryFn: async () => {
-      void logs.debug('get latest version')()
+      logs.debug('get latest version')()
 
-      const res = await getLatestVersion()()
+      const res = await getLatestVersion()
 
-      if (isLeft(res)) {
-        void logs.error('error get latest version', res.left)()
+      if (res.err) {
+        logs.error('error get latest version', res.val)()
 
-        throw res.left
+        throw res.val
       }
 
-      return res.right
+      return res.val
     },
     cacheTime: Infinity,
     staleTime: Infinity,
