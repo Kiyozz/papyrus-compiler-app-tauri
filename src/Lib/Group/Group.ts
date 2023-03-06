@@ -14,9 +14,9 @@ import { type Id } from 'App/Type/Id'
 import { Ok, type Result } from 'ts-results'
 
 const writeDefaultGroupsIfNotExists = async (options: GroupOptions): Promise<Result<void, Error>> => {
-  const needWrite = (await isGroupsFileExists(options.fileName)).unwrap()
+  const notNeedWrite = (await isGroupsFileExists(options.fileName)).unwrap()
 
-  if (!needWrite) {
+  if (notNeedWrite) {
     return Ok(undefined)
   }
 

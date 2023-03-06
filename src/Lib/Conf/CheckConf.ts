@@ -147,7 +147,7 @@ const checkCreationKitScriptExistsInGameDataFolder = async (conf: Conf): Promise
     `creation kit script does not exist: ${defaultScriptAbsolute}`,
   )
 
-  if (checkDefaultScript.err) return checkDefaultScript
+  if (checkDefaultScript.ok) return checkDefaultScript
 
   const defaultOtherScriptAbsolute = await join(conf.game.path, 'Data', toOtherSource(conf.game.type), defaultScript)
 
@@ -208,12 +208,12 @@ export const checkConf = async (conf: Conf): Promise<Result<Conf, CheckConfError
 
   return (
     await catchErr(async () => {
-      ;(await checkGamePath(conf)).qm()
-      ;(await checkGameExe(conf)).qm()
-      ;(await checkCompiler(conf)).qm()
+      ;(await checkGamePath(conf)).q()
+      ;(await checkGameExe(conf)).q()
+      ;(await checkCompiler(conf)).q()
 
       if (conf.mo2.use) {
-        ;(await checkMo2(conf)).qm()
+        ;(await checkMo2(conf)).q()
       }
 
       ;(
@@ -222,7 +222,7 @@ export const checkConf = async (conf: Conf): Promise<Result<Conf, CheckConfError
           : checkCreationKitScriptExistsInGameDataFolder(conf))
       )
         .mapErr(onRejected)
-        .qm()
+        .q()
 
       return Ok(conf)
     })

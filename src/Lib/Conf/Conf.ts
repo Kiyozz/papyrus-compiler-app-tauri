@@ -19,9 +19,9 @@ import { writeConfigFile } from 'App/Lib/Conf/WriteConfigFile'
  * @param options
  */
 const writeDefaultConfIfFileNotExists = async (options: ConfOptions<Conf>): Promise<Result<void, Error>> => {
-  const needWrite = (await isConfFileExists(options.confName)).unwrap()
+  const notNeedWrite = (await isConfFileExists(options.confName)).unwrap()
 
-  if (!needWrite) {
+  if (notNeedWrite) {
     return Ok(undefined)
   }
 

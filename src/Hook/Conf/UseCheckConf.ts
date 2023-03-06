@@ -47,7 +47,7 @@ export const useCheckConf = (conf: Option<Conf>, options: UseQueryOptions<Option
 
       return None
     },
-    enabled: conf.some && step.some && step.val === 'end',
+    enabled: conf.some && step.some && step.val === 'end' && !conf.val.tutorial.telemetry,
     retry: false,
     cacheTime: 0,
     staleTime: 60 * 1000 * 5, // 5 minutes

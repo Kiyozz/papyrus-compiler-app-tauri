@@ -8,7 +8,7 @@
 import { type PropsWithChildren } from 'react'
 
 const TutorialContent = ({ children }: PropsWithChildren) => {
-  return <section className="fixed inset-0 z-50 flex h-full w-full bg-gray-900">{children}</section>
+  return <section className="fixed inset-0 z-50 flex h-full w-full bg-gray-100 dark:bg-gray-900">{children}</section>
 }
 
 export default TutorialContent

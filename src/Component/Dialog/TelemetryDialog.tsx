@@ -33,7 +33,7 @@ const TelemetryDialog = () => {
   }
 
   return (
-    <Dialog open={(step.none || step.val === 'end') && conf.isSuccess && conf.data.tutorial.telemetry}>
+    <Dialog open={step.some && step.val === 'end' && conf.isSuccess && conf.data.tutorial.telemetry}>
       <DialogTitle>{t('common.telemetry.title')}</DialogTitle>
       <DialogContent>{t('common.telemetry.text')}</DialogContent>
       <DialogActions>

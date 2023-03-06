@@ -13,9 +13,9 @@ import { writeRecentScriptsFile } from 'App/Lib/RecentScripts/WriteRecentScripts
 import { Ok, type Result } from 'ts-results'
 
 const writeRecentScriptsIfNotExists = async (options: RecentScriptsOptions): Promise<Result<void, Error>> => {
-  const needWrite = (await isRecentScriptsFileExists(options.fileName)).unwrap()
+  const notNeedWrite = (await isRecentScriptsFileExists(options.fileName)).unwrap()
 
-  if (!needWrite) {
+  if (notNeedWrite) {
     return Ok(undefined)
   }
 

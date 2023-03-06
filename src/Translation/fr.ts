@@ -78,7 +78,7 @@ const fr: TranslationSchema = {
         game: 'Enregistrez les informations de votre jeu',
         compiler: "Enregistrez le chemin vers le compilateur Papyrus. Disponible après l'installation de Creation Kit",
         concurrent: 'Enregistrez le nombre de scripts compilés en simultané.',
-        mo2: 'Enregistrez vos informations MO2. Ignorez cette option, si vous utilisez PCA à travers MO2',
+        mo2: 'Enregistrez vos informations MO2. Ignorez cette option si vous utilisez PCA à travers MO2',
       },
       compilation: {
         addScripts: 'Ajouter des scripts',

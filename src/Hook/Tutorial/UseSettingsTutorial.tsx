@@ -50,14 +50,13 @@ const Context = createContext({
 })
 
 const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
-  useConf({
-    onSuccess: (data) => {
-      setStep(Some(!data.tutorial.settings ? ('end' as const) : ('welcome' as const)))
-    },
-  })
+  const conf = useConf()
+
   const { trackEvent } = useMatomo()
 
-  const [step, setStep] = useState<Option<TutorialStep>>(None)
+  const [step, setStep] = useState<Option<TutorialStep>>(
+    conf.data?.tutorial.settings === true ? Some('welcome' as const) : Some('end' as const),
+  )
   const gameRef = useRef<HTMLDivElement>(null)
   const compilerRef = useRef<HTMLDivElement>(null)
   const concurrentRef = useRef<HTMLDivElement>(null)
