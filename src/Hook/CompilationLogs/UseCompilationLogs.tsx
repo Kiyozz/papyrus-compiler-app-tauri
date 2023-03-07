@@ -6,7 +6,7 @@
  */
 
 import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
-import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
 import { A } from 'App/Lib/FpTs'
 import { createContext, type PropsWithChildren, useCallback, useContext, useReducer } from 'react'
 import { match, P } from 'ts-pattern'

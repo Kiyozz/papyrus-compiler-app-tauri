@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add'
 import Button, { type ButtonProps } from '@mui/material/Button'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
 import { fileScriptsCompilationToFileScripts } from 'App/Lib/FileScriptsCompilationToFileScripts'
 import { A } from 'App/Lib/FpTs'
 import { forwardRef } from 'react'

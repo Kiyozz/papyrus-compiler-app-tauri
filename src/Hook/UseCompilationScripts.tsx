@@ -6,7 +6,7 @@
  */
 
 import { useScriptsList } from 'App/Hook/UseScriptsList'
-import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
 import { createContext, type PropsWithChildren, useContext } from 'react'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions

@@ -5,7 +5,7 @@
  *
  */
 
-import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
 import { type Conf } from 'App/Lib/Conf/ConfZod'
 import { invokeCompileScript } from 'App/Lib/InvokeCompileScript'
 import { Ok, type Result } from 'ts-results'

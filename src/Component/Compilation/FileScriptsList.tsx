@@ -17,7 +17,7 @@ import { CompilationIcon } from 'App/Component/CompilationIcon'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
-import { isDone, isFileScriptCompilation, isRunning } from 'App/Lib/FileScriptCompilation'
+import { isBusy, isDone, isFileScriptCompilation, isRunning } from 'App/Lib/FileScriptCompilation'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -54,10 +54,10 @@ function FileScriptsList<T extends FileScript>({
               className="mt-0.5 [&:first-child]:mt-0"
               secondaryAction={
                 <IconButton
-                  aria-disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
+                  aria-disabled={isFileScriptCompilation(script) ? isRunning(script) || isBusy(script) : false}
                   aria-label={t('common.remove')}
                   color="error"
-                  disabled={isFileScriptCompilation(script) ? script.status === 'running' : false}
+                  disabled={isFileScriptCompilation(script) ? isRunning(script) || isBusy(script) : false}
                   onClick={() => {
                     onRemove(script)
                   }}
@@ -70,7 +70,7 @@ function FileScriptsList<T extends FileScript>({
               {isFileScriptCompilation(script) ? (
                 <ListItemIcon>
                   <IconButton
-                    disabled={disabled || isRunning(script)}
+                    disabled={disabled || isRunning(script) || isBusy(script)}
                     onClick={async () => await onStart?.(script)}
                     className="text-primary-400"
                     edge="end"
@@ -86,7 +86,7 @@ function FileScriptsList<T extends FileScript>({
                   <IconButton
                     onClick={() => onClickOnError?.(script)}
                     size="small"
-                    disabled={isRunning(script) || isDone(script)}
+                    disabled={isRunning(script) || isDone(script) || isBusy(script)}
                   >
                     <CompilationIcon script={script} />
                   </IconButton>

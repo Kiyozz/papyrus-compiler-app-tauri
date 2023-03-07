@@ -31,10 +31,10 @@ import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { createLogs } from 'App/Lib/CreateLog'
-import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilationDecoder'
-import { isRunning } from 'App/Lib/FileScriptCompilation'
+import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
+import { isBusy, isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
-import { A, flow, pipe, R } from 'App/Lib/FpTs'
+import { flow, R } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
 import { toExecutable } from 'App/Lib/ToExecutable'
@@ -58,7 +58,7 @@ function CompilationPage() {
   const { refs } = useSettingsTutorial()
   const checkConf = useCheckConf(fromNullable(conf.data))
 
-  const isAllScriptsRunning = scripts.every(isRunning)
+  const isAllScriptsRunningOrBusy = scripts.every((script) => isRunning(script) || isBusy(script))
 
   return (
     <div>
@@ -138,22 +138,18 @@ function CompilationPage() {
                     name: 'All scripts',
                   })
 
-                  await pipe(
-                    scripts,
-                    A.filter((script) => script.status !== 'running'),
-                    async (scripts) => {
-                      logs.trace('start compilation for all remaining scripts')()
-                      scripts.forEach(removeCompilationLog)
+                  logs.trace('start compilation for all remaining scripts')()
 
-                      return await compile(scripts)
-                    },
-                  )
+                  const scriptsToCompile = scripts.filter((script) => !isRunning(script) && !isBusy(script))
+
+                  scriptsToCompile.forEach(removeCompilationLog)
+                  await compile(scriptsToCompile)
                 }}
-                disabled={isAllScriptsRunning || isCheckConfQueryError(checkConf)}
+                disabled={isAllScriptsRunningOrBusy || isCheckConfQueryError(checkConf)}
               />
 
               <Button
-                disabled={isAllScriptsRunning}
+                disabled={isAllScriptsRunningOrBusy}
                 onClick={flow(
                   clearScripts,
                   clearCompilationLogs,
