@@ -8,7 +8,6 @@
 import Menu, { type MenuProps } from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Divider from '@mui/material/Divider'
-import { flow } from 'App/Lib/FpTs'
 import { useTranslation } from 'react-i18next'
 
 export const MenuSelectList = ({
@@ -34,13 +33,31 @@ export const MenuSelectList = ({
 
   return (
     <Menu {...props} anchorReference="anchorPosition">
-      <MenuItem onClick={flow(props.onClose, onAll)} disabled={disabled.all}>
+      <MenuItem
+        onClick={() => {
+          props.onClose()
+          onAll()
+        }}
+        disabled={disabled.all}
+      >
         {t('common.select.all')}
       </MenuItem>
-      <MenuItem onClick={flow(props.onClose, onNone)} disabled={disabled.none}>
+      <MenuItem
+        onClick={() => {
+          props.onClose()
+          onNone()
+        }}
+        disabled={disabled.none}
+      >
         {t('common.select.none')}
       </MenuItem>
-      <MenuItem onClick={flow(props.onClose, onInvert)} disabled={disabled.invert}>
+      <MenuItem
+        onClick={() => {
+          props.onClose()
+          onInvert()
+        }}
+        disabled={disabled.invert}
+      >
         {t('common.select.invert')}
       </MenuItem>
       {children != null && <Divider />}

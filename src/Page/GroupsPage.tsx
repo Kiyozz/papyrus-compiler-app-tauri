@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Fade from '@mui/material/Fade'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import is from '@sindresorhus/is'
 import AddGroupDialog from 'App/Component/Dialog/AddGroupDialog'
 import EditGroupDialog from 'App/Component/Dialog/EditGroupDialog'
 import RemovingGroupDialog from 'App/Component/Dialog/RemovingGroupDialog'
@@ -25,14 +26,14 @@ import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { createLogs } from 'App/Lib/CreateLog'
-import { A, pipe, R } from 'App/Lib/FpTs'
+import { R } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { fromNullable } from 'App/Lib/TsResults'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
-import { None, type Option, Result } from 'ts-results'
+import { None, type Option, Result, Some } from 'ts-results'
 import { useEffectOnce } from 'usehooks-ts'
 import { v4 } from 'uuid'
 
@@ -91,6 +92,8 @@ function GroupsPage() {
     closeEditGroupDialog()
     logs.trace('closeDialogs')()
   }
+
+  const groupsAsArray = groups.isSuccess ? Some(groupRecordToArray(groups.data)) : None
 
   return (
     <>
@@ -213,34 +216,35 @@ function GroupsPage() {
                 {t('page.groups.createGroupText')}
               </Typography>
             )}
-            {groups.isSuccess
-              ? pipe(
-                  groups.data,
-                  groupRecordToArray,
-                  A.match(
-                    () => <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>,
-                    (groups) => (
-                      <>
-                        <Toolbar className="p-0">
-                          <GroupMoreDetailsCheckbox
-                            className="ml-auto"
-                            checked={isMoreDetails}
-                            onChange={(checked) => {
-                              setMoreDetails(checked)
-                            }}
-                          />
-                        </Toolbar>
-                        <GroupsList
-                          groups={groups}
-                          isMoreDetails={isMoreDetails}
-                          onTryRemove={openRemoveGroupDialog}
-                          onClickEdit={openEditGroupDialog}
-                        />
-                      </>
-                    ),
-                  ),
+            {groupsAsArray
+              .map((groups) => {
+                /* eslint-disable react/jsx-key */
+                if (is.emptyArray(groups)) {
+                  return <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>
+                }
+
+                return (
+                  <>
+                    <Toolbar className="p-0">
+                      <GroupMoreDetailsCheckbox
+                        className="ml-auto"
+                        checked={isMoreDetails}
+                        onChange={(checked) => {
+                          setMoreDetails(checked)
+                        }}
+                      />
+                    </Toolbar>
+                    <GroupsList
+                      groups={groups}
+                      isMoreDetails={isMoreDetails}
+                      onTryRemove={openRemoveGroupDialog}
+                      onClickEdit={openEditGroupDialog}
+                    />
+                  </>
                 )
-              : null}
+                /* eslint-enable react/jsx-key */
+              })
+              .unwrapOr(null)}
           </div>
         </Fade>
       </Page>

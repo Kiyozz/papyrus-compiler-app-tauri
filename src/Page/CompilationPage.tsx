@@ -34,13 +34,13 @@ import { createLogs } from 'App/Lib/CreateLog'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
 import { isBusy, isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
-import { flow, R } from 'App/Lib/FpTs'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { fromNullable } from 'App/Lib/TsResults'
 import { type RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { R } from 'App/Lib/FpTs'
 
 const logs = createLogs('CompilationPage')
 
@@ -68,15 +68,13 @@ function CompilationPage() {
           setRecentFilesDialogOpen(false)
         }}
         currentScripts={scripts}
-        onScriptsLoad={flow(
-          pathsToFileScriptAndFilterPscFile,
-          fileScriptsToFileScriptCompilation,
-          addScripts,
-          logs.log('add scripts from recent scripts'),
-          () => {
-            setRecentFilesDialogOpen(false)
-          },
-        )}
+        onScriptsLoad={(paths) => {
+          const files = pathsToFileScriptAndFilterPscFile(paths)
+          const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
+          addScripts(scriptsCompilation)
+          logs.log('add scripts from recent scripts')()
+          setRecentFilesDialogOpen(false)
+        }}
       />
 
       <PageAppBar title={t('page.compilation.appBar.title')}>
@@ -110,16 +108,14 @@ function CompilationPage() {
             className="px-3 py-2"
             color="inherit"
             groups={groups.data}
-            onGroupClick={flow(
-              (group) => group.scripts.map((script) => script.path),
-              pathsToFileScriptAndFilterPscFile,
-              fileScriptsToFileScriptCompilation,
-              addScripts,
-              logs.log('add scripts from group'),
-              () => {
-                trackEvent({ category: 'Compilation', action: 'Add scripts', name: 'Group' })
-              },
-            )}
+            onGroupClick={(group) => {
+              const paths = group.scripts.map((s) => s.path)
+              const files = pathsToFileScriptAndFilterPscFile(paths)
+              const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
+              addScripts(scriptsCompilation)
+              logs.log('add scripts from group')()
+              trackEvent({ category: 'Compilation', action: 'Add scripts', name: 'Group' })
+            }}
           >
             {t('common.group')}
           </GroupChooseButton>
@@ -150,17 +146,15 @@ function CompilationPage() {
 
               <Button
                 disabled={isAllScriptsRunningOrBusy}
-                onClick={flow(
-                  clearScripts,
-                  clearCompilationLogs,
-                  logs.trace('clear scripts and compilation logs'),
-                  () => {
-                    trackEvent({
-                      category: 'Compilation',
-                      action: 'Clear',
-                    })
-                  },
-                )}
+                onClick={() => {
+                  clearScripts()
+                  clearCompilationLogs()
+                  logs.trace('clear scripts and compilation logs')()
+                  trackEvent({
+                    category: 'Compilation',
+                    action: 'Clear',
+                  })
+                }}
                 startIcon={<ClearIcon />}
                 color="inherit"
               >

@@ -9,8 +9,8 @@ import AddIcon from '@mui/icons-material/Add'
 import Button, { type ButtonProps } from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import is from '@sindresorhus/is'
 import { type Groups } from 'App/Lib/Conf/ConfZod'
-import { A, pipe } from 'App/Lib/FpTs'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import { useState } from 'react'
@@ -22,17 +22,13 @@ function GroupChooseButton({
   ...props
 }: Omit<ButtonProps, 'onClick'> & { groups: Groups; onGroupClick: (group: GroupWithId) => void }) {
   const [anchor, setAnchor] = useState<Option<HTMLElement>>(None)
-
-  const nonEmptyGroups = pipe(
-    groupRecordToArray(groups),
-    A.filter((group) => A.isNonEmpty(group.scripts)),
-  )
+  const nonEmptyGroups = groupRecordToArray(groups).filter((group) => is.nonEmptyArray(group.scripts))
 
   const isOpen = anchor.some
 
   return (
     <>
-      {A.isNonEmpty(nonEmptyGroups) && (
+      {is.nonEmptyArray(nonEmptyGroups) && (
         <Button
           aria-controls={isOpen ? 'group-loader-menu' : undefined}
           aria-expanded={isOpen ? 'true' : undefined}
@@ -59,21 +55,18 @@ function GroupChooseButton({
           setAnchor(None)
         }}
       >
-        {pipe(
-          nonEmptyGroups,
-          A.map((group) => (
-            <MenuItem
-              key={group.id}
-              className="justify-center"
-              onClick={() => {
-                onGroupClick(group)
-                setAnchor(None)
-              }}
-            >
-              {group.name}
-            </MenuItem>
-          )),
-        )}
+        {nonEmptyGroups.map((group) => (
+          <MenuItem
+            key={group.id}
+            className="justify-center"
+            onClick={() => {
+              onGroupClick(group)
+              setAnchor(None)
+            }}
+          >
+            {group.name}
+          </MenuItem>
+        ))}
       </Menu>
     </>
   )

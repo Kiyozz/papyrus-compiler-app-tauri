@@ -7,7 +7,5 @@
 
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 
-export const isFileScriptInArray =
-  (file: FileScript) =>
-  (array: FileScript[]): boolean =>
-    array.some((item) => item.path === file.path)
+export const isFileScriptInArray = (file: FileScript, array: FileScript[]): boolean =>
+  array.some((item) => item.path === file.path)

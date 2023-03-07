@@ -5,7 +5,6 @@
  *
  */
 
-import { A, pipe } from 'App/Lib/FpTs'
 import { uniqObjectArrayByKeys } from 'App/Lib/UniqObjectArrayByKeys'
 import { useCallback, useReducer } from 'react'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
@@ -21,20 +20,12 @@ type Action<T extends FileScript> =
 function reducer<T extends FileScript>(state: T[], action: Action<T>): T[] {
   return match(action)
     .with({ type: 'add' }, (action) => uniqObjectArrayByKeys([...state, ...action.payload])(['name']))
-    .with({ type: 'remove' }, (action) =>
-      pipe(
-        state,
-        A.filter((fileInState) => !action.payload.includes(fileInState)),
-      ),
-    )
+    .with({ type: 'remove' }, (action) => state.filter((fileInState) => !action.payload.includes(fileInState)))
     .with({ type: 'replace' }, (action) =>
-      pipe(
-        state,
-        A.map((fileInState) =>
-          match(fileInState.name === action.payload.name)
-            .with(true, () => action.payload)
-            .otherwise(() => fileInState),
-        ),
+      state.map((fileInState) =>
+        match(fileInState.name === action.payload.name)
+          .with(true, () => action.payload)
+          .otherwise(() => fileInState),
       ),
     )
     .with({ type: 'clear' }, () => [])

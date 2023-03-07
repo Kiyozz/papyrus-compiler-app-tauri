@@ -5,9 +5,9 @@
  *
  */
 
+import is from '@sindresorhus/is'
 import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
-import { A } from 'App/Lib/FpTs'
 import { createContext, type PropsWithChildren, useCallback, useContext, useReducer } from 'react'
 import { match, P } from 'ts-pattern'
 
@@ -67,7 +67,7 @@ const CompilationLogsProvider = ({ children }: PropsWithChildren) => {
         remove,
         clear,
         hasAnyError: logs.some((log) => log.status === 'error'),
-        hasAllSuccess: A.isNonEmpty(logs) && logs.every((log) => log.status === 'success'),
+        hasAllSuccess: is.nonEmptyArray(logs) && logs.every((log) => log.status === 'success'),
       }}
     >
       {children}

@@ -11,7 +11,6 @@ import SearchIcon from '@mui/icons-material/Search'
 import Button, { type ButtonProps } from '@mui/material/Button'
 import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
-import { pipe } from 'App/Lib/FpTs'
 import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
 import { fromNullable } from 'App/Lib/TsResults'
 import { forwardRef, useState } from 'react'
@@ -25,9 +24,9 @@ const SearchScriptButton = forwardRef<
   const { t } = useTranslation()
   useListenFileDrop({
     onDrop: (evt) => {
-      pipe(evt.payload, pathsToFileScriptAndFilterPscFile, (files) => {
-        onFileSelect(files, 'Drop')
-      })
+      const files = pathsToFileScriptAndFilterPscFile(evt.payload)
+
+      onFileSelect(files, 'Drop')
     },
   })
 

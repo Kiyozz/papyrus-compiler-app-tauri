@@ -34,7 +34,6 @@ import { useKey } from 'App/Hook/UseKey'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
-import { pipe, A } from 'App/Lib/FpTs'
 import { isFileScriptInArray } from 'App/Lib/IsFileScriptInArray'
 import { fromNullable } from 'App/Lib/TsResults'
 import cx from 'classnames'
@@ -97,7 +96,7 @@ function RecentScriptsDialog({
   }
 
   const onDialogEnter = useKey('Enter', () => {
-    if (A.isEmpty(scriptsToLoad)) return
+    if (is.emptyArray(scriptsToLoad)) return
 
     handleOnLoad()
   })
@@ -135,7 +134,9 @@ function RecentScriptsDialog({
           </DialogTitle>
           <FormGroup id="recent-scripts-content">
             <FormControlLabel
-              disabled={fromNullable(recentScripts.data).map(A.isEmpty).unwrapOr(false)}
+              disabled={fromNullable(recentScripts.data)
+                .map((scripts) => is.emptyArray(scripts))
+                .unwrapOr(false)}
               control={
                 <Checkbox
                   checked={isMoreDetails}
@@ -156,7 +157,7 @@ function RecentScriptsDialog({
                 return <DialogContentText>{t('dialog.recentFiles.noRecentFiles')}</DialogContentText>
               }
 
-              const notInCurrentScripts = allScripts.filter((script) => !isFileScriptInArray(script)(currentScripts))
+              const notInCurrentScripts = allScripts.filter((script) => !isFileScriptInArray(script, currentScripts))
 
               return (
                 <List className="overflow-x-hidden" onContextMenu={handleContextMenu}>
@@ -173,12 +174,12 @@ function RecentScriptsDialog({
                       clearScriptsToLoad()
                     }}
                     onInvert={() => {
-                      const toAdd = notInCurrentScripts.filter(
-                        (script) => !pipe(scriptsToLoad, isFileScriptInArray(script)),
-                      )
-                      const toRemove = notInCurrentScripts.filter((script) =>
-                        pipe(scriptsToLoad, isFileScriptInArray(script)),
-                      )
+                      const toAdd = notInCurrentScripts.filter((script) => {
+                        return !isFileScriptInArray(script, scriptsToLoad)
+                      })
+                      const toRemove = notInCurrentScripts.filter((script) => {
+                        return isFileScriptInArray(script, scriptsToLoad)
+                      })
 
                       addScriptsToLoad(toAdd)
                       removeScriptToLoad(toRemove)
@@ -201,15 +202,15 @@ function RecentScriptsDialog({
                     detailsText={t(isMoreDetails ? 'common.lessDetails' : 'common.moreDetails')}
                     scriptsToLoad={scriptsToLoad}
                     disabled={{
-                      all: A.size(scriptsToLoad) === A.size(allScripts),
-                      none: A.isEmpty(scriptsToLoad),
-                      clear: A.isEmpty(allScripts),
-                      load: A.isEmpty(scriptsToLoad),
-                      details: A.isEmpty(allScripts),
+                      all: scriptsToLoad.length === allScripts.length,
+                      none: is.emptyArray(scriptsToLoad),
+                      clear: is.emptyArray(allScripts),
+                      load: is.emptyArray(scriptsToLoad),
+                      details: is.emptyArray(allScripts),
                     }}
                   />
                   {allScripts.map((script) => {
-                    const isAlreadyAddedInCurrentScripts = pipe(currentScripts, isFileScriptInArray(script))
+                    const isAlreadyAddedInCurrentScripts = isFileScriptInArray(script, currentScripts)
                     const isAlreadyAddedInScriptsToLoad = scriptsToLoad.includes(script)
 
                     return (
@@ -274,7 +275,7 @@ function RecentScriptsDialog({
           <Button onClick={handleOnClose} tabIndex={4} color="inherit">
             {t('common.close')}
           </Button>
-          <Button disabled={A.isEmpty(scriptsToLoad)} onClick={handleOnLoad} tabIndex={3} color="inherit">
+          <Button disabled={is.emptyArray(scriptsToLoad)} onClick={handleOnLoad} tabIndex={3} color="inherit">
             {t('dialog.recentFiles.actions.load')}
           </Button>
         </DialogActions>

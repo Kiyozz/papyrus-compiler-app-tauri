@@ -6,7 +6,6 @@
  */
 
 import { type Groups } from 'App/Lib/Conf/ConfZod'
-import { A, flow, R } from 'App/Lib/FpTs'
 import { type GroupOptions } from 'App/Lib/Group/GroupOptions'
 import { isGroupsFileExists, readGroupsFileJson } from 'App/Lib/Group/ReadGroupsFile'
 import { writeGroupsFile } from 'App/Lib/Group/WriteGroupsFile'
@@ -46,13 +45,11 @@ export const writeGroups = async (options: GroupOptions, groups: Groups): Promis
 export const writeDefaultGroups = async (groups: Groups) => await writeGroups(defaultOptions, groups)
 
 export const removeGroup = async (options: GroupOptions, groupId: Id) => {
-  const currentGroups = (await readGroups()).map(
-    flow(
-      R.toEntries,
-      A.filter(([id]) => id !== groupId),
-      R.fromEntries,
-    ),
-  )
+  const currentGroups = (await readGroups()).map((groups) => {
+    const newGroups = Object.entries(groups).filter(([id]) => id !== groupId)
+
+    return Object.fromEntries(newGroups)
+  })
 
   if (currentGroups.err) return currentGroups
 

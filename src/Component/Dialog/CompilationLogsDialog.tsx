@@ -14,11 +14,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Snackbar from '@mui/material/Snackbar'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import is from '@sindresorhus/is'
 import LogItem from 'App/Component/Dialog/CompilationLogs/LogItem'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSnackbar } from 'App/Hook/UseSnackbar'
-import { A, pipe } from 'App/Lib/FpTs'
 import cx from 'classnames'
 import { type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -40,7 +40,7 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
     successMessage: () => t('common.copySuccess'),
   })
 
-  const hasNoLogs = A.isEmpty(logs)
+  const hasNoLogs = is.emptyArray(logs)
 
   const handleDialogKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === 'Enter') {
@@ -74,30 +74,25 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
           dividers
           id="logs-content"
         >
-          {pipe(
-            logs,
-            A.matchW(
-              () => (
-                <Typography component="span" variant="h5">
-                  {t('dialog.logs.noLogs')}
-                </Typography>
-              ),
-              (logs) =>
-                logs.map((log) => (
-                  <LogItem
-                    key={log.script.id}
-                    log={log}
-                    onClickCopy={(res) => {
-                      if (res.err) {
-                        console.error(res.val)
-                        errorCopy(res.val)
-                      } else {
-                        successCopy()
-                      }
-                    }}
-                  />
-                )),
-            ),
+          {hasNoLogs ? (
+            <Typography component="span" variant="h5">
+              {t('dialog.logs.noLogs')}
+            </Typography>
+          ) : (
+            logs.map((log) => (
+              <LogItem
+                key={log.script.id}
+                log={log}
+                onClickCopy={(res) => {
+                  if (res.err) {
+                    console.error(res.val)
+                    errorCopy(res.val)
+                  } else {
+                    successCopy()
+                  }
+                }}
+              />
+            ))
           )}
         </DialogContent>
         <DialogActions>

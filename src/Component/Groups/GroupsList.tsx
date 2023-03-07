@@ -9,8 +9,8 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
+import is from '@sindresorhus/is'
 import GroupsListItemSecondaryAction from 'App/Component/Groups/GroupsListItemSecondaryAction'
-import { A } from 'App/Lib/FpTs'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
@@ -35,12 +35,13 @@ function GroupsList({
     <List className={cx('flex flex-col gap-2', className)}>
       {groups.map((group) => {
         const secondaryText = (!isMoreDetails ? None : Some(group.scripts))
-          .map(
-            A.match(
-              () => (isMoreDetails ? t('common.noScripts') : undefined),
-              (s) => s.map((s) => s.name).join(', '),
-            ),
-          )
+          .andThen((scripts) => {
+            if (is.emptyArray(scripts)) {
+              return isMoreDetails ? Some(t('common.noScripts')) : None
+            }
+
+            return Some(scripts.map((s) => s.name).join(', '))
+          })
           .unwrapOr(undefined)
 
         return (
