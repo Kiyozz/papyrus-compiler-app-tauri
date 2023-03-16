@@ -12,15 +12,17 @@ import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
+import { useUpdateEffect } from 'usehooks-ts'
 import { z } from 'zod'
 
-const hardMaxConcurrentCompilationScripts = 100
+const hardMinConcurrentCompilationScripts = 1
 
 const ConcurrentScriptsZod = z.preprocess(
   (a) => parseInt(z.string().parse(a), 10),
-  z.number().min(1).max(hardMaxConcurrentCompilationScripts),
+  z.number().min(hardMinConcurrentCompilationScripts),
 )
 
 function SettingsCompilationSection() {
@@ -29,11 +31,25 @@ function SettingsCompilationSection() {
   const updateConf = useUpdateConf()
   const { refs } = useSettingsTutorial()
   const { trackEvent } = useMatomo()
+  const [concurrentScripts, setConcurrentScripts] = useState(conf.data?.compilation.concurrentScripts ?? 15)
+
+  useUpdateEffect(() => {
+    if (concurrentScripts >= hardMinConcurrentCompilationScripts) {
+      updateConf.mutate({
+        compilation: {
+          concurrentScripts,
+        },
+      })
+      trackEvent({
+        category: 'Conf',
+        action: 'Change concurrent scripts',
+        value: concurrentScripts,
+      })
+    }
+  }, [concurrentScripts])
 
   if (conf.isLoading) return <>Loading...</>
   if (!conf.isSuccess) return <Navigate to="/" />
-
-  const concurrentScripts = conf.data.compilation.concurrentScripts
 
   return (
     <SettingsSection id="compilation-section" sectionTitle={t('page.settings.sections.compilation.title')}>
@@ -50,19 +66,12 @@ function SettingsCompilationSection() {
           label={t('page.settings.sections.compilation.concurrentScripts.label')}
           name="compilation-concurrentScripts"
           onChange={(v) => {
-            const nV = ConcurrentScriptsZod.safeParse(v.currentTarget.value)
+            const safeValue = ConcurrentScriptsZod.safeParse(v.currentTarget.value)
 
-            if (nV.success) {
-              updateConf.mutate({
-                compilation: {
-                  concurrentScripts: nV.data,
-                },
-              })
-              trackEvent({
-                category: 'Conf',
-                action: 'Change concurrent scripts',
-                value: nV.data,
-              })
+            if (safeValue.success) {
+              setConcurrentScripts(safeValue.data)
+            } else {
+              setConcurrentScripts(0)
             }
           }}
           value={concurrentScripts === 0 ? '' : concurrentScripts}
