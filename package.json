@@ -1,7 +1,7 @@
 {
   "name": "@kiyozz/tauri-app",
   "private": true,
-  "version": "2023.1",
+  "version": "2023.1.0",
   "author": {
     "email": "kevinturmel@gmail.com",
     "name": "Kiyozz",

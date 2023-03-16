@@ -6,6 +6,6 @@
  */
 
 import { GroupsZod } from 'App/Lib/Conf/ConfZod'
-import { parseJson } from 'App/Lib/Json'
+import { parseSafeJson } from 'App/Lib/Json'
 
-export const parseGroupsJson = (contents: string) => parseJson(GroupsZod, contents)
+export const parseGroupsJson = (contents: string) => parseSafeJson(GroupsZod, contents)

@@ -31,6 +31,7 @@ export const useConf = (options: UseQueryOptions<Conf> = {}) => {
       return config.val
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: 0,
     ...options,
   })
 }

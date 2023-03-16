@@ -5,6 +5,7 @@
  *
  */
 import { join } from '@tauri-apps/api/path'
+import { catchErr } from 'App/Lib/TsResults'
 import deepmerge from 'deepmerge'
 import { Ok, type Result } from 'ts-results'
 import { type PartialDeep } from 'type-fest'
@@ -13,28 +14,30 @@ import { type Conf } from 'App/Lib/Conf/ConfZod'
 import { isConfFileExists, readConfigFileJson } from 'App/Lib/Conf/ReadConfigFile'
 import { writeConfigFile } from 'App/Lib/Conf/WriteConfigFile'
 
+export const confFileName = 'conf.json'
+
 /**
  * Write the default conf if the conf file doesn't exist
  *
  * @param options
  */
 const writeDefaultConfIfFileNotExists = async (options: ConfOptions<Conf>): Promise<Result<void, Error>> => {
-  const notNeedWrite = (await isConfFileExists(options.confName)).unwrap()
+  const notNeedWrite = (await isConfFileExists()).unwrap()
 
   if (notNeedWrite) {
     return Ok(undefined)
   }
 
-  return await writeConfigFile(options.confName, options.defaults)
+  return await writeConfigFile(options.defaults)
 }
 
-const readConfigOrUseDefaultConfig = async (options: ConfOptions<Conf>): Promise<Result<Conf, Error>> => {
-  return await readConfigFileJson(options.confName)
+const readConfigOrUseDefaultConfig = async (): Promise<Result<Conf, Error>> => {
+  return await catchErr(async () => await readConfigFileJson())
 }
 
 const defaultOptions: ConfOptions<Conf> = {
-  projectVersion: '7.0.0',
-  confName: 'conf.json',
+  projectVersion: '2023.1',
+  confName: confFileName,
   defaults: {
     game: {
       type: 'Skyrim SE',
@@ -71,7 +74,7 @@ const defaultOptions: ConfOptions<Conf> = {
   },
 }
 
-export const readConfig = async () => await readConfigOrUseDefaultConfig(defaultOptions)
+export const readConfig = async () => await readConfigOrUseDefaultConfig()
 
 export const writeConfig = async (partialConfig: PartialDeep<Conf>): Promise<Result<Conf, Error>> => {
   const conf = await readConfig()
@@ -79,7 +82,7 @@ export const writeConfig = async (partialConfig: PartialDeep<Conf>): Promise<Res
 
   if (finalConf.err) return finalConf
 
-  await writeConfigFile(defaultOptions.confName, finalConf.val)
+  await writeConfigFile(finalConf.val)
 
   return finalConf
 }

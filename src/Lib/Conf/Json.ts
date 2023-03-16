@@ -6,6 +6,6 @@
  */
 
 import { ConfZod } from 'App/Lib/Conf/ConfZod'
-import { parseJson } from 'App/Lib/Json'
+import { safeDecode } from 'App/Lib/Json'
 
-export const parseConfJson = (contents: string) => parseJson(ConfZod, contents)
+export const safeDecodeConf = (contents: unknown) => safeDecode(ConfZod, contents)

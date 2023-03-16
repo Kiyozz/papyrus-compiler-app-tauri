@@ -6,6 +6,6 @@
  */
 
 import { RecentScriptsZod } from 'App/Lib/Conf/ConfZod'
-import { parseJson } from 'App/Lib/Json'
+import { parseSafeJson } from 'App/Lib/Json'
 
-export const parseRecentScriptsJson = (text: string) => parseJson(RecentScriptsZod, text)
+export const parseRecentScriptsJson = (text: string) => parseSafeJson(RecentScriptsZod, text)

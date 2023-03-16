@@ -6,16 +6,17 @@
  */
 
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
+import { confFileName } from 'App/Lib/Conf/Conf'
 import { type Conf } from 'App/Lib/Conf/ConfZod'
 import { stringify } from 'App/Lib/Json'
 import { Result } from 'ts-results'
 
-export const writeConfigFile = async (path: string, contents: Conf): Promise<Result<void, Error>> => {
+export const writeConfigFile = async (contents: Conf): Promise<Result<void, Error>> => {
   const asStringJson = stringify(contents).unwrap()
 
   const res = await Result.wrapAsync(async () => {
-    await writeTextFile({ path, contents: asStringJson }, { dir: BaseDirectory.App })
+    await writeTextFile({ path: confFileName, contents: asStringJson }, { dir: BaseDirectory.App })
   })
 
-  return res.mapErr((reason) => new Error(`Cannot write config file, error given: ${reason}`))
+  return res.mapErr((reason) => new Error('cannot write config file', { cause: reason }))
 }
