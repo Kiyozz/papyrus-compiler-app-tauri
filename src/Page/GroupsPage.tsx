@@ -8,7 +8,6 @@
 import CreateIcon from '@mui/icons-material/Create'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
-import Fade from '@mui/material/Fade'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import is from '@sindresorhus/is'
@@ -26,10 +25,11 @@ import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { createLogs } from 'App/Lib/CreateLog'
-import { R } from 'App/Lib/FpTs'
+import { enterPageAnimate } from 'App/Lib/Framer'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { fromNullable } from 'App/Lib/TsResults'
 import { type GroupWithId } from 'App/Type/GroupWithId'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
@@ -206,47 +206,53 @@ function GroupsPage() {
       </PageAppBar>
 
       <Page className="pt-0">
-        <Fade in={groups.isLoading} unmountOnExit>
-          <CircularProgress className="mt-6" variant="indeterminate" />
-        </Fade>
-        <Fade in={groups.isSuccess}>
-          <div className="h-full w-full justify-center gap-4 text-lg">
-            {!groups.isLoading && R.size(groups.data ?? {}) === 0 && (
-              <Typography gutterBottom variant="h6" className="pt-6">
-                {t('page.groups.createGroupText')}
-              </Typography>
-            )}
-            {groupsAsArray
-              .map((groups) => {
-                /* eslint-disable react/jsx-key */
-                if (is.emptyArray(groups)) {
-                  return <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>
-                }
+        <AnimatePresence>
+          {groups.isLoading && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <CircularProgress className="mt-6" variant="indeterminate" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {groups.isSuccess && (
+            <motion.div className="h-full w-full justify-center gap-4 text-lg" {...enterPageAnimate}>
+              {Object.keys(groups.data).length === 0 && (
+                <Typography gutterBottom variant="h6" className="pt-6">
+                  {t('page.groups.createGroupText')}
+                </Typography>
+              )}
+              {groupsAsArray
+                .map((groups) => {
+                  /* eslint-disable react/jsx-key */
+                  if (is.emptyArray(groups)) {
+                    return <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>
+                  }
 
-                return (
-                  <>
-                    <Toolbar className="p-0">
-                      <GroupMoreDetailsCheckbox
-                        className="ml-auto"
-                        checked={isMoreDetails}
-                        onChange={(checked) => {
-                          setMoreDetails(checked)
-                        }}
+                  return (
+                    <>
+                      <Toolbar className="p-0">
+                        <GroupMoreDetailsCheckbox
+                          className="ml-auto"
+                          checked={isMoreDetails}
+                          onChange={(checked) => {
+                            setMoreDetails(checked)
+                          }}
+                        />
+                      </Toolbar>
+                      <GroupsList
+                        groups={groups}
+                        isMoreDetails={isMoreDetails}
+                        onTryRemove={openRemoveGroupDialog}
+                        onClickEdit={openEditGroupDialog}
                       />
-                    </Toolbar>
-                    <GroupsList
-                      groups={groups}
-                      isMoreDetails={isMoreDetails}
-                      onTryRemove={openRemoveGroupDialog}
-                      onClickEdit={openEditGroupDialog}
-                    />
-                  </>
-                )
-                /* eslint-enable react/jsx-key */
-              })
-              .unwrapOr(null)}
-          </div>
-        </Fade>
+                    </>
+                  )
+                  /* eslint-enable react/jsx-key */
+                })
+                .unwrapOr(null)}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Page>
     </>
   )

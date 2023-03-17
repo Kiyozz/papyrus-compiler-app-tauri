@@ -22,10 +22,14 @@ import { type GameType } from 'App/Lib/Conf/ConfZod'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { toExecutable } from 'App/Lib/ToExecutable'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { fromNullable } from 'App/Lib/TsResults'
 import { Some } from 'ts-results'
+import { exitAlertAnimate } from 'App/Lib/Framer'
+
+const MotionAlert = motion(Alert)
 
 function SettingsGameSection() {
   const { t } = useTranslation()
@@ -71,7 +75,13 @@ function SettingsGameSection() {
         step="settings-game"
         ref={refs['settings-game']}
       >
-        <FormControl component="fieldset" fullWidth error={isGameExeError}>
+        <FormControl
+          component={motion.fieldset}
+          fullWidth
+          layout
+          layoutId="settings-game-game-type"
+          error={isGameExeError}
+        >
           <RadioGroup
             classes={{ row: 'justify-between' }}
             row
@@ -109,7 +119,7 @@ function SettingsGameSection() {
         </FormControl>
       </TutorialTooltip>
 
-      <div className="mt-3" id="settings-game-game-folder">
+      <motion.div className="mt-3" id="settings-game-game-folder" layout layoutId="settings-game-game-folder">
         <TextFieldDialog
           label={
             <>
@@ -135,9 +145,9 @@ function SettingsGameSection() {
           type="folder"
           error={isCheckConfQueryError(checkConf, Some(['gamePathDoesNotExist'] as const))}
         />
-      </div>
+      </motion.div>
 
-      <div className="mt-3" id="settings-game-compiler">
+      <motion.div className="mt-3" id="settings-game-compiler" layout>
         <TutorialTooltip
           title={t('common.settingsTutorial.settings.compiler')}
           step="settings-compiler"
@@ -168,18 +178,27 @@ function SettingsGameSection() {
             error={isCheckConfQueryError(checkConf, Some(['compilerPathDoesNotExist'] as const))}
           />
         </TutorialTooltip>
-      </div>
-      {isCheckConfQueryError(
-        checkConf,
-        Some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist'] as const),
-      ) && (
-        <Alert severity="error" className="mt-3 dark:bg-red-400/10">
-          {t<string>('common.confCheckError', {
-            context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
-            gameExe: toExecutable(conf.data.game.type),
-          })}
-        </Alert>
-      )}
+      </motion.div>
+      <AnimatePresence mode="popLayout">
+        {isCheckConfQueryError(
+          checkConf,
+          Some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist'] as const),
+        ) && (
+          <MotionAlert
+            key="error-alert"
+            severity="error"
+            className="mt-3 dark:bg-red-400/10"
+            {...exitAlertAnimate}
+            layout
+            layoutId="error-alert"
+          >
+            {t<string>('common.confCheckError', {
+              context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
+              gameExe: toExecutable(conf.data.game.type),
+            })}
+          </MotionAlert>
+        )}
+      </AnimatePresence>
     </SettingsSection>
   )
 }

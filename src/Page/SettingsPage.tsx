@@ -16,7 +16,9 @@ import SettingsTelemetrySection from 'App/Component/Settings/SettingsTelemetrySe
 import SettingsThemeSection from 'App/Component/Settings/SettingsThemeSection'
 import { useRefreshConf } from 'App/Hook/Conf/UseRefreshConf'
 import { useMatomo } from 'App/Hook/UseMatomo'
+import { enterPageAnimate } from 'App/Lib/Framer'
 import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
 
 function SettingsPage() {
   const { t } = useTranslation()
@@ -44,13 +46,13 @@ function SettingsPage() {
       </PageAppBar>
 
       <Page>
-        <section className="container mx-auto">
+        <motion.section className="container mx-auto" {...enterPageAnimate}>
           <SettingsGameSection />
           <SettingsCompilationSection />
           <SettingsMo2Section />
           <SettingsThemeSection />
           <SettingsTelemetrySection />
-        </section>
+        </motion.section>
       </Page>
     </div>
   )

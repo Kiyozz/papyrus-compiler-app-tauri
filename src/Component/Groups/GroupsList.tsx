@@ -11,10 +11,14 @@ import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
 import is from '@sindresorhus/is'
 import GroupsListItemSecondaryAction from 'App/Component/Groups/GroupsListItemSecondaryAction'
+import { exitAlertAnimate } from 'App/Lib/Framer'
 import { type GroupWithId } from 'App/Type/GroupWithId'
 import cx from 'classnames'
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { None, Some } from 'ts-results'
+
+const MotionPaper = motion(Paper)
 
 function GroupsList({
   groups,
@@ -32,41 +36,60 @@ function GroupsList({
   const { t } = useTranslation()
 
   return (
-    <List className={cx('flex flex-col gap-2', className)}>
-      {groups.map((group) => {
-        const secondaryText = (!isMoreDetails ? None : Some(group.scripts))
-          .andThen((scripts) => {
-            if (is.emptyArray(scripts)) {
-              return isMoreDetails ? Some(t('common.noScripts')) : None
-            }
+    <LayoutGroup>
+      <List className={cx('flex flex-col gap-2', className)}>
+        {groups.map((group) => {
+          const secondaryText = (!isMoreDetails ? None : Some(group.scripts))
+            .andThen((scripts) => {
+              if (is.emptyArray(scripts)) {
+                return isMoreDetails ? Some(t('common.noScripts')) : None
+              }
 
-            return Some(scripts.map((s) => s.name).join(', '))
-          })
-          .unwrapOr(undefined)
+              return Some(scripts.map((s) => s.name).join(', '))
+            })
+            .unwrapOr(undefined)
 
-        return (
-          <ListItem
-            className="py-4"
-            key={group.id}
-            component={Paper}
-            secondaryAction={
-              <GroupsListItemSecondaryAction
-                groupId={group.id}
-                onTryRemove={() => {
-                  onTryRemove(group)
+          return (
+            <ListItem
+              className="py-4"
+              key={group.id}
+              component={MotionPaper}
+              secondaryAction={
+                <GroupsListItemSecondaryAction
+                  groupId={group.id}
+                  onTryRemove={() => {
+                    onTryRemove(group)
+                  }}
+                  onClickEdit={() => {
+                    onClickEdit(group)
+                  }}
+                />
+              }
+              variant="outlined"
+              layout
+            >
+              <ListItemText
+                aria-label={group.name}
+                primary={group.name}
+                primaryTypographyProps={{
+                  component: motion.span,
+                  layout: true,
                 }}
-                onClickEdit={() => {
-                  onClickEdit(group)
-                }}
+                secondary={
+                  <AnimatePresence mode="popLayout">
+                    {secondaryText != null && (
+                      <motion.span layout {...exitAlertAnimate}>
+                        {secondaryText}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                }
               />
-            }
-            variant="outlined"
-          >
-            <ListItemText aria-label={group.name} primary={group.name} secondary={secondaryText} />
-          </ListItem>
-        )
-      })}
-    </List>
+            </ListItem>
+          )
+        })}
+      </List>
+    </LayoutGroup>
   )
 }
 

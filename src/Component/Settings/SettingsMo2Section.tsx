@@ -17,11 +17,16 @@ import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type CheckConfErrorTypes } from 'App/Lib/Conf/CheckConfTypes'
+import { exitAlertAnimate } from 'App/Lib/Framer'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { fromNullable } from 'App/Lib/TsResults'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { Some } from 'ts-results'
+
+const MotionAlert = motion(Alert)
+const MotionFormControlLabel = motion(FormControlLabel)
 
 function SettingsMo2Section() {
   const { t } = useTranslation()
@@ -44,7 +49,7 @@ function SettingsMo2Section() {
   return (
     <SettingsSection sectionTitle={t('page.settings.sections.mo2.title')} id="mo2-section" ref={refs['settings-mo2']}>
       <TutorialTooltip title={t('common.settingsTutorial.settings.mo2')} step="settings-mo2" placement="top-end">
-        <FormControlLabel
+        <MotionFormControlLabel
           control={
             <Checkbox
               checked={mo2Use}
@@ -68,34 +73,48 @@ function SettingsMo2Section() {
             />
           }
           label={<span className="dark:text-white">{t('common.activate')}</span>}
+          layout
         />
       </TutorialTooltip>
 
-      {mo2Use && (
-        <TextFieldDialog
-          className="mt-2"
-          defaultValue={mo2Instance ?? ''}
-          label={t('page.settings.sections.mo2.instance.label')}
-          type="folder"
-          onChange={(newPath) => {
-            updateConf.mutate({
-              mo2: {
-                instance: newPath,
-              },
-            })
-          }}
-          error={hasAnyMo2Error}
-        />
-      )}
-
-      {hasAnyMo2Error && (
-        <Alert severity="error" className="mt-3 dark:bg-red-400/10">
-          {t<string>('common.confCheckError', {
-            context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
-            gameExe: toExecutable(conf.data.game.type),
-          })}
-        </Alert>
-      )}
+      <AnimatePresence mode="popLayout">
+        {mo2Use && (
+          <TextFieldDialog
+            key="mo2-instance"
+            className="mt-2"
+            defaultValue={mo2Instance ?? ''}
+            label={t('page.settings.sections.mo2.instance.label')}
+            type="folder"
+            onChange={(newPath) => {
+              updateConf.mutate({
+                mo2: {
+                  instance: newPath,
+                },
+              })
+            }}
+            error={hasAnyMo2Error}
+            {...exitAlertAnimate}
+            layout
+            layoutId="mo2-instance"
+          />
+        )}
+        {hasAnyMo2Error && (
+          <MotionAlert
+            key="mo2-error"
+            severity="error"
+            className="mt-3 dark:bg-red-400/10"
+            transition={{ type: 'tween' }}
+            {...exitAlertAnimate}
+            layout
+            layoutId="mo2-error"
+          >
+            {t<string>('common.confCheckError', {
+              context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
+              gameExe: toExecutable(conf.data.game.type),
+            })}
+          </MotionAlert>
+        )}
+      </AnimatePresence>
     </SettingsSection>
   )
 }

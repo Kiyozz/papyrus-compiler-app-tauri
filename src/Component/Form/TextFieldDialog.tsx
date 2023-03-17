@@ -7,19 +7,22 @@
 
 import is from '@sindresorhus/is'
 import { open as openDialog } from '@tauri-apps/api/dialog'
-import FormControl, { type FormControlProps } from '@mui/material/FormControl'
+import FormControl from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput, { type OutlinedInputProps } from '@mui/material/OutlinedInput'
-import React, { forwardRef, type ReactNode, useState } from 'react'
+import { motion } from 'framer-motion'
+import React, { type ComponentProps, forwardRef, type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import FolderIcon from '@mui/icons-material/Folder'
 
+const MotionFormControl = motion(FormControl)
+
 const TextFieldDialog = forwardRef<
   HTMLDivElement,
-  Omit<FormControlProps, 'onChange' | 'ref'> & {
+  Omit<ComponentProps<typeof MotionFormControl>, 'onChange' | 'ref'> & {
     label: ReactNode
     defaultValue: string
     outlinedInputProps?: OutlinedInputProps
@@ -53,7 +56,7 @@ const TextFieldDialog = forwardRef<
   }
 
   return (
-    <FormControl fullWidth variant="outlined" {...props} ref={ref}>
+    <MotionFormControl fullWidth variant="outlined" {...props} ref={ref}>
       <InputLabel className="flex items-center" htmlFor={outlinedInputProps?.id}>
         {label}
       </InputLabel>
@@ -90,7 +93,7 @@ const TextFieldDialog = forwardRef<
         value={value}
         {...outlinedInputProps}
       />
-    </FormControl>
+    </MotionFormControl>
   )
 })
 
