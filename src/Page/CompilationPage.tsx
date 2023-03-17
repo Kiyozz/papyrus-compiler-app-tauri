@@ -174,7 +174,6 @@ function CompilationPage() {
                 </TutorialTooltip>
               </div>
               <FileScriptsList<FileScriptCompilation>
-                animate
                 scripts={scripts}
                 onRemove={(scriptToRemove) => {
                   removeCompilationLog(scriptToRemove)

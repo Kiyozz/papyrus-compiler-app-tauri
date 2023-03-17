@@ -31,7 +31,6 @@ function FileScriptsList<T extends FileScript>({
   onClickOnError,
   disabled = false,
   className,
-  animate = false,
 }: {
   scripts: T[]
   onRemove: (script: T) => void
@@ -39,7 +38,6 @@ function FileScriptsList<T extends FileScript>({
   onClickOnError?: (script: T) => void
   disabled?: boolean
   className?: string
-  animate?: boolean
 }) {
   const { t } = useTranslation()
   const { refs } = useSettingsTutorial()
@@ -50,36 +48,16 @@ function FileScriptsList<T extends FileScript>({
       step="compilation-compile"
       ref={refs['compilation-compile']}
     >
-      <List
-        className={cx('', className)}
-        component={motion.div}
-        variants={{
-          enter: {
-            transition: {
-              ease: 'easeInOut',
-            },
-            opacity: 1,
-            y: 0,
-          },
-        }}
-        animate={animate ? 'enter' : undefined}
-      >
+      <List className={cx('', className)} key="list">
         {scripts.map((script) => {
           return (
             <ListItem
               key={script.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: 'spring' }}
               component={MotionPaper}
               className="mt-0.5 [&:first-child]:mt-0"
-              variants={{
-                enter: {
-                  opacity: 1,
-                  y: 0,
-                },
-              }}
-              initial={{
-                opacity: 0,
-                y: -10,
-              }}
               secondaryAction={
                 <IconButton
                   aria-disabled={isFileScriptCompilation(script) ? isRunning(script) || isBusy(script) : false}

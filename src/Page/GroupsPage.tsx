@@ -25,7 +25,7 @@ import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { createLogs } from 'App/Lib/CreateLog'
-import { enterPageAnimate } from 'App/Lib/Framer'
+import { enterPageAnimate, fadeAnimate } from 'App/Lib/Framer'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { fromNullable } from 'App/Lib/TsResults'
 import { type GroupWithId } from 'App/Type/GroupWithId'
@@ -208,7 +208,7 @@ function GroupsPage() {
       <Page className="pt-0">
         <AnimatePresence>
           {groups.isLoading && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div {...fadeAnimate}>
               <CircularProgress className="mt-6" variant="indeterminate" />
             </motion.div>
           )}

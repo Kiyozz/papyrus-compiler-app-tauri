@@ -5,7 +5,6 @@
  *
  */
 
-import Fade from '@mui/material/Fade'
 import CompilationLogsDialog from 'App/Component/Dialog/CompilationLogsDialog'
 import OpenDocumentationDialog from 'App/Component/Dialog/OpenDocumentationDialog'
 import TelemetryDialog from 'App/Component/Dialog/TelemetryDialog'
@@ -16,6 +15,8 @@ import { useConf } from 'App/Hook/Conf/UseConf'
 import { useListenConfReset } from 'App/Hook/UseListenConfReset'
 import { useRootTheme } from 'App/Hook/UseRootTheme'
 import SettingsTutorialProvider from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { fadeAnimate } from 'App/Lib/Framer'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Outlet } from 'react-router-dom'
 
 function App() {
@@ -26,23 +27,26 @@ function App() {
 
   return (
     <>
-      <Fade in={isLoading} timeout={{ enter: 3000, exit: 0 }} unmountOnExit>
-        <div>Loading configuration...</div>
-      </Fade>
-      <Fade in={!isLoading}>
-        <div>
-          <SettingsTutorialProvider>
-            <AppDrawer />
-            <CompilationLogsDialog />
-            <OpenDocumentationDialog />
-            <LatestVersionSnackbar />
-            <SettingsTutorial />
-            <TelemetryDialog />
+      <AnimatePresence>
+        {isLoading ? (
+          <motion.div {...fadeAnimate} transition={{ delay: 0.3 }}>
+            Loading configuration...
+          </motion.div>
+        ) : (
+          <motion.div layoutScroll {...fadeAnimate}>
+            <SettingsTutorialProvider>
+              <AppDrawer />
+              <CompilationLogsDialog />
+              <OpenDocumentationDialog />
+              <LatestVersionSnackbar />
+              <SettingsTutorial />
+              <TelemetryDialog />
 
-            <Outlet />
-          </SettingsTutorialProvider>
-        </div>
-      </Fade>
+              <Outlet />
+            </SettingsTutorialProvider>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }
