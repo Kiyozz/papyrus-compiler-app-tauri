@@ -27,3 +27,10 @@ export const fadeAnimate: AnimationProps = {
   exit: { opacity: 0 },
   transition: { type: 'tween' },
 }
+
+export function withDelay(delay: number, props: AnimationProps): AnimationProps {
+  return {
+    ...props,
+    transition: { ...props.transition, delay },
+  }
+}

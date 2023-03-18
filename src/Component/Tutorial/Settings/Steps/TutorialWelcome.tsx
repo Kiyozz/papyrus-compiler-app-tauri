@@ -7,17 +7,20 @@
 
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser'
 import Button from '@mui/material/Button'
-import Fade from '@mui/material/Fade'
 import Typography from '@mui/material/Typography'
 import AnchorExternal, { type AnchorExternalProps } from 'App/Component/AnchorExternal'
+import AnimateAppLogo from 'App/Component/AnimateAppLogo'
 import TutorialContent from 'App/Component/Tutorial/Settings/TutorialContent'
 import useDocumentationUrl from 'App/Hook/UseDocumentationUrl'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { useState } from 'react'
+import { enterPageAnimate, withDelay } from 'App/Lib/Framer'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { useTimeout } from 'usehooks-ts'
+
+const MotionTypography = motion(Typography)
+const MotionButton = motion(Button)
 
 const AnchorWithOpenInBrowser = ({ children, ...props }: AnchorExternalProps) => {
   return (
@@ -31,59 +34,64 @@ const AnchorWithOpenInBrowser = ({ children, ...props }: AnchorExternalProps) =>
 const TutorialWelcome = () => {
   const { changeStep, skip } = useSettingsTutorial()
   const { trackEvent } = useMatomo()
-  const [waiting, setWaiting] = useState(true)
   const documentationUrl = useDocumentationUrl()
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  useTimeout(() => {
-    setWaiting(false)
-  }, 500)
-
   return (
     <TutorialContent>
-      <Fade in={!documentationUrl.isLoading}>
-        <div className="container mx-auto flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center">
-          <Typography variant="h4" gutterBottom className="font-normal">
-            {t('common.settingsTutorial.welcome.title')}
-          </Typography>
-          <Typography gutterBottom className="font-normal">
-            {t('common.settingsTutorial.welcome.firstStartText')}
-          </Typography>
-          <Fade in={documentationUrl.isSuccess}>
-            <Typography className="font-bold">
-              <Trans i18nKey="common.settingsTutorial.welcome.documentationText">
-                <AnchorWithOpenInBrowser href={documentationUrl?.data ?? ''} />
-              </Trans>
-            </Typography>
-          </Fade>
-          <div className="mt-12 flex gap-2">
-            <Button
-              disabled={waiting}
-              variant="contained"
-              onClick={() => {
-                navigate('/settings')
-                changeStep('settings-game')
-                trackEvent({
-                  category: 'Settings tutorial',
-                  action: 'Start',
-                })
-              }}
-            >
-              {t('common.settingsTutorial.welcome.needHelpText')}
-            </Button>
-            <Button
-              disabled={waiting}
-              color="inherit"
-              onClick={() => {
-                skip('deny')
-              }}
-            >
-              {t('common.close')}
-            </Button>
-          </div>
-        </div>
-      </Fade>
+      <AnimatePresence>
+        {!documentationUrl.isLoading && (
+          <motion.div
+            className="container mx-auto flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center"
+            {...enterPageAnimate}
+          >
+            <div className="text-9xl">
+              <AnimateAppLogo animate withText />
+            </div>
+            <MotionTypography variant="h4" gutterBottom className="font-normal" {...withDelay(1.4, enterPageAnimate)}>
+              {t('common.settingsTutorial.welcome.title')}
+            </MotionTypography>
+            <MotionTypography gutterBottom className="font-normal" {...withDelay(1.75, enterPageAnimate)}>
+              {t('common.settingsTutorial.welcome.firstStartText')}
+            </MotionTypography>
+            <AnimatePresence>
+              {documentationUrl.isSuccess && (
+                <MotionTypography className="font-bold" {...withDelay(1.75, enterPageAnimate)}>
+                  <Trans i18nKey="common.settingsTutorial.welcome.documentationText">
+                    <AnchorWithOpenInBrowser href={documentationUrl.data} />
+                  </Trans>
+                </MotionTypography>
+              )}
+            </AnimatePresence>
+            <div className="mt-12 flex gap-2">
+              <MotionButton
+                variant="contained"
+                onClick={() => {
+                  navigate('/settings')
+                  changeStep('settings-game')
+                  trackEvent({
+                    category: 'Settings tutorial',
+                    action: 'Start',
+                  })
+                }}
+                {...withDelay(2.75, enterPageAnimate)}
+              >
+                {t('common.settingsTutorial.welcome.needHelpText')}
+              </MotionButton>
+              <MotionButton
+                color="inherit"
+                onClick={() => {
+                  skip('deny')
+                }}
+                {...withDelay(2.75, enterPageAnimate)}
+              >
+                {t('common.close')}
+              </MotionButton>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </TutorialContent>
   )
 }

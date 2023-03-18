@@ -206,53 +206,55 @@ function GroupsPage() {
       </PageAppBar>
 
       <Page className="pt-0">
-        <AnimatePresence>
-          {groups.isLoading && (
-            <motion.div {...fadeAnimate}>
-              <CircularProgress className="mt-6" variant="indeterminate" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {groups.isSuccess && (
-            <motion.div className="h-full w-full justify-center gap-4 text-lg" {...enterPageAnimate}>
-              {Object.keys(groups.data).length === 0 && (
-                <Typography gutterBottom variant="h6" className="pt-6">
-                  {t('page.groups.createGroupText')}
-                </Typography>
-              )}
-              {groupsAsArray
-                .map((groups) => {
-                  /* eslint-disable react/jsx-key */
-                  if (is.emptyArray(groups)) {
-                    return <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>
-                  }
+        <div className="container mx-auto">
+          <AnimatePresence>
+            {groups.isLoading && (
+              <motion.div {...fadeAnimate}>
+                <CircularProgress className="mt-6" variant="indeterminate" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {groups.isSuccess && (
+              <motion.div className="h-full w-full justify-center gap-4 text-lg" {...enterPageAnimate}>
+                {Object.keys(groups.data).length === 0 && (
+                  <Typography gutterBottom variant="h6" className="pt-6">
+                    {t('page.groups.createGroupText')}
+                  </Typography>
+                )}
+                {groupsAsArray
+                  .map((groups) => {
+                    /* eslint-disable react/jsx-key */
+                    if (is.emptyArray(groups)) {
+                      return <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>
+                    }
 
-                  return (
-                    <>
-                      <Toolbar className="p-0">
-                        <GroupMoreDetailsCheckbox
-                          className="ml-auto"
-                          checked={isMoreDetails}
-                          onChange={(checked) => {
-                            setMoreDetails(checked)
-                          }}
+                    return (
+                      <>
+                        <Toolbar className="p-0">
+                          <GroupMoreDetailsCheckbox
+                            className="ml-auto"
+                            checked={isMoreDetails}
+                            onChange={(checked) => {
+                              setMoreDetails(checked)
+                            }}
+                          />
+                        </Toolbar>
+                        <GroupsList
+                          groups={groups}
+                          isMoreDetails={isMoreDetails}
+                          onTryRemove={openRemoveGroupDialog}
+                          onClickEdit={openEditGroupDialog}
                         />
-                      </Toolbar>
-                      <GroupsList
-                        groups={groups}
-                        isMoreDetails={isMoreDetails}
-                        onTryRemove={openRemoveGroupDialog}
-                        onClickEdit={openEditGroupDialog}
-                      />
-                    </>
-                  )
-                  /* eslint-enable react/jsx-key */
-                })
-                .unwrapOr(null)}
-            </motion.div>
-          )}
-        </AnimatePresence>
+                      </>
+                    )
+                    /* eslint-enable react/jsx-key */
+                  })
+                  .unwrapOr(null)}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </Page>
     </>
   )

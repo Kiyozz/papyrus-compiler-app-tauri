@@ -125,95 +125,97 @@ function CompilationPage() {
       </PageAppBar>
 
       <Page className="flex flex-col">
-        <AnimatePresence mode="wait">
-          {scripts.length > 0 ? (
-            <motion.div key="file-list">
-              <div className="mb-4 flex gap-2">
-                <StartCompilationButton
-                  onCompilationStart={async () => {
+        <div className="container mx-auto flex w-full grow flex-col">
+          <AnimatePresence mode="wait">
+            {scripts.length > 0 ? (
+              <motion.div key="file-list">
+                <div className="mb-4 flex gap-2">
+                  <StartCompilationButton
+                    onCompilationStart={async () => {
+                      trackEvent({
+                        category: 'Compilation',
+                        action: 'Start',
+                        name: 'All scripts',
+                      })
+
+                      logs.trace('start compilation for all remaining scripts')()
+
+                      const scriptsToCompile = scripts.filter((script) => !isRunning(script) && !isBusy(script))
+
+                      scriptsToCompile.forEach(removeCompilationLog)
+                      await compile(scriptsToCompile)
+                    }}
+                    disabled={isAllScriptsRunningOrBusy || isCheckConfQueryError(checkConf)}
+                  />
+
+                  <Button
+                    disabled={isAllScriptsRunningOrBusy}
+                    onClick={() => {
+                      clearScripts()
+                      clearCompilationLogs()
+                      logs.trace('clear scripts and compilation logs')()
+                      trackEvent({
+                        category: 'Compilation',
+                        action: 'Clear',
+                      })
+                    }}
+                    startIcon={<ClearIcon />}
+                    color="inherit"
+                  >
+                    {t('common.clear')}
+                  </Button>
+
+                  <TutorialTooltip
+                    title={t('common.settingsTutorial.compilation.createGroupFromScriptsList')}
+                    step="compilation-create-group-from-scripts-list"
+                    placement="left-start"
+                    ref={refs['compilation-create-group-from-scripts-list']}
+                  >
+                    <CreateGroupFromScriptsButton className="ml-auto" scripts={scripts} />
+                  </TutorialTooltip>
+                </div>
+                <FileScriptsList<FileScriptCompilation>
+                  scripts={scripts}
+                  onRemove={(scriptToRemove) => {
+                    removeCompilationLog(scriptToRemove)
+                    removeScripts([scriptToRemove])
+                    logs.trace('remove script', scriptToRemove)()
+                  }}
+                  onStart={async (scriptToStart) => {
+                    logs.trace('start compile single script', scriptToStart)()
+                    removeCompilationLog(scriptToStart)
+                    await compile([scriptToStart])
+
                     trackEvent({
                       category: 'Compilation',
                       action: 'Start',
-                      name: 'All scripts',
+                      name: 'Row',
                     })
-
-                    logs.trace('start compilation for all remaining scripts')()
-
-                    const scriptsToCompile = scripts.filter((script) => !isRunning(script) && !isBusy(script))
-
-                    scriptsToCompile.forEach(removeCompilationLog)
-                    await compile(scriptsToCompile)
                   }}
-                  disabled={isAllScriptsRunningOrBusy || isCheckConfQueryError(checkConf)}
-                />
+                  onClickOnError={() => {
+                    setCompilationLogsDialogOpen(true)
 
-                <Button
-                  disabled={isAllScriptsRunningOrBusy}
-                  onClick={() => {
-                    clearScripts()
-                    clearCompilationLogs()
-                    logs.trace('clear scripts and compilation logs')()
                     trackEvent({
                       category: 'Compilation',
-                      action: 'Clear',
+                      action: 'Show error',
+                      name: 'Row',
                     })
                   }}
-                  startIcon={<ClearIcon />}
-                  color="inherit"
-                >
-                  {t('common.clear')}
-                </Button>
-
-                <TutorialTooltip
-                  title={t('common.settingsTutorial.compilation.createGroupFromScriptsList')}
-                  step="compilation-create-group-from-scripts-list"
-                  placement="left-start"
-                  ref={refs['compilation-create-group-from-scripts-list']}
-                >
-                  <CreateGroupFromScriptsButton className="ml-auto" scripts={scripts} />
-                </TutorialTooltip>
-              </div>
-              <FileScriptsList<FileScriptCompilation>
-                scripts={scripts}
-                onRemove={(scriptToRemove) => {
-                  removeCompilationLog(scriptToRemove)
-                  removeScripts([scriptToRemove])
-                  logs.trace('remove script', scriptToRemove)()
-                }}
-                onStart={async (scriptToStart) => {
-                  logs.trace('start compile single script', scriptToStart)()
-                  removeCompilationLog(scriptToStart)
-                  await compile([scriptToStart])
-
-                  trackEvent({
-                    category: 'Compilation',
-                    action: 'Start',
-                    name: 'Row',
-                  })
-                }}
-                onClickOnError={() => {
-                  setCompilationLogsDialogOpen(true)
-
-                  trackEvent({
-                    category: 'Compilation',
-                    action: 'Show error',
-                    name: 'Row',
-                  })
-                }}
-                disabled={isCheckConfQueryError(checkConf)}
-              />
-            </motion.div>
-          ) : (
-            <motion.div className="m-auto text-center" key="page-description" {...enterPageAnimate}>
-              <Typography variant="h5">
-                <span>{t('page.compilation.dragAndDropText')}</span>
-              </Typography>
-              <Tooltip title={t('page.compilation.dragAndDropAdmin')}>
-                <HelpIcon className="mt-3" />
-              </Tooltip>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  disabled={isCheckConfQueryError(checkConf)}
+                />
+              </motion.div>
+            ) : (
+              <motion.div className="m-auto text-center" key="page-description" {...enterPageAnimate}>
+                <Typography variant="h5">
+                  <span>{t('page.compilation.dragAndDropText')}</span>
+                </Typography>
+                <Tooltip title={t('page.compilation.dragAndDropAdmin')}>
+                  <HelpIcon className="mt-3" />
+                </Tooltip>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </Page>
 
       <Snackbar open={isCheckConfQueryError(checkConf)} sx={{ zIndex: 30 }}>

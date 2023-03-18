@@ -84,7 +84,7 @@ const fr: TranslationSchema = {
         addScripts: 'Ajouter des scripts',
         compile:
           "Liste des scripts à compiler. Vous pourrez créer des groupes afin d'y ajouter un ensemble de scripts rapidement.",
-        createGroupFromScriptsList: 'Créer un groupe depuis la liste des scripts actuelle',
+        createGroupFromScriptsList: 'Créer un groupe depuis la liste des scripts actuelle.',
       },
       groups: {
         whatAreGroups: "Qu'est-ce qu'un groupe ?",
