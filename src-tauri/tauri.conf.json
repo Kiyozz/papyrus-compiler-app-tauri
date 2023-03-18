@@ -20,7 +20,7 @@
       },
       "shell": {
         "execute": true,
-        "open": "(com\\.kiyozz\\.pca[\/].*(conf\\.json|pca\\.log|pca_previous\\.log)$|https:\/\/github\\.com\/Kiyozz\/papyrus-compiler-app|https:\/\/nexusmods\\.com)"
+        "open": "(com\\.kiyozz\\.pca[\/].*(conf\\.json|pca\\.log|pca_previous\\.log)$|https:\/\/github\\.com\/Kiyozz\/papyrus-compiler-app|https:\/\/nexusmods\\.com|http:\/\/localhost:3001)"
       },
       "http": {
         "request": true,
