@@ -24,7 +24,7 @@ const LatestVersionSnackbar = () => {
   const latestVersion = useLatestVersion({
     retry: 1,
     onSuccess: (data) => {
-      if (version.data === undefined) return
+      if (version.data === undefined || !data.ok) return
 
       setSnackOpen(!isNewerVersion(version.data, data.data.tag_name) || manualUpdateCheck)
     },
