@@ -8,7 +8,9 @@
 use log::{debug, error, info};
 use regex::Regex;
 use std::process::{Command, Stdio};
+#[cfg(debug_assertions)]
 use std::thread::sleep;
+#[cfg(debug_assertions)]
 use std::time::Duration;
 
 macro_rules! compile_brand {

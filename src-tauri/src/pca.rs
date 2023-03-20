@@ -13,6 +13,7 @@ pub mod glob;
 pub mod logs;
 pub mod menu;
 pub mod path;
+pub mod window_state_plugin;
 
 macro_rules! brand {
     ($from:expr, $text:expr) => {
