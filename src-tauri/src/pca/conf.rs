@@ -37,7 +37,7 @@ impl Default for Conf {
 
         Conf {
             game: Game {
-                type_field: "Skyrim SE".to_string(),
+                type_field: "Skyrim SE/AE".to_string(),
                 path: "".to_string(),
             },
             compilation: Compilation {

@@ -48,7 +48,7 @@ export type Flag = z.infer<typeof FlagZod>
 
 export const GameTypeZod = z.union([
   z.literal('Skyrim LE'),
-  z.literal('Skyrim SE'),
+  z.literal('Skyrim SE/AE'),
   z.literal('Skyrim VR'),
   z.literal('Fallout 4'),
 ])

@@ -40,7 +40,7 @@ const defaultOptions: ConfOptions<Conf> = {
   confName: confFileName,
   defaults: {
     game: {
-      type: 'Skyrim SE',
+      type: 'Skyrim SE/AE',
       path: '',
     },
     compilation: {

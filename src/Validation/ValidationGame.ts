@@ -14,7 +14,7 @@ export function validationGameType(gameType: unknown): gameType is GameType {
   if (is.string(gameType)) {
     switch (gameType) {
       case 'Skyrim LE':
-      case 'Skyrim SE':
+      case 'Skyrim SE/AE':
       case 'Skyrim VR':
       case 'Fallout 4':
         return true

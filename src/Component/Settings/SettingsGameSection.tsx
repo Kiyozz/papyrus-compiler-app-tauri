@@ -45,7 +45,7 @@ function SettingsGameSection() {
       label: t('page.settings.sections.game.games.le'),
     },
     {
-      value: 'Skyrim SE',
+      value: 'Skyrim SE/AE',
       label: t('page.settings.sections.game.games.se'),
     },
     {
@@ -184,20 +184,20 @@ function SettingsGameSection() {
           checkConf,
           Some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist'] as const),
         ) && (
-          <MotionAlert
-            key="error-alert"
-            severity="error"
-            className="mt-3 dark:bg-red-400/10"
-            {...exitAlertAnimate}
-            layout
-            layoutId="error-alert"
-          >
-            {t<string>('common.confCheckError', {
-              context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
-              gameExe: toExecutable(conf.data.game.type),
-            })}
-          </MotionAlert>
-        )}
+            <MotionAlert
+              key="error-alert"
+              severity="error"
+              className="mt-3 dark:bg-red-400/10"
+              {...exitAlertAnimate}
+              layout
+              layoutId="error-alert"
+            >
+              {t<string>('common.confCheckError', {
+                context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
+                gameExe: toExecutable(conf.data.game.type),
+              })}
+            </MotionAlert>
+          )}
       </AnimatePresence>
     </SettingsSection>
   )

@@ -19,7 +19,9 @@ import LogItem from 'App/Component/Dialog/CompilationLogs/LogItem'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSnackbar } from 'App/Hook/UseSnackbar'
+import { enterPageAnimate } from 'App/Lib/Framer'
 import cx from 'classnames'
+import { AnimatePresence, motion } from 'framer-motion'
 import { type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -69,31 +71,33 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
             {t('common.clear')}
           </Button>
         </Toolbar>
-        <DialogContent
-          className={cx('flex flex-col gap-4', hasNoLogs && 'items-center justify-center')}
-          dividers
-          id="logs-content"
-        >
-          {hasNoLogs ? (
-            <Typography component="span" variant="h5">
-              {t('dialog.logs.noLogs')}
-            </Typography>
-          ) : (
-            logs.map((log) => (
-              <LogItem
-                key={log.script.id}
-                log={log}
-                onClickCopy={(res) => {
-                  if (res.err) {
-                    console.error(res.val)
-                    errorCopy(res.val)
-                  } else {
-                    successCopy()
-                  }
-                }}
-              />
-            ))
-          )}
+        <DialogContent className={cx('flex flex-col gap-4')} dividers id="logs-content">
+          <AnimatePresence mode="wait">
+            {hasNoLogs ? (
+              <motion.div key="no-logs" className="flex grow items-center justify-center" {...enterPageAnimate}>
+                <Typography key="no-logs" variant="h5">
+                  {t('dialog.logs.noLogs')}
+                </Typography>
+              </motion.div>
+            ) : (
+              <motion.div key="logs-list" className="flex flex-col gap-4" {...enterPageAnimate}>
+                {logs.map((log) => (
+                  <LogItem
+                    key={log.script.id}
+                    log={log}
+                    onClickCopy={(res) => {
+                      if (res.err) {
+                        console.error(res.val)
+                        errorCopy(res.val)
+                      } else {
+                        successCopy()
+                      }
+                    }}
+                  />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </DialogContent>
         <DialogActions>
           <Button

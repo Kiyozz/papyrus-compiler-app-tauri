@@ -128,7 +128,7 @@ function CompilationPage() {
         <div className="container mx-auto flex w-full grow flex-col">
           <AnimatePresence mode="wait">
             {scripts.length > 0 ? (
-              <motion.div key="file-list">
+              <motion.div key="file-list" {...enterPageAnimate}>
                 <div className="mb-4 flex gap-2">
                   <StartCompilationButton
                     onCompilationStart={async () => {

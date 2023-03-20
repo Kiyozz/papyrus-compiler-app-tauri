@@ -18,6 +18,7 @@ mod pca;
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .menu(pca::menu::create_menu())
         .setup(|app| {
             let path_resolver = app.path_resolver();

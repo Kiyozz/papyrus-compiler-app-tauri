@@ -12,7 +12,7 @@ import { match } from 'ts-pattern'
 export const toExecutable = (game: GameType): GameExecutable =>
   match(game)
     .with('Skyrim LE', () => 'TESV.exe' as const)
-    .with('Skyrim SE', () => 'SkyrimSE.exe' as const)
+    .with('Skyrim SE/AE', () => 'SkyrimSE.exe' as const)
     .with('Skyrim VR', () => 'SkyrimVR.exe' as const)
     .with('Fallout 4', () => 'Fallout4.exe' as const)
     .exhaustive()

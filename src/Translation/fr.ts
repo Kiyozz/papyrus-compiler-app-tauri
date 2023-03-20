@@ -161,7 +161,7 @@ const fr: TranslationSchema = {
           title: 'Jeu',
           games: {
             le: 'Skyrim LE',
-            se: 'Skyrim SE',
+            se: 'Skyrim SE/AE',
             vr: 'Skyrim VR',
             fo4: 'Fallout 4',
           },

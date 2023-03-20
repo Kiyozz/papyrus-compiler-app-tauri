@@ -12,6 +12,6 @@ import { match, P } from 'ts-pattern'
 export const toOtherSource = (game: GameType): GameSource => {
   return match(game)
     .with(P.union('Skyrim LE', 'Fallout 4'), () => 'Source/Scripts' as const)
-    .with(P.union('Skyrim SE', 'Skyrim VR'), () => 'Scripts/Source' as const)
+    .with(P.union('Skyrim SE/AE', 'Skyrim VR'), () => 'Scripts/Source' as const)
     .exhaustive()
 }
