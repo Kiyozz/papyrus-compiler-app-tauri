@@ -81,7 +81,7 @@ function GroupsPage() {
     const scripts = fromNullable(location.state as { scripts: FileScript[] }).map(({ scripts }) => scripts)
 
     if (scripts.some) {
-      logs.debug('add group from compilation page scripts list')()
+      logs.debug('add group from compilation page scripts list')
       openAddGroupDialog(scripts.val)
     }
   })
@@ -90,7 +90,7 @@ function GroupsPage() {
     closeAddGroupDialog()
     closeRemoveGroupDialog()
     closeEditGroupDialog()
-    logs.trace('closeDialogs')()
+    logs.trace('closeDialogs')
   }
 
   const groupsAsArray = groups.isSuccess ? Some(groupRecordToArray(groups.data)) : None
@@ -107,7 +107,7 @@ function GroupsPage() {
             })
 
             if (res.err) {
-              logs.error('cannot remove group', res.val)()
+              logs.error('cannot remove group', res.val)
 
               console.error(res.val)
             }
@@ -126,7 +126,7 @@ function GroupsPage() {
             defaultScripts={addGroupDefaultScripts}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
-              logs.debug('add group', name)()
+              logs.debug('add group', name)
 
               await updateGroups.mutateAsync({
                 [v4()]: {
@@ -154,7 +154,7 @@ function GroupsPage() {
             group={groupToEdit}
             onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
-              logs.debug('edit group', name)()
+              logs.debug('edit group', name)
 
               if (groupToEdit.some) {
                 const res = await Result.wrapAsync(async () => {
@@ -171,7 +171,7 @@ function GroupsPage() {
                 })
 
                 if (res.err) {
-                  logs.error('cannot edit group', res.val)()
+                  logs.error('cannot edit group', res.val)
 
                   console.error(res.val)
                 }

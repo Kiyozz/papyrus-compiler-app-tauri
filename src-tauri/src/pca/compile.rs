@@ -17,6 +17,9 @@ macro_rules! compile_brand {
     };
 }
 
+/// Construct the command line to compile a psc script.
+///
+/// Get the PapyrusCompiler path with args and script name and produce a .pex file.
 #[tauri::command]
 pub async fn compile_script(
     compiler_path: &str,
@@ -78,6 +81,7 @@ fn get_final_output(
     }
 }
 
+/// Remove useless strings from the PapyrusCompiler command's output.
 fn clean_output(output: &str, script_name: &str) -> Result<String, regex::Error> {
     let papyrus_compiler_version_regex =
         Regex::new(r"Papyrus Compiler Version .* for (Fallout 4|Skyrim)")?;

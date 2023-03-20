@@ -18,12 +18,12 @@ export const useRemoveGroup = (
 
   return useMutation({
     mutationFn: async (groupId) => {
-      logs.debug('remove group', groupId)()
+      logs.debug('remove group', groupId)
 
       const res = await removeDefaultGroup(groupId)
 
       if (res.err) {
-        logs.error('error remove group', res.val)()
+        logs.error('error remove group', res.val)
 
         throw res.val
       }

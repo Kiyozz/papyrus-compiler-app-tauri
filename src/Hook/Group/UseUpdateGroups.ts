@@ -18,12 +18,12 @@ export const useUpdateGroups = (
 
   return useMutation({
     mutationFn: async (partialGroups) => {
-      logs.debug('update groups', partialGroups)()
+      logs.debug('update groups', partialGroups)
 
       const res = await writeDefaultGroups(partialGroups)
 
       if (res.err) {
-        logs.error('error update groups', res.val)()
+        logs.error('error update groups', res.val)
 
         throw res.val
       }

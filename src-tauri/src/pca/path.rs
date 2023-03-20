@@ -9,6 +9,9 @@ use glob::{glob_with, MatchOptions};
 use log::{debug, trace};
 use std::path::Path;
 
+/// Check that the path exists in the system.
+///
+/// Used by Webview.
 #[tauri::command]
 pub fn path_exists(path: &str, from: Option<&str>) -> bool {
     debug!("{} {}", super::brand!(from, "path_exists"), path);
@@ -16,6 +19,9 @@ pub fn path_exists(path: &str, from: Option<&str>) -> bool {
     Path::new(path).exists()
 }
 
+/// Check that the path is a file in the system.
+///
+/// Used by Webview.
 #[tauri::command]
 pub fn is_file(path: &str, from: Option<&str>) -> bool {
     debug!("{} {}", super::brand!(from, "is_file"), path);
@@ -23,6 +29,9 @@ pub fn is_file(path: &str, from: Option<&str>) -> bool {
     Path::new(path).is_file()
 }
 
+/// Check that a list of paths exists in the system.
+///
+/// Used by Webview.
 #[tauri::command]
 pub fn paths_exists(paths: Vec<&str>, from: Option<&str>) -> bool {
     debug!("{} {:?}", super::brand!(from, "paths_exists"), paths);
@@ -30,6 +39,9 @@ pub fn paths_exists(paths: Vec<&str>, from: Option<&str>) -> bool {
     paths.iter().map(|path| Path::new(path).exists()).all(|x| x)
 }
 
+/// Get a list of scripts file (`.psc`) in the system by a regex pattern using glob package.
+///
+/// Used by Webview.
 #[tauri::command]
 pub fn get_scripts_in_paths(
     patterns: Vec<&str>,

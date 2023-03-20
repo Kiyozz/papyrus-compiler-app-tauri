@@ -18,12 +18,12 @@ export const useRecentScripts = (options: UseQueryOptions<FileScript[]> = {}) =>
   return useQuery({
     queryKey: ['recentScripts'],
     queryFn: async () => {
-      logs.debug('read recent scripts')()
+      logs.debug('read recent scripts')
 
       const res = await readRecentScripts()
 
       if (res.err) {
-        logs.error('error read recent scripts', res.val)()
+        logs.error('error read recent scripts', res.val)
 
         throw res.val
       }

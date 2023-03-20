@@ -16,12 +16,12 @@ export const useGroups = (options: UseQueryOptions<Groups> = {}) => {
   return useQuery({
     queryKey: ['groups'],
     queryFn: async () => {
-      logs.debug('read groups')()
+      logs.debug('read groups')
 
       const res = await readGroups()
 
       if (res.err) {
-        logs.error('error read groups', res.val)()
+        logs.error('error read groups', res.val)
 
         throw res.val
       }

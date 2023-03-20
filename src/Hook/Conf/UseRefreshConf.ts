@@ -15,7 +15,7 @@ export const useRefreshConf = () => {
   const queryClient = useQueryClient()
 
   return useCallback(async () => {
-    logs.debug('refreshing conf')()
+    logs.debug('refreshing conf')
 
     await queryClient.invalidateQueries({
       queryKey: ['conf'],

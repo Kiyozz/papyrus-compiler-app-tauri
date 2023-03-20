@@ -74,7 +74,7 @@ function CompilationPage() {
           const files = pathsToFileScriptAndFilterPscFile(paths)
           const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
           addScripts(scriptsCompilation)
-          logs.log('add scripts from recent scripts')()
+          logs.log('add scripts from recent scripts')
           setRecentFilesDialogOpen(false)
         }}
       />
@@ -98,7 +98,7 @@ function CompilationPage() {
             onFileSelect={(files, reason) => {
               const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
               addScripts(scriptsCompilation)
-              logs.log('add scripts from file select')()
+              logs.log('add scripts from file select')
               trackEvent({ category: 'Compilation', action: 'Add scripts', name: reason })
             }}
           >
@@ -115,7 +115,7 @@ function CompilationPage() {
               const files = pathsToFileScriptAndFilterPscFile(paths)
               const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
               addScripts(scriptsCompilation)
-              logs.log('add scripts from group')()
+              logs.log('add scripts from group')
               trackEvent({ category: 'Compilation', action: 'Add scripts', name: 'Group' })
             }}
           >
@@ -138,7 +138,7 @@ function CompilationPage() {
                         name: 'All scripts',
                       })
 
-                      logs.trace('start compilation for all remaining scripts')()
+                      logs.trace('start compilation for all remaining scripts')
 
                       const scriptsToCompile = scripts.filter((script) => !isRunning(script) && !isBusy(script))
 
@@ -153,7 +153,7 @@ function CompilationPage() {
                     onClick={() => {
                       clearScripts()
                       clearCompilationLogs()
-                      logs.trace('clear scripts and compilation logs')()
+                      logs.trace('clear scripts and compilation logs')
                       trackEvent({
                         category: 'Compilation',
                         action: 'Clear',
@@ -179,10 +179,10 @@ function CompilationPage() {
                   onRemove={(scriptToRemove) => {
                     removeCompilationLog(scriptToRemove)
                     removeScripts([scriptToRemove])
-                    logs.trace('remove script', scriptToRemove)()
+                    logs.trace('remove script', scriptToRemove)
                   }}
                   onStart={async (scriptToStart) => {
-                    logs.trace('start compile single script', scriptToStart)()
+                    logs.trace('start compile single script', scriptToStart)
                     removeCompilationLog(scriptToStart)
                     await compile([scriptToStart])
 

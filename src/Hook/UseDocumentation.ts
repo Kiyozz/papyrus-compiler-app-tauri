@@ -18,7 +18,7 @@ const openUrl = async (url: string): Promise<Result<void, Error>> =>
     await Result.wrapAsync(async () => {
       await open(url)
     })
-  ).mapErr((reason) => new Error(`Cannot open url, error given: ${reason}`))
+  ).mapErr((reason) => new Error('Cannot open url', { cause: reason }))
 
 export function useDocumentation() {
   const { trackEvent } = useMatomo()
@@ -28,7 +28,7 @@ export function useDocumentation() {
     _reason: 'enter' | 'click' | 'settings-app-bar',
   ): Promise<Result<void, Error>> => {
     if (documentationUrl.data == null) {
-      logs.error('cannot open documentation, environment is not set')()
+      logs.error('cannot open documentation, environment is not set')
 
       return Err(new Error('Cannot open documentation, environment is not set'))
     }
@@ -39,12 +39,12 @@ export function useDocumentation() {
       name: 'Nav',
     })
 
-    logs.debug('open documentation')()
+    logs.debug('open documentation')
 
     const res = await openUrl(documentationUrl.data)
 
     if (res.err) {
-      logs.error('error open documentation')()
+      logs.error('error open documentation')
 
       console.error(res.val)
     }

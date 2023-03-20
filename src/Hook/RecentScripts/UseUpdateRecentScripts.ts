@@ -18,12 +18,12 @@ export const useUpdateRecentScripts = (
 
   return useMutation({
     mutationFn: async (params) => {
-      logs.debug('update recent scripts', params)()
+      logs.debug('update recent scripts', params)
 
       const res = await writeDefaultRecentScripts(params)
 
       if (res.err) {
-        logs.error('error update recent scripts', res.val)()
+        logs.error('error update recent scripts', res.val)
 
         throw res.val
       }

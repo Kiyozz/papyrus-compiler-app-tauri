@@ -18,12 +18,12 @@ export const useRemoveRecentScripts = (
 
   return useMutation({
     mutationFn: async (recentScript) => {
-      logs.debug('remove recent scripts', recentScript)()
+      logs.debug('remove recent scripts', recentScript)
 
       const res = await removeDefaultRecentScripts(recentScript)
 
       if (res.err) {
-        logs.error('error remove recent scripts', res.val)()
+        logs.error('error remove recent scripts', res.val)
 
         throw res.val
       }

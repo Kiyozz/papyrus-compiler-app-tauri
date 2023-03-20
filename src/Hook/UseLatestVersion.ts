@@ -20,12 +20,12 @@ export const useLatestVersion = (options: UseQueryOptions<Response<GitHubRelease
   return useQuery({
     queryKey: ['app', 'latest-version'],
     queryFn: async () => {
-      logs.debug('get latest version')()
+      logs.debug('get latest version')
 
       const res = await getLatestVersion()
 
       if (res.err) {
-        logs.error('error get latest version', res.val)()
+        logs.error('error get latest version', res.val)
 
         throw res.val
       }

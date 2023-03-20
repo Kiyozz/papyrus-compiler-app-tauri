@@ -16,12 +16,12 @@ export const useUpdateConf = (options: UseMutationOptions<void, Error, Parameter
 
   return useMutation({
     mutationFn: async (partialConfig) => {
-      logs.debug('updating conf', partialConfig)()
+      logs.debug('updating conf', partialConfig)
 
       const res = await writeConfig(partialConfig)
 
       if (res.err) {
-        logs.error('error updating conf', res.val)()
+        logs.error('error updating conf', res.val)
 
         throw res.val
       }

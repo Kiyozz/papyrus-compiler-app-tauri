@@ -32,7 +32,7 @@ export function useCompilation() {
     async (scripts: FileScriptCompilation[]) => {
       const concurrentScripts = data?.compilation?.concurrentScripts
       invariant(concurrentScripts, 'concurrentScripts is not defined')
-      logs.trace('compile', scripts)()
+      logs.trace('compile', scripts)
 
       // Mark all scripts as busy
       for (const script of scripts) {
@@ -56,15 +56,15 @@ export function useCompilation() {
               status: 'running',
             })
 
-            logs.trace('start compile', script)()
+            logs.trace('start compile', script)
 
             const res = (await Result.wrapAsync(async () => await compileMutation.mutateAsync(script))).mapErr(
-              (reason) => new Error(`failed to compile script ${script.name}. error given: ${reason}`),
+              (reason) => new Error(`failed to compile script ${script.name}`, { cause: reason }),
             )
 
             if (res.err) {
               const err = res.val
-              logs.error('error compile script', script, err)()
+              logs.error('error compile script', script, err)
               console.error('compile', err)
 
               replace({
@@ -80,7 +80,7 @@ export function useCompilation() {
                 status: log.status === 'error' ? 'error' : 'done',
               })
 
-              logs.trace('add compilation log', log)()
+              logs.trace('add compilation log', log)
 
               addCompilationLog(log)
 
@@ -94,7 +94,7 @@ export function useCompilation() {
 
       const compilationLogs = compileRes.filter((r) => r.ok).map((r) => (r.val as CompilationLog).script.path)
 
-      logs.trace('add scripts to recent scripts', compilationLogs)()
+      logs.trace('add scripts to recent scripts', compilationLogs)
 
       const updateRes = (
         await Result.wrapAsync(async () => {
@@ -102,10 +102,10 @@ export function useCompilation() {
             recentScripts: compilationLogs,
           })
         })
-      ).mapErr((reason) => new Error(`failed to update recent scripts: ${reason}`))
+      ).mapErr((reason) => new Error('failed to update recent scripts', { cause: reason }))
 
       if (updateRes.err) {
-        logs.error('error update recent scripts', updateRes.val)()
+        logs.error('error update recent scripts', updateRes.val)
 
         console.error('failed to update recent scripts', updateRes)
       }

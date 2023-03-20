@@ -23,6 +23,7 @@ pub struct Logs {
     pub handle: log4rs::Handle,
 }
 
+/// Create a LogConf depending of the application conf.
 fn build_config(conf: &Conf, path: &PathBuf) -> LogConfig {
     let level = conf.log_level_filter();
     let stdout = ConsoleAppender::builder().build();
@@ -72,6 +73,9 @@ impl Logs {
     }
 }
 
+/// Create a log entry in the application pca.log file.
+///
+/// Used by Webview.
 #[tauri::command]
 pub fn log(ns: String, message: String, level: String, args: &str) {
     let args = serde_json::from_str::<Value>(args).unwrap();

@@ -7,9 +7,9 @@
 
 use tauri::{AboutMetadata, CustomMenuItem, Menu, MenuItem, Submenu};
 
-/// Taken from tauri::Menu::os_default
+/// Taken from tauri::Menu::os_default.
 ///
-/// Add Custom Items to the menu
+/// Create the default app menu and add Custom Items to the menu.
 pub fn create_menu() -> Menu {
     let mut menu = Menu::new();
 

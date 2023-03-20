@@ -20,6 +20,7 @@ import { type CheckConfErrorTypes, isCheckConfError } from './CheckConfTypes'
 export interface CheckConfError<T extends CheckConfErrorTypes = CheckConfErrorTypes> {
   type: T
   message: string
+  cause?: unknown
 }
 
 const logs = createLogs('checkConf')
@@ -31,7 +32,8 @@ const onRejected = (reason: unknown): CheckConfError => {
 
   return {
     type: 'fatalError',
-    message: `fatal error check conf, error given: ${reason}`,
+    message: 'fatal error check conf',
+    cause: reason,
   }
 }
 
@@ -204,7 +206,7 @@ const checkCreationKitScriptExistsInMo2 = async (conf: Conf): Promise<Result<voi
  * @param conf
  */
 export const checkConf = async (conf: Conf): Promise<Result<Conf, CheckConfError>> => {
-  logs.debug('checking conf', conf)()
+  logs.debug('checking conf', conf)
 
   return (
     await catchErr(async () => {

@@ -13,6 +13,7 @@ use std::path::Path;
 use tauri::api::file;
 use tauri::PathResolver;
 
+/// This is the application conf.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Conf {
@@ -28,6 +29,7 @@ pub struct Conf {
 }
 
 impl Default for Conf {
+    /// Create a default Conf. Used by the application menu to reset the application conf.
     fn default() -> Self {
         let compiler_path = Path::new("Papyrus Compiler");
         let compilation_output = Path::new("Data");

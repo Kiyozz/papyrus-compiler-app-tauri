@@ -24,14 +24,13 @@ export const createLogs = (ns: string) => ({
 
 export const createLog =
   (ns: string, level: LogLevel = 'info') =>
-  (message: string, ...args: unknown[]) =>
-  () => {
+  (message: string, ...args: unknown[]) => {
     const json = stringify(args).unwrap()
 
     void Result.wrapAsync(async () => {
       await invoke('log', { ns, message, level, args: json })
     })
-      .then((res) => res.mapErr((reason) => new Error(`cannot call log command. error given: ${reason}`)))
+      .then((res) => res.mapErr((reason) => new Error('cannot call log command', { cause: reason })))
       .then((res) => {
         res.err && console.error(res.val)
       })
