@@ -31,6 +31,9 @@ function MuiTheme({ children }: React.PropsWithChildren) {
 
   const theme = createTheme({
     palette,
+    typography: {
+      fontFamily: '"Inter var", Inter, Roboto, sans-serif',
+    },
     zIndex: {
       appBar: 20,
       drawer: 20,
@@ -147,6 +150,8 @@ function MuiTheme({ children }: React.PropsWithChildren) {
       },
     },
   })
+
+  // return <>{children}</>
 
   return (
     <StyledEngineProvider injectFirst>

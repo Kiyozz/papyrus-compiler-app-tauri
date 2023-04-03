@@ -24,7 +24,6 @@ import ReactDOM from 'react-dom/client'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { useUpdateEffect } from 'usehooks-ts'
 import App from './App'
-import MuiTheme from './MuiTheme'
 import './style.css'
 
 declare global {
@@ -117,21 +116,21 @@ rootRef.render(
       <DialogsProvider>
         <CompilationLogsProvider>
           <CompilationScriptsProvider>
-            <MuiTheme>
-              <MemoryRouter>
-                <Matomo>
-                  <RouterListen>
-                    <Routes>
-                      <Route path="/" element={<App />}>
-                        <Route index element={<CompilationPage />} />
-                        <Route path="/groups" element={<GroupsPage />} />
-                        <Route path="/settings" element={<SettingsPage />} />
-                      </Route>
-                    </Routes>
-                  </RouterListen>
-                </Matomo>
-              </MemoryRouter>
-            </MuiTheme>
+            {/* <MuiTheme> */}
+            <MemoryRouter>
+              <Matomo>
+                <RouterListen>
+                  <Routes>
+                    <Route path="/" element={<App />}>
+                      <Route index element={<CompilationPage />} />
+                      <Route path="/groups" element={<GroupsPage />} />
+                      <Route path="/settings" element={<SettingsPage />} />
+                    </Route>
+                  </Routes>
+                </RouterListen>
+              </Matomo>
+            </MemoryRouter>
+            {/* </MuiTheme> */}
           </CompilationScriptsProvider>
         </CompilationLogsProvider>
       </DialogsProvider>

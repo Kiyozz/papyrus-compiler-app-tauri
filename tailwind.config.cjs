@@ -5,6 +5,8 @@
  *
  */
 
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -15,9 +17,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Roboto', '-apple-system', 'sans-serif'],
-        body: ['Roboto', '-apple-system', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
+        sans: ['Inter var',...defaultTheme.fontFamily.sans],
+        mono: ['IBM Plex Mono', ...defaultTheme.fontFamily.mono],
       },
       boxShadow: {
         b: '0 1px 0 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
@@ -55,6 +56,8 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
 

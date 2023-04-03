@@ -7,9 +7,7 @@
 
 import ClearIcon from '@mui/icons-material/Clear'
 import HelpIcon from '@mui/icons-material/Help'
-import HistoryIcon from '@mui/icons-material/History'
 import Alert from '@mui/material/Alert'
-import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
@@ -43,6 +41,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { type RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { R } from 'App/Lib/FpTs'
+import Button from 'App/Component/UI/Button'
+import { ClockIcon } from '@heroicons/react/24/outline'
 
 const logs = createLogs('CompilationPage')
 
@@ -80,48 +80,49 @@ function CompilationPage() {
       />
 
       <PageAppBar title={t('page.compilation.appBar.title')}>
-        <Button
-          onClick={() => {
-            setRecentFilesDialogOpen(true)
-          }}
-          className="px-3 py-2"
-          color="inherit"
-          startIcon={<HistoryIcon />}
-        >
-          {t('common.recentFiles')}
-        </Button>
-        <TutorialTooltip title={t('common.settingsTutorial.compilation.addScripts')} step="compilation-add-scripts">
-          <SearchScriptButton
-            ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
-            className="px-3 py-2"
+        <div className="flex gap-x-2">
+          <Button
+            variant="link"
             color="inherit"
-            onFileSelect={(files, reason) => {
-              const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
-              addScripts(scriptsCompilation)
-              logs.log('add scripts from file select')
-              trackEvent({ category: 'Compilation', action: 'Add scripts', name: reason })
+            onClick={() => {
+              setRecentFilesDialogOpen(true)
             }}
+            startIcon={<ClockIcon />}
           >
-            {t('common.searchScripts')}
-          </SearchScriptButton>
-        </TutorialTooltip>
-        {isQueryNonNullable(groups) && R.size(groups.data) > 0 ? (
-          <GroupChooseButton
-            className="px-3 py-2"
-            color="inherit"
-            groups={groups.data}
-            onGroupClick={(group) => {
-              const paths = group.scripts.map((s) => s.path)
-              const files = pathsToFileScriptAndFilterPscFile(paths)
-              const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
-              addScripts(scriptsCompilation)
-              logs.log('add scripts from group')
-              trackEvent({ category: 'Compilation', action: 'Add scripts', name: 'Group' })
-            }}
-          >
-            {t('common.group')}
-          </GroupChooseButton>
-        ) : null}
+            {t('common.recentFiles')}
+          </Button>
+          <TutorialTooltip title={t('common.settingsTutorial.compilation.addScripts')} step="compilation-add-scripts">
+            <SearchScriptButton
+              variant="link"
+              color="inherit"
+              ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
+              onFileSelect={(files, reason) => {
+                const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
+                addScripts(scriptsCompilation)
+                logs.log('add scripts from file select')
+                trackEvent({ category: 'Compilation', action: 'Add scripts', name: reason })
+              }}
+            >
+              {t('common.searchScripts')}
+            </SearchScriptButton>
+          </TutorialTooltip>
+          {isQueryNonNullable(groups) && R.size(groups.data) > 0 ? (
+            <GroupChooseButton
+              className="px-3 py-2"
+              groups={groups.data}
+              onGroupClick={(group) => {
+                const paths = group.scripts.map((s) => s.path)
+                const files = pathsToFileScriptAndFilterPscFile(paths)
+                const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
+                addScripts(scriptsCompilation)
+                logs.log('add scripts from group')
+                trackEvent({ category: 'Compilation', action: 'Add scripts', name: 'Group' })
+              }}
+            >
+              {t('common.group')}
+            </GroupChooseButton>
+          ) : null}
+        </div>
       </PageAppBar>
 
       <Page className="flex flex-col">
@@ -160,7 +161,6 @@ function CompilationPage() {
                       })
                     }}
                     startIcon={<ClearIcon />}
-                    color="inherit"
                   >
                     {t('common.clear')}
                   </Button>

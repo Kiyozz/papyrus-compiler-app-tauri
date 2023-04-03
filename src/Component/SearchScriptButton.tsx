@@ -5,22 +5,26 @@
  *
  */
 
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import is from '@sindresorhus/is'
 import { open as openFileDialog } from '@tauri-apps/api/dialog'
-import SearchIcon from '@mui/icons-material/Search'
-import Button, { type ButtonProps } from '@mui/material/Button'
+import Button, { type ButtonProps } from 'App/Component/UI/Button'
 import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
 import { fromNullable } from 'App/Lib/TsResults'
-import { forwardRef, useState } from 'react'
+import { forwardRef, type Ref, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { None, Some } from 'ts-results'
 
-const SearchScriptButton = forwardRef<
-  HTMLButtonElement,
-  { onFileSelect: (files: FileScript[], reason: 'Drop' | 'Select') => void } & Omit<ButtonProps, 'ref'>
->(({ onFileSelect, disabled = false, ...props }, ref) => {
+function SearchScriptButtonRoot(
+  {
+    onFileSelect,
+    disabled = false,
+    ...props
+  }: { onFileSelect: (files: FileScript[], reason: 'Drop' | 'Select') => void } & ButtonProps,
+  ref: Ref<HTMLButtonElement>,
+) {
   const { t } = useTranslation()
   useListenFileDrop({
     onDrop: (evt) => {
@@ -34,7 +38,7 @@ const SearchScriptButton = forwardRef<
 
   return (
     <Button
-      startIcon={<SearchIcon />}
+      startIcon={<MagnifyingGlassIcon />}
       disabled={disabled || isDialogOpen}
       onClick={() => {
         setDialogOpen(true)
@@ -66,8 +70,10 @@ const SearchScriptButton = forwardRef<
       {...props}
     />
   )
-})
+}
 
-SearchScriptButton.displayName = 'SearchScriptButton'
+SearchScriptButtonRoot.displayName = 'SearchScriptButton'
+
+const SearchScriptButton = forwardRef(SearchScriptButtonRoot) as typeof SearchScriptButtonRoot
 
 export default SearchScriptButton

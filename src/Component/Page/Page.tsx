@@ -5,7 +5,6 @@
  *
  */
 
-import Paper from '@mui/material/Paper'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import cx from 'classnames'
@@ -17,8 +16,7 @@ function Page({ children, className }: PropsWithChildren<{ className?: string }>
   if (!isQueryNonNullable(conf)) return <>Waiting...</>
 
   return (
-    <Paper
-      component="main"
+    <main
       className={cx(
         'min-h-app w-full rounded-none p-6 transition-[padding-left] duration-[225ms] ease-sharp',
         conf.data.misc.drawerOpen ? 'pl-[13.5rem]' : 'pl-20',
@@ -26,7 +24,7 @@ function Page({ children, className }: PropsWithChildren<{ className?: string }>
       )}
     >
       {children}
-    </Paper>
+    </main>
   )
 }
 

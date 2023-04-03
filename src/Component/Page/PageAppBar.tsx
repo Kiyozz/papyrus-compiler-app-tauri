@@ -11,8 +11,8 @@ import { type PropsWithChildren } from 'react'
 
 function PageAppBar({ title, className, children }: PropsWithChildren<{ title: string; className?: string }>) {
   return (
-    <AppBar aria-label={title}>
-      <Toolbar className={cx('pr-6 pl-4', className)} disableGutters>
+    <AppBar aria-label={title} position="sticky">
+      <Toolbar className={cx('pl-4 pr-6', className)} disableGutters>
         <Typography className="grow" variant="h4">
           {title}
         </Typography>
