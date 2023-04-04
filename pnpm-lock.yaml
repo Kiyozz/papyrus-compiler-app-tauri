@@ -8,6 +8,7 @@ specifiers:
   '@fontsource/inter': ^4.5.15
   '@fontsource/roboto': ^4.5.8
   '@headlessui/react': ^1.7.13
+  '@headlessui/tailwindcss': ^0.1.2
   '@heroicons/react': ^2.0.17
   '@hookform/resolvers': ^2.9.11
   '@mui/icons-material': ^5.11.11
@@ -124,6 +125,7 @@ dependencies:
   zod: 3.21.4
 
 devDependencies:
+  '@headlessui/tailwindcss': 0.1.2_tailwindcss@3.3.1
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.3.1
   '@tanstack/react-query-devtools': 4.28.0_q4teel2yjbizrm4naiaqcdpjum
   '@tauri-apps/cli': 1.2.3
@@ -803,6 +805,15 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
+
+  /@headlessui/tailwindcss/0.1.2_tailwindcss@3.3.1:
+    resolution: {integrity: sha512-AQNESz+f1grCxifrocOE6hDMDFqhqY0g3xrSGOS0ocGkmVkssaBzXaAPAPNSs/nHmr4ZUhfl5THQpYrvaouWlQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      tailwindcss: ^3.0
+    dependencies:
+      tailwindcss: 3.3.1
+    dev: true
 
   /@heroicons/react/2.0.17_react@18.2.0:
     resolution: {integrity: sha512-90GMZktkA53YbNzHp6asVEDevUQCMtxWH+2UK2S8OpnLEu7qckTJPhNxNQG52xIR1WFTwFqtH6bt7a60ZNcLLA==}

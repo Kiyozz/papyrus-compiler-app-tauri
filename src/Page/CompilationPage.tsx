@@ -82,7 +82,7 @@ function CompilationPage() {
       <PageAppBar title={t('page.compilation.appBar.title')}>
         <div className="flex gap-x-2">
           <Button
-            variant="link"
+            variant="secondary"
             color="inherit"
             onClick={() => {
               setRecentFilesDialogOpen(true)
@@ -93,7 +93,7 @@ function CompilationPage() {
           </Button>
           <TutorialTooltip title={t('common.settingsTutorial.compilation.addScripts')} step="compilation-add-scripts">
             <SearchScriptButton
-              variant="link"
+              variant="secondary"
               color="inherit"
               ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
               onFileSelect={(files, reason) => {

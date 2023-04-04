@@ -61,7 +61,7 @@ const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
         </Typography>
       </Paper>
       <Paper
-        className="block w-full rounded-t-none bg-gray-800 p-4 text-white dark:bg-black-800"
+        className="block w-full rounded-t-none bg-gray-800 p-4 text-white dark:bg-black"
         component="code"
         elevation={0}
         id={`${log.script.id}-logs`}

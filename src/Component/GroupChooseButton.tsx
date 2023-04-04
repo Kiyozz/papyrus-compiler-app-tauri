@@ -29,7 +29,7 @@ function GroupChooseButton({
 
   return (
     <>
-      <PopoverMenu key="choose-group-popover">
+      <PopoverMenu as="div" key="choose-group-popover">
         <PopoverMenu.Button {...props}>{children}</PopoverMenu.Button>
 
         <PopoverMenu.Transition>

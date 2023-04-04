@@ -30,7 +30,7 @@ const AppDrawerLink = forwardRef<
         <ListItemButton
           component={ActiveLink}
           to={path}
-          activeClassName="bg-light-800 hover:bg-light-800 dark:bg-black-400 dark:text-white dark:hover:bg-black-400 dark:hover:text-white"
+          activeClassName="bg-light-800 hover:bg-light-800 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-900 dark:hover:text-white"
         >
           <ListItemIcon>{icon}</ListItemIcon>
           <ListItemText primary={label} primaryTypographyProps={{ noWrap: true }} />

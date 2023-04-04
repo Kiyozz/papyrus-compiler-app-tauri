@@ -82,7 +82,7 @@ function ButtonRoot<T extends ElementType = 'button'>(
           brand:
             'bg-indigo-600 hover:bg-indigo-500 focus-visible:ring-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:ring-indigo-500',
           secondary:
-            'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-700',
+            'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-gray-700 dark:hover:bg-gray-700',
           soft: 'bg-indigo-50 text-indigo-600 shadow-sm hover:bg-indigo-100',
           link: 'focus-visible:ring',
         }[variant],
