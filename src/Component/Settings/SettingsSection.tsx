@@ -5,29 +5,23 @@
  *
  */
 
-import Paper from '@mui/material/Paper'
-import Typography, { type TypographyProps } from '@mui/material/Typography'
 import is from '@sindresorhus/is'
 import cx from 'classnames'
-import { type HTMLMotionProps, LayoutGroup, motion } from 'framer-motion'
-import { type ComponentProps, forwardRef, type ReactNode } from 'react'
-
-const MotionPaper = motion(Paper)
+import { LayoutGroup, motion } from 'framer-motion'
+import { type ComponentProps, forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 
 const SettingsSection = forwardRef<
   HTMLDivElement,
-  Omit<ComponentProps<typeof MotionPaper>, 'title' | 'ref'> & {
-    sectionTitle: ReactNode
-    gutterTop?: boolean
-    titleProps?: TypographyProps<'h3'> & HTMLMotionProps<'h3'>
-  }
->(({ sectionTitle, className, 'aria-label': ariaLabel, gutterTop = true, titleProps, children, ...props }, ref) => (
+  Omit<ComponentProps<typeof motion.div>, 'title' | 'ref' | 'children'> &
+    PropsWithChildren<{
+      title: ReactNode
+      description: ReactNode
+    }>
+>(({ title, className, description, 'aria-label': ariaLabel, children, ...props }, ref) => (
   <LayoutGroup>
-    <MotionPaper
-      className={cx('relative p-4 transition-none', gutterTop && 'mt-4', className)}
-      variant="outlined"
-      aria-label={is.string(sectionTitle) ? sectionTitle : ariaLabel}
-      aria-labelledby={is.string(titleProps?.id) ? titleProps?.id : undefined}
+    <motion.section
+      className={cx('relative p-4 transition-none', className)}
+      aria-label={is.string(title) ? title : ariaLabel}
       ref={ref}
       layout
       layoutId={props.id}
@@ -35,20 +29,15 @@ const SettingsSection = forwardRef<
       key={props.id}
       {...props}
     >
-      <Typography
-        className="dark:text-white"
-        component={motion.h3}
-        fontWeight="bold"
-        gutterBottom
-        variant="h5"
-        layout
-        {...titleProps}
-      >
-        {sectionTitle}
-      </Typography>
+      <motion.h3 className="font-semibold leading-7 text-gray-900 dark:text-white" layout>
+        {title}
+      </motion.h3>
+      <motion.p className="mt-1 text-sm leading-6 text-gray-600" layout>
+        {description}
+      </motion.p>
 
       {children}
-    </MotionPaper>
+    </motion.section>
   </LayoutGroup>
 ))
 

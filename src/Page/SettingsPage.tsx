@@ -5,6 +5,13 @@
  *
  */
 
+import {
+  BarsArrowUpIcon,
+  ChevronDownIcon,
+  EnvelopeIcon,
+  QuestionMarkCircleIcon,
+  UsersIcon,
+} from '@heroicons/react/20/solid'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import Button from '@mui/material/Button'
 import Page from 'App/Component/Page/Page'
@@ -14,6 +21,7 @@ import SettingsGameSection from 'App/Component/Settings/SettingsGameSection'
 import SettingsMo2Section from 'App/Component/Settings/SettingsMo2Section'
 import SettingsTelemetrySection from 'App/Component/Settings/SettingsTelemetrySection'
 import SettingsThemeSection from 'App/Component/Settings/SettingsThemeSection'
+import Input from 'App/Component/UI/Input'
 import { useRefreshConf } from 'App/Hook/Conf/UseRefreshConf'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { enterPageAnimate } from 'App/Lib/Framer'
@@ -46,7 +54,11 @@ function SettingsPage() {
       </PageAppBar>
 
       <Page>
-        <motion.section className="container mx-auto" {...enterPageAnimate}>
+        <div className="space-y-6">
+          <Input id="eee244email" type="email" label="Email" />
+        </div>
+
+        <motion.section className="container mx-auto space-y-4" {...enterPageAnimate}>
           <SettingsGameSection />
           <SettingsCompilationSection />
           <SettingsMo2Section />

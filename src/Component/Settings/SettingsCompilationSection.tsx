@@ -52,7 +52,11 @@ function SettingsCompilationSection() {
   if (!conf.isSuccess) return <Navigate to="/" />
 
   return (
-    <SettingsSection id="compilation-section" sectionTitle={t('page.settings.sections.compilation.title')}>
+    <SettingsSection
+      id="compilation-section"
+      title={t('page.settings.sections.compilation.title')}
+      description="Informations optionnelles sur le fonctionnement de la compilation."
+    >
       <TutorialTooltip
         title={t('common.settingsTutorial.settings.concurrent')}
         step="settings-concurrent"

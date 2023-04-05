@@ -43,14 +43,8 @@ function SettingsTelemetrySection() {
   return (
     <SettingsSection
       id="telemetry-section"
-      sectionTitle={
-        <div className="flex items-center gap-2">
-          <span>{t('common.telemetry.title')}</span>
-          <Tooltip title={t('common.telemetry.text')} placement="top">
-            <HelpIcon />
-          </Tooltip>
-        </div>
-      }
+      title={t('common.telemetry.title')}
+      description={t('common.telemetry.text')}
     >
       <FormControlLabel
         control={

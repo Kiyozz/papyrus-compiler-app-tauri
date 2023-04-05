@@ -47,7 +47,12 @@ function SettingsMo2Section() {
   )
 
   return (
-    <SettingsSection sectionTitle={t('page.settings.sections.mo2.title')} id="mo2-section" ref={refs['settings-mo2']}>
+    <SettingsSection
+      title={t('page.settings.sections.mo2.title')}
+      id="mo2-section"
+      ref={refs['settings-mo2']}
+      description="Si vous utilisez PCA en dehors de MO2, ajoutez les informations de l'instance de MO2 que vous utilisez."
+    >
       <TutorialTooltip title={t('common.settingsTutorial.settings.mo2')} step="settings-mo2" placement="top-end">
         <MotionFormControlLabel
           control={

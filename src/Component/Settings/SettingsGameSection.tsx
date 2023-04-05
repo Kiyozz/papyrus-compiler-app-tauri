@@ -68,7 +68,11 @@ function SettingsGameSection() {
   const isGameExeError = isCheckConfQueryError(checkConf, Some(['gameExeDoesNotExist'] as const))
 
   return (
-    <SettingsSection id="game-section" sectionTitle={t('page.settings.sections.game.title')} gutterTop={false}>
+    <SettingsSection
+      id="game-section"
+      title={t('page.settings.sections.game.title')}
+      description="Ajoutez les informations de votre environnement."
+    >
       <TutorialTooltip
         placement="top-start"
         title={t('common.settingsTutorial.settings.game')}
@@ -184,20 +188,20 @@ function SettingsGameSection() {
           checkConf,
           Some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist'] as const),
         ) && (
-            <MotionAlert
-              key="error-alert"
-              severity="error"
-              className="mt-3 dark:bg-red-400/10"
-              {...exitAlertAnimate}
-              layout
-              layoutId="error-alert"
-            >
-              {t<string>('common.confCheckError', {
-                context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
-                gameExe: toExecutable(conf.data.game.type),
-              })}
-            </MotionAlert>
-          )}
+          <MotionAlert
+            key="error-alert"
+            severity="error"
+            className="mt-3 dark:bg-red-400/10"
+            {...exitAlertAnimate}
+            layout
+            layoutId="error-alert"
+          >
+            {t<string>('common.confCheckError', {
+              context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
+              gameExe: toExecutable(conf.data.game.type),
+            })}
+          </MotionAlert>
+        )}
       </AnimatePresence>
     </SettingsSection>
   )
