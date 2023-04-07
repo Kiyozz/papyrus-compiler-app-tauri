@@ -5,8 +5,7 @@
  *
  */
 
-import ClearIcon from '@mui/icons-material/Clear'
-import HelpIcon from '@mui/icons-material/Help'
+import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid'
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
 import Tooltip from '@mui/material/Tooltip'
@@ -42,7 +41,7 @@ import { type RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { R } from 'App/Lib/FpTs'
 import Button from 'App/Component/UI/Button'
-import { ClockIcon } from '@heroicons/react/24/outline'
+import { ClockIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const logs = createLogs('CompilationPage')
 
@@ -91,21 +90,6 @@ function CompilationPage() {
           >
             {t('common.recentFiles')}
           </Button>
-          <TutorialTooltip title={t('common.settingsTutorial.compilation.addScripts')} step="compilation-add-scripts">
-            <SearchScriptButton
-              variant="secondary"
-              color="inherit"
-              ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
-              onFileSelect={(files, reason) => {
-                const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
-                addScripts(scriptsCompilation)
-                logs.log('add scripts from file select')
-                trackEvent({ category: 'Compilation', action: 'Add scripts', name: reason })
-              }}
-            >
-              {t('common.searchScripts')}
-            </SearchScriptButton>
-          </TutorialTooltip>
           {isQueryNonNullable(groups) && R.size(groups.data) > 0 ? (
             <GroupChooseButton
               className="px-3 py-2"
@@ -122,6 +106,19 @@ function CompilationPage() {
               {t('common.group')}
             </GroupChooseButton>
           ) : null}
+          <TutorialTooltip title={t('common.settingsTutorial.compilation.addScripts')} step="compilation-add-scripts">
+            <SearchScriptButton
+              ref={refs['compilation-add-scripts'] as unknown as RefObject<HTMLButtonElement>}
+              onFileSelect={(files, reason) => {
+                const scriptsCompilation = fileScriptsToFileScriptCompilation(files)
+                addScripts(scriptsCompilation)
+                logs.log('add scripts from file select')
+                trackEvent({ category: 'Compilation', action: 'Add scripts', name: reason })
+              }}
+            >
+              {t('common.searchScripts')}
+            </SearchScriptButton>
+          </TutorialTooltip>
         </div>
       </PageAppBar>
 
@@ -160,7 +157,7 @@ function CompilationPage() {
                         action: 'Clear',
                       })
                     }}
-                    startIcon={<ClearIcon />}
+                    startIcon={<XMarkIcon />}
                   >
                     {t('common.clear')}
                   </Button>
@@ -210,7 +207,7 @@ function CompilationPage() {
                   <span>{t('page.compilation.dragAndDropText')}</span>
                 </Typography>
                 <Tooltip title={t('page.compilation.dragAndDropAdmin')}>
-                  <HelpIcon className="mt-3" />
+                  <QuestionMarkCircleIcon className="mt-3 inline-block h-8 w-8" />
                 </Tooltip>
               </motion.div>
             )}

@@ -15,12 +15,13 @@ import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
 import { CompilationIcon } from 'App/Component/CompilationIcon'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
+import Button from 'App/Component/UI/Button'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { isBusy, isDone, isFileScriptCompilation, isRunning } from 'App/Lib/FileScriptCompilation'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const MotionPaper = motion(Paper)
 
@@ -88,15 +89,18 @@ function FileScriptsList<T extends FileScript>({
               ) : null}
               <ListItemText aria-label={script.name} primary={script.name} />
               {isFileScriptCompilation(script) ? (
-                <ListItemIcon>
-                  <IconButton
-                    onClick={() => onClickOnError?.(script)}
-                    size="small"
-                    disabled={isRunning(script) || isDone(script) || isBusy(script)}
-                  >
-                    <CompilationIcon script={script} />
-                  </IconButton>
-                </ListItemIcon>
+                <Button
+                  className="mr-3"
+                  variant="link"
+                  onClick={() => onClickOnError?.(script)}
+                  size="xs"
+                  disabled={isRunning(script) || isDone(script) || isBusy(script)}
+                  startIcon={
+                    <AnimatePresence>
+                      <CompilationIcon script={script} />
+                    </AnimatePresence>
+                  }
+                />
               ) : null}
             </ListItem>
           )

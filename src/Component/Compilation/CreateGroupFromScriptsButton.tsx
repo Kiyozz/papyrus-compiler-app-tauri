@@ -1,6 +1,6 @@
-import AddIcon from '@mui/icons-material/Add'
-import Button, { type ButtonProps } from '@mui/material/Button'
+import { PlusIcon } from '@heroicons/react/24/solid'
 import is from '@sindresorhus/is'
+import Button, { type ButtonProps } from 'App/Component/UI/Button'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
 import { fileScriptsCompilationToFileScripts } from 'App/Lib/FileScriptsCompilationToFileScripts'
@@ -37,7 +37,8 @@ const CreateGroupFromScriptsButton = forwardRef<
           },
         })
       }}
-      startIcon={<AddIcon />}
+      startIcon={<PlusIcon />}
+      variant="secondary"
       color="inherit"
     >
       {t('common.createGroup')}

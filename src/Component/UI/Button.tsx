@@ -80,11 +80,11 @@ function ButtonRoot<T extends ElementType = 'button'>(
         // variants
         {
           brand:
-            'bg-indigo-600 hover:bg-indigo-500 focus-visible:ring-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:ring-indigo-500',
+            'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:ring-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:ring-indigo-500',
           secondary:
             'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-gray-700 dark:hover:bg-gray-700',
           soft: 'bg-indigo-50 text-indigo-600 shadow-sm hover:bg-indigo-100',
-          link: 'focus-visible:ring',
+          link: 'text-indigo-600 focus-visible:ring',
         }[variant],
         // sizes
         {
@@ -97,7 +97,7 @@ function ButtonRoot<T extends ElementType = 'button'>(
         // colors
         {
           default:
-            'text-indigo-600 hover:text-indigo-800 focus-visible:ring-indigo-400 dark:text-indigo-400 dark:hover:text-indigo-300 dark:focus-visible:ring-indigo-200',
+            'focus-visible:ring-indigo-400 dark:text-indigo-400 dark:hover:text-indigo-300 dark:focus-visible:ring-indigo-200',
           error:
             'text-red-600 hover:text-red-800 focus-visible:ring-red-400 dark:text-red-400 dark:hover:text-red-300 dark:focus-visible:ring-red-200',
           success:

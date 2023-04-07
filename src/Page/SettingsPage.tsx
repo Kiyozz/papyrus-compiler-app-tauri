@@ -5,8 +5,7 @@
  *
  */
 
-import RefreshIcon from '@mui/icons-material/Refresh'
-import Button from '@mui/material/Button'
+import { ArrowPathIcon } from '@heroicons/react/24/solid'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
 import SettingsCompilationSection from 'App/Component/Settings/SettingsCompilationSection'
@@ -14,6 +13,7 @@ import SettingsGameSection from 'App/Component/Settings/SettingsGameSection'
 import SettingsMo2Section from 'App/Component/Settings/SettingsMo2Section'
 import SettingsTelemetrySection from 'App/Component/Settings/SettingsTelemetrySection'
 import SettingsThemeSection from 'App/Component/Settings/SettingsThemeSection'
+import Button from 'App/Component/UI/Button'
 import { useRefreshConf } from 'App/Hook/Conf/UseRefreshConf'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { enterPageAnimate } from 'App/Lib/Framer'
@@ -29,9 +29,7 @@ function SettingsPage() {
     <div>
       <PageAppBar title={t('page.settings.appBar.title')}>
         <Button
-          className="px-3 py-2"
-          color="inherit"
-          startIcon={<RefreshIcon />}
+          startIcon={<ArrowPathIcon />}
           onClick={() => {
             void refreshConf()
             trackEvent({

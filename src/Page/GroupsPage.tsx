@@ -5,8 +5,7 @@
  *
  */
 
-import CreateIcon from '@mui/icons-material/Create'
-import Button from '@mui/material/Button'
+import { PlusCircleIcon } from '@heroicons/react/24/solid'
 import CircularProgress from '@mui/material/CircularProgress'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -18,6 +17,7 @@ import GroupMoreDetailsCheckbox from 'App/Component/Groups/GroupMoreDetailsCheck
 import GroupsList from 'App/Component/Groups/GroupsList'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
+import Button from 'App/Component/UI/Button'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
@@ -193,10 +193,8 @@ function GroupsPage() {
 
       <PageAppBar title={t('page.groups.appBar.title')}>
         <Button
-          className="px-3 py-2"
-          color="inherit"
           disabled={updateGroups.isLoading}
-          startIcon={<CreateIcon />}
+          startIcon={<PlusCircleIcon />}
           onClick={() => {
             openAddGroupDialog()
           }}

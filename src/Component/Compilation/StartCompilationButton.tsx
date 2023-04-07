@@ -5,8 +5,8 @@
  *
  */
 
-import PlayIcon from '@mui/icons-material/PlayCircleFilled'
-import Button, { type ButtonProps } from '@mui/material/Button'
+import { PlayIcon } from '@heroicons/react/24/solid'
+import Button, { type ButtonProps } from 'App/Component/UI/Button'
 import { useTranslation } from 'react-i18next'
 
 const StartCompilationButton = ({
@@ -17,14 +17,7 @@ const StartCompilationButton = ({
   const { t } = useTranslation()
 
   return (
-    <Button
-      color="primary"
-      disabled={disabled}
-      onClick={onCompilationStart}
-      startIcon={<PlayIcon />}
-      variant="contained"
-      {...props}
-    >
+    <Button disabled={disabled} onClick={onCompilationStart} startIcon={<PlayIcon />} {...props}>
       {t('common.start')}
     </Button>
   )
