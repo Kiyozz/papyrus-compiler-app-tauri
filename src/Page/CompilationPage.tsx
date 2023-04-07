@@ -123,7 +123,7 @@ function CompilationPage() {
       </PageAppBar>
 
       <Page className="flex flex-col">
-        <div className="container mx-auto flex w-full grow flex-col">
+        <div className="container mx-auto flex w-full max-w-6xl grow flex-col">
           <AnimatePresence mode="wait">
             {scripts.length > 0 ? (
               <motion.div key="file-list" {...enterPageAnimate}>
@@ -147,6 +147,7 @@ function CompilationPage() {
                   />
 
                   <Button
+                    variant="secondary"
                     disabled={isAllScriptsRunningOrBusy}
                     onClick={() => {
                       clearScripts()
