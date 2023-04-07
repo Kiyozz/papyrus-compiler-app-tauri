@@ -7,14 +7,11 @@
 
 import HelpIcon from '@mui/icons-material/Help'
 import Alert from '@mui/material/Alert'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
 import Tooltip from '@mui/material/Tooltip'
 import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
+import RadioGroup from 'App/Component/UI/RadioGroup'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
@@ -23,6 +20,7 @@ import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { AnimatePresence, motion } from 'framer-motion'
+import { type Ref } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { fromNullable } from 'App/Lib/TsResults'
@@ -30,6 +28,7 @@ import { Some } from 'ts-results'
 import { exitAlertAnimate } from 'App/Lib/Framer'
 
 const MotionAlert = motion(Alert)
+const MotionRadioGroup = motion(RadioGroup)
 
 function SettingsGameSection() {
   const { t } = useTranslation()
@@ -79,17 +78,20 @@ function SettingsGameSection() {
         step="settings-game"
         ref={refs['settings-game']}
       >
-        <FormControl
-          component={motion.fieldset}
-          fullWidth
-          layout
-          layoutId="settings-game-game-type"
-          error={isGameExeError}
-        >
-          <RadioGroup
-            classes={{ row: 'justify-between' }}
-            row
+        <div>
+          <MotionRadioGroup
+            className="mt-5"
+            layout
+            layoutId="settings-game-game-type"
+            error={isGameExeError}
+            name="settings-game-game-type"
+            items={games.map((game) => ({
+              id: game.value,
+              label: game.label,
+              value: game.value,
+            }))}
             onChange={(evt, value) => {
+              console.log(value)
               trackEvent({
                 category: 'Conf',
                 action: 'Change game',
@@ -105,25 +107,11 @@ function SettingsGameSection() {
               })
             }}
             value={gameType}
-          >
-            {games.map((game) => {
-              return (
-                <FormControlLabel
-                  key={game.value}
-                  classes={{
-                    label: gameType === game.value && isGameExeError ? 'text-red-400' : '',
-                  }}
-                  control={<Radio />}
-                  label={game.label}
-                  value={game.value}
-                />
-              )
-            })}
-          </RadioGroup>
-        </FormControl>
+          />
+        </div>
       </TutorialTooltip>
 
-      <motion.div className="mt-3" id="settings-game-game-folder" layout layoutId="settings-game-game-folder">
+      <motion.div className="mt-2" id="settings-game-game-folder" layout layoutId="settings-game-game-folder">
         <TextFieldDialog
           label={
             <>
@@ -137,6 +125,7 @@ function SettingsGameSection() {
             </>
           }
           id="settings-game-game-folder-text-field"
+          name="settings-game-game-folder-text-field"
           defaultValue={gamePath}
           onChange={(newValue) => {
             // update the game path in config
@@ -151,36 +140,40 @@ function SettingsGameSection() {
         />
       </motion.div>
 
-      <motion.div className="mt-3" id="settings-game-compiler" layout>
+      <motion.div className="mt-2" id="settings-game-compiler" layout>
         <TutorialTooltip
           title={t('common.settingsTutorial.settings.compiler')}
           step="settings-compiler"
           ref={refs['settings-compiler']}
         >
-          <TextFieldDialog
-            ref={refs['settings-compiler']}
-            label={
-              <>
-                {t('page.settings.sections.game.compiler.label')}
+          <div>
+            <TextFieldDialog
+              ref={refs['settings-compiler'] as Ref<HTMLInputElement>}
+              label={
+                <>
+                  {t('page.settings.sections.game.compiler.label')}
 
-                <Tooltip title={t('page.settings.sections.game.compiler.tooltip')}>
-                  <HelpIcon className="ml-1" />
-                </Tooltip>
-              </>
-            }
-            defaultValue={gameCompilerPath}
-            type="file"
-            onChange={(newValue) => {
-              // update the compiler path in config
-              updateConf.mutate({
-                compilation: {
-                  compilerPath: newValue,
-                },
-              })
-            }}
-            placeholder={t('common.select.file')}
-            error={isCheckConfQueryError(checkConf, Some(['compilerPathDoesNotExist'] as const))}
-          />
+                  <Tooltip title={t('page.settings.sections.game.compiler.tooltip')}>
+                    <HelpIcon className="ml-1" />
+                  </Tooltip>
+                </>
+              }
+              defaultValue={gameCompilerPath}
+              type="file"
+              onChange={(newValue) => {
+                // update the compiler path in config
+                updateConf.mutate({
+                  compilation: {
+                    compilerPath: newValue,
+                  },
+                })
+              }}
+              id="settings-game-compiler-folder-text-field"
+              name="settings-game-compiler-folder-text-field"
+              placeholder={t('common.select.file')}
+              error={isCheckConfQueryError(checkConf, Some(['compilerPathDoesNotExist'] as const))}
+            />
+          </div>
         </TutorialTooltip>
       </motion.div>
       <AnimatePresence mode="popLayout">

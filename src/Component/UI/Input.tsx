@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { type DetailedHTMLProps, type InputHTMLAttributes, forwardRef, type ReactNode } from 'react'
 
 interface InputProps extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  label?: string
+  label?: ReactNode
   overlapLabel?: boolean
   leadingAddon?: ReactNode
   trailingAddon?: ReactNode
@@ -11,7 +11,7 @@ interface InputProps extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElem
   inlineTrailingAddon?: boolean
   cornerHint?: ReactNode
   helpText?: ReactNode
-  error?: string
+  error?: string | boolean
 }
 
 const ErrorIcon = () => <ExclamationCircleIcon className="hidden h-5 w-5 text-red-500 group-aria-invalid:block" />
@@ -36,7 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    const hasError = error != null
+    const hasError = typeof error === 'boolean' ? error : error != null
     const hasHelpText = helpText != null
     const hasCornerHint = cornerHint != null
     const hasLeadingAddon = leadingAddon != null
@@ -98,7 +98,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               disabled={disabled}
               {...props}
             />
-            <span className="">
+            <span>
               <ExclamationCircleIcon />
             </span>
             <div
@@ -129,7 +129,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               name={id}
               id={id}
               className={cx(
-                'block w-full rounded-none rounded-r-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600',
+                'block w-full rounded-none rounded-r-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 group-aria-invalid:ring-red-300 group-aria-invalid:group-aria-disabled:ring-red-200',
                 'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
               )}
               placeholder="Jane Smith"
@@ -407,7 +407,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </div>
         )}
         {hasHelpText && !hasError && <p className="mt-2 text-sm text-gray-500">{helpText}</p>}
-        {hasError && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {typeof error !== 'boolean' && hasError && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
     )
   },

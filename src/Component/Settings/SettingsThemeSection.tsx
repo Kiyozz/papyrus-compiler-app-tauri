@@ -5,11 +5,8 @@
  *
  */
 
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
+import RadioGroup from 'App/Component/UI/RadioGroup'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type Theme } from 'App/Lib/ThemeDecoder'
 import { useConf } from 'App/Hook/Conf/UseConf'
@@ -35,34 +32,27 @@ function SettingsThemeSection() {
       title={t('page.settings.sections.theme.title')}
       description="Paramétrer l'apparence de PCA"
     >
-      <FormControl component="fieldset" fullWidth>
-        <RadioGroup
-          onChange={(evt) => {
-            updateConf.mutate({
-              theme: evt.target.value as Theme,
-            })
-            trackEvent({
-              category: 'Conf',
-              action: 'Change theme',
-              name: evt.target.value,
-            })
-          }}
-          row
-          value={theme}
-        >
-          {themes.map((theme) => (
-            <FormControlLabel
-              key={theme}
-              classes={{
-                label: 'dark:text-white',
-              }}
-              control={<Radio />}
-              label={<>{t(`page.settings.sections.theme.options.${theme}`)}</>}
-              value={theme}
-            />
-          ))}
-        </RadioGroup>
-      </FormControl>
+      <RadioGroup
+        className="mt-5"
+        onChange={(evt, value) => {
+          updateConf.mutate({
+            theme: value,
+          })
+          trackEvent({
+            category: 'Conf',
+            action: 'Change theme',
+            name: value,
+          })
+        }}
+        col
+        value={theme}
+        name="theme"
+        items={themes.map((theme) => ({
+          id: theme,
+          label: t(`page.settings.sections.theme.options.${theme}`),
+          value: theme,
+        }))}
+      />
     </SettingsSection>
   )
 }

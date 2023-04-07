@@ -57,7 +57,6 @@ module.exports = {
     require('@headlessui/tailwindcss', { prefix: 'ui' }),
     plugin(function ({
       addVariant,
-      matchVariant
     }) {
       addVariant('aria-invalid', ['&[aria-invalid="true"]'])
       addVariant('group-aria-invalid', ':merge(.group)[aria-invalid="true"] &')

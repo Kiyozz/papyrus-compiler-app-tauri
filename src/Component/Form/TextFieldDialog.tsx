@@ -7,30 +7,22 @@
 
 import is from '@sindresorhus/is'
 import { open as openDialog } from '@tauri-apps/api/dialog'
-import FormControl from '@mui/material/FormControl'
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
-import InputLabel from '@mui/material/InputLabel'
-import OutlinedInput, { type OutlinedInputProps } from '@mui/material/OutlinedInput'
+import Button from 'App/Component/UI/Button'
+import Input from 'App/Component/UI/Input'
 import { motion } from 'framer-motion'
-import React, { type ComponentProps, forwardRef, type ReactNode, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import FolderOpenIcon from '@mui/icons-material/FolderOpen'
-import FolderIcon from '@mui/icons-material/Folder'
+import React, { type ComponentPropsWithoutRef, forwardRef, useState } from 'react'
+import { FolderIcon, FolderArrowDownIcon } from '@heroicons/react/24/solid'
 
-const MotionFormControl = motion(FormControl)
+const MotionInput = motion(Input)
 
 const TextFieldDialog = forwardRef<
-  HTMLDivElement,
-  Omit<ComponentProps<typeof MotionFormControl>, 'onChange' | 'ref'> & {
-    label: ReactNode
+  HTMLInputElement,
+  Omit<ComponentPropsWithoutRef<typeof MotionInput>, 'onChange' | 'value'> & {
     defaultValue: string
-    outlinedInputProps?: OutlinedInputProps
     onChange?: (newValue: string) => void
     type: 'folder' | 'file'
   }
->(({ label, outlinedInputProps, onChange, defaultValue, type, placeholder, ...props }, ref) => {
-  const { t } = useTranslation()
+>(({ onChange, defaultValue, type, ...props }, ref) => {
   const [value, setValue] = useState(defaultValue)
   const [isHover, setHover] = useState(false)
 
@@ -55,6 +47,35 @@ const TextFieldDialog = forwardRef<
     }
   }
 
+  return (
+    <MotionInput
+      leadingAddon={
+        <Button
+          variant="link"
+          className="-mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50"
+          color={(typeof props.error === 'boolean' ? props.error : props.error != null) ? 'error' : undefined}
+          onClick={onClickInput}
+          onMouseEnter={() => {
+            setHover(true)
+          }}
+          onMouseLeave={() => {
+            setHover(false)
+          }}
+          startIcon={isHover ? <FolderArrowDownIcon /> : <FolderIcon />}
+        />
+      }
+      ref={ref}
+      value={value}
+      onChange={(evt) => {
+        const newValue = evt.currentTarget.value
+
+        setValue(newValue)
+        onChange?.(newValue)
+      }}
+      {...props}
+    />
+  )
+  /*
   return (
     <MotionFormControl fullWidth variant="outlined" {...props} ref={ref}>
       <InputLabel className="flex items-center" htmlFor={outlinedInputProps?.id}>
@@ -94,7 +115,7 @@ const TextFieldDialog = forwardRef<
         {...outlinedInputProps}
       />
     </MotionFormControl>
-  )
+  ) */
 })
 
 TextFieldDialog.displayName = 'TextFieldDialog'

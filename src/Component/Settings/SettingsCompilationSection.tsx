@@ -5,7 +5,6 @@
  *
  */
 
-import TextField from '@mui/material/TextField'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import Input from 'App/Component/UI/Input'
