@@ -19,7 +19,14 @@ const TutorialTooltip = forwardRef<HTMLDivElement, Omit<TooltipProps, 'open' | '
       <Tooltip
         arrow
         open={currentStep.some && currentStep.val === step}
-        classes={{ tooltip: 'text-sm px-4 py-2' }}
+        classes={{ tooltip: 'text-lg leading-5 px-4 py-2' }}
+        componentsProps={{
+          tooltip: {
+            sx: {
+              fontSize: '1rem',
+            },
+          },
+        }}
         ref={ref}
         {...props}
       >

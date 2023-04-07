@@ -5,11 +5,9 @@
  *
  */
 
-import Button from '@mui/material/Button'
-import CloseIcon from '@mui/icons-material/Close'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import Button from 'App/Component/UI/Button'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { ArrowLeftIcon, ArrowRightIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
 const TutorialArrows = ({ onBack, onNext }: { onBack: () => void; onNext: () => void }) => {
   const { total, step } = useSettingsTutorial()
@@ -17,15 +15,18 @@ const TutorialArrows = ({ onBack, onNext }: { onBack: () => void; onNext: () => 
   return (
     <>
       <Button
-        variant="contained"
         disabled={step.none || step.val === 'settings-game'}
         className="fixed left-4 top-1/2 min-w-fit -translate-y-1/2 p-2"
         onClick={onBack}
       >
-        <ArrowBackIcon />
+        <ArrowLeftIcon className="h-5 w-5" />
       </Button>
-      <Button variant="contained" className="fixed right-4 top-1/2 min-w-fit -translate-y-1/2 p-2" onClick={onNext}>
-        {step.none || step.val !== 'documentation' ? <ArrowForwardIcon /> : <CloseIcon />}
+      <Button className="fixed right-4 top-1/2 min-w-fit -translate-y-1/2 p-2" onClick={onNext}>
+        {step.none || step.val !== 'documentation' ? (
+          <ArrowRightIcon className="h-5 w-5" />
+        ) : (
+          <XMarkIcon className="h-5 w-5" />
+        )}
       </Button>
       <div className="mt-4 flex justify-center text-xl">
         {total.current}/{total.end}

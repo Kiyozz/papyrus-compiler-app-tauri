@@ -5,10 +5,9 @@
  *
  */
 
-import CloseIcon from '@mui/icons-material/Close'
-import Backdrop from '@mui/material/Backdrop'
-import Button from '@mui/material/Button'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import TutorialArrows from 'App/Component/Tutorial/Settings/TutorialArrows'
+import Button from 'App/Component/UI/Button'
 import { type TutorialRefs, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -40,22 +39,21 @@ const TutorialBackdrop = ({
   }, [scrollInto, tutorialRef])
 
   return (
-    <Backdrop open className="items-end pb-6" timeout={{ enter: 0 }}>
+    <div className="fixed inset-0 z-30 bg-black/30">
       <TutorialArrows onBack={onBack} onNext={onNext} />
       {step.some && step.val !== 'documentation' && (
         <Button
-          className="fixed top-4 left-4 z-50"
-          variant="contained"
-          color="info"
+          className="fixed left-4 top-4 z-50"
+          color="inherit"
           onClick={() => {
             skip('skip')
           }}
-          endIcon={<CloseIcon />}
+          endIcon={<XMarkIcon className="h-5 w-5" />}
         >
           {t('common.skip')}
         </Button>
       )}
-    </Backdrop>
+    </div>
   )
 }
 

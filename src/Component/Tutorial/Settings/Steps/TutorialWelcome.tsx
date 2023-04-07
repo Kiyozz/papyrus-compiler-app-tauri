@@ -5,12 +5,12 @@
  *
  */
 
-import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser'
-import Button from '@mui/material/Button'
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/solid'
 import Typography from '@mui/material/Typography'
 import AnchorExternal, { type AnchorExternalProps } from 'App/Component/AnchorExternal'
 import AnimateAppLogo from 'App/Component/AnimateAppLogo'
 import TutorialContent from 'App/Component/Tutorial/Settings/TutorialContent'
+import Button from 'App/Component/UI/Button'
 import useDocumentationUrl from 'App/Hook/UseDocumentationUrl'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useMatomo } from 'App/Hook/UseMatomo'
@@ -26,7 +26,7 @@ const AnchorWithOpenInBrowser = ({ children, ...props }: AnchorExternalProps) =>
   return (
     <AnchorExternal className="inline-flex cursor-pointer items-center gap-1 underline" {...props}>
       <span>{children}</span>
-      <OpenInBrowserIcon />
+      <ArrowTopRightOnSquareIcon className="h-4 w-4" />
     </AnchorExternal>
   )
 }
@@ -66,7 +66,6 @@ const TutorialWelcome = () => {
             </AnimatePresence>
             <div className="mt-12 flex gap-2">
               <MotionButton
-                variant="contained"
                 onClick={() => {
                   navigate('/settings')
                   changeStep('settings-game')
@@ -80,6 +79,7 @@ const TutorialWelcome = () => {
                 {t('common.settingsTutorial.welcome.needHelpText')}
               </MotionButton>
               <MotionButton
+                variant="link"
                 color="inherit"
                 onClick={() => {
                   skip('deny')

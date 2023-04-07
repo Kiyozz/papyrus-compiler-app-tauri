@@ -75,10 +75,10 @@ const fr: TranslationSchema = {
         needHelpText: "J'ai besoin d'aide",
       },
       settings: {
-        game: 'Enregistrez les informations de votre jeu',
-        compiler: "Enregistrez le chemin vers le compilateur Papyrus. Disponible après l'installation de Creation Kit",
-        concurrent: 'Enregistrez le nombre de scripts compilés en simultané.',
-        mo2: 'Enregistrez vos informations MO2. Ignorez cette option si vous utilisez PCA à travers MO2',
+        game: 'Commencez par enregistrer les informations de votre jeu',
+        compiler: "Ensuite, le chemin vers le compilateur Papyrus. Disponible après l'installation de Creation Kit",
+        concurrent: 'Optionnel, vous pouvez paramétrer le nombre de scripts compilés en simultané.',
+        mo2: "Optionnel, ajoutez les informations de votre instance MO2. <0>Ce n'est pas nécessaire si vous utilisez PCA à travers MO2</0>",
       },
       compilation: {
         addScripts: 'Ajouter des scripts',

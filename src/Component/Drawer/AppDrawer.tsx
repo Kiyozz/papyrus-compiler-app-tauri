@@ -130,6 +130,7 @@ function AppDrawer() {
     <Drawer
       PaperProps={{
         sx: {
+          zIndex: 10,
           top: 64,
           height: `calc(100% - ${64}px)`,
         },

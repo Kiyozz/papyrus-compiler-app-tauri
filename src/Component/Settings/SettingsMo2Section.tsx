@@ -20,7 +20,7 @@ import { enterPageAnimate } from 'App/Lib/Framer'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { fromNullable } from 'App/Lib/TsResults'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { Some } from 'ts-results'
 
@@ -51,7 +51,15 @@ function SettingsMo2Section() {
       ref={refs['settings-mo2']}
       description="Si vous utilisez PCA en dehors de MO2, ajoutez les informations de l'instance MO2 que vous utilisez."
     >
-      <TutorialTooltip title={t('common.settingsTutorial.settings.mo2')} step="settings-mo2" placement="top-end">
+      <TutorialTooltip
+        title={
+          <Trans i18nKey="common.settingsTutorial.settings.mo2">
+            <strong />
+          </Trans>
+        }
+        step="settings-mo2"
+        placement="top-start"
+      >
         <motion.div layout>
           <Switch
             name="mo2"
