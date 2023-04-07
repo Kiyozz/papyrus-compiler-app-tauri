@@ -28,7 +28,6 @@ import { Some } from 'ts-results'
 import { enterPageAnimate } from 'App/Lib/Framer'
 
 const MotionAlert = motion(Alert)
-const MotionRadioGroup = motion(RadioGroup)
 
 function SettingsGameSection() {
   const { t } = useTranslation()
@@ -78,11 +77,9 @@ function SettingsGameSection() {
         step="settings-game"
         ref={refs['settings-game']}
       >
-        <div>
-          <MotionRadioGroup
+        <motion.div layout layoutId="settings-game-game-type">
+          <RadioGroup
             className="mt-5"
-            layout
-            layoutId="settings-game-game-type"
             error={isGameExeError}
             name="settings-game-game-type"
             items={games.map((game) => ({
@@ -99,16 +96,16 @@ function SettingsGameSection() {
               })
               updateConf.mutate({
                 game: {
-                  type: value as GameType,
+                  type: value,
                 },
                 compilation: {
-                  flag: (value as GameType) === 'Fallout 4' ? 'Institute_Papyrus_Flags.flg' : 'TESV_Papyrus_Flags.flg',
+                  flag: value === 'Fallout 4' ? 'Institute_Papyrus_Flags.flg' : 'TESV_Papyrus_Flags.flg',
                 },
               })
             }}
             value={gameType}
           />
-        </div>
+        </motion.div>
       </TutorialTooltip>
 
       <motion.div className="mt-2" id="settings-game-game-folder" layout layoutId="settings-game-game-folder">
@@ -128,6 +125,7 @@ function SettingsGameSection() {
           }
           id="settings-game-game-folder-text-field"
           name="settings-game-game-folder-text-field"
+          placeholder={t('common.select.folder')}
           defaultValue={gamePath}
           onChange={(newValue) => {
             // update the game path in config
@@ -180,7 +178,7 @@ function SettingsGameSection() {
           </div>
         </TutorialTooltip>
       </motion.div>
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence>
         {isCheckConfQueryError(
           checkConf,
           Some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist'] as const),

@@ -83,7 +83,9 @@ function SettingsMo2Section() {
           type="folder"
           id="mo2-instance"
           name="mo2-instance"
+          placeholder={t('common.select.folder')}
           disabled={!mo2Use}
+          resetOnDisabled
           onChange={(newPath) => {
             updateConf.mutate({
               mo2: {
@@ -95,7 +97,7 @@ function SettingsMo2Section() {
         />
       </motion.div>
 
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="sync">
         {hasAnyMo2Error && (
           <MotionAlert
             key="mo2-error"

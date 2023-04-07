@@ -10,7 +10,7 @@ import { type AnimationProps } from 'framer-motion'
 export const enterPageAnimate: AnimationProps = {
   animate: { opacity: 1, y: 0 },
   initial: { opacity: 0, y: -10 },
-  exit: { opacity: 0, transition: { duration: 0.2 } },
+  exit: { opacity: 0, transition: { duration: 0.2, delay: 0.075 } },
   transition: { type: 'spring', duration: 0.5 },
 }
 

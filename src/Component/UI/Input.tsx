@@ -32,6 +32,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       error,
       type = 'text',
       disabled,
+      className,
       ...props
     },
     ref,
@@ -56,7 +57,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       hasLeadingAddon && inlineLeadingAddon && hasTrailingAddon && inlineTrailingAddon
 
     return (
-      <div className="relative">
+      <div className="relative [&_*]:delay-75">
         <div className={cx(cornerHint != null && 'flex justify-between')}>
           <label
             htmlFor={id}
@@ -92,8 +93,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 'placeholder:text-gray-400',
                 'disabled:cursor-not-allowed disabled:text-gray-500',
                 'group-aria-invalid:text-red-900 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:group-aria-disabled:text-red-300',
+                className,
               )}
-              placeholder="Jane Smith"
               ref={ref}
               disabled={disabled}
               {...props}
@@ -131,8 +132,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               className={cx(
                 'block w-full rounded-none rounded-r-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 group-aria-invalid:ring-red-300 group-aria-invalid:group-aria-disabled:ring-red-200',
                 'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
+                className,
               )}
-              placeholder="Jane Smith"
               ref={ref}
               disabled={disabled}
               {...props}
@@ -165,8 +166,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               id={id}
               className={cx(
                 'block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 disabled:cursor-not-allowed sm:text-sm sm:leading-6',
+                className,
               )}
-              placeholder="Jane Smith"
               ref={ref}
               disabled={disabled}
               {...props}
@@ -183,8 +184,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               className={cx(
                 'block w-full rounded-none rounded-l-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
                 'group-aria-invalid:text-red-900 group-aria-invalid:ring-red-300 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:focus:ring-red-500 group-aria-invalid:disabled:text-red-300 group-aria-invalid:disabled:ring-red-200',
+                className,
               )}
-              placeholder="Jane Smith"
               ref={ref}
               disabled={disabled}
               {...props}
@@ -222,8 +223,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   'block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6',
                   'disabled:cursor-not-allowed',
                   'group-aria-invalid:text-red-900 group-aria-invalid:placeholder:text-red-300',
+                  className,
                 )}
-                placeholder="Jane Smith"
                 ref={ref}
                 disabled={disabled}
                 {...props}
@@ -262,8 +263,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               className={cx(
                 'block w-full rounded-none border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
                 'group-aria-invalid:text-red-900 group-aria-invalid:ring-red-300 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:focus:ring-red-500 group-aria-invalid:disabled:text-red-300 group-aria-invalid:disabled:ring-red-200',
+                className,
               )}
-              placeholder="Jane Smith"
               ref={ref}
               disabled={disabled}
               {...props}
@@ -309,8 +310,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 className={cx(
                   'block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 disabled:cursor-not-allowed disabled:text-gray-500 sm:text-sm sm:leading-6',
                   'group-aria-invalid:text-red-900 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:disabled:text-red-300 group-aria-invalid:disabled:ring-red-200',
+                  className,
                 )}
-                placeholder="Jane Smith"
                 ref={ref}
                 disabled={disabled}
                 {...props}
@@ -358,8 +359,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               className={cx(
                 'block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6',
                 'disabled:cursor-not-allowed group-aria-invalid:text-red-900 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:disabled:text-red-300',
+                className,
               )}
-              placeholder="Jane Smith"
               ref={ref}
               disabled={disabled}
               {...props}
@@ -394,8 +395,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 id={id}
                 className={cx(
                   'block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6',
+                  className,
                 )}
-                placeholder="Jane Smith"
                 ref={ref}
                 disabled={disabled}
                 {...props}

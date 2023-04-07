@@ -10,7 +10,7 @@ import { open as openDialog } from '@tauri-apps/api/dialog'
 import Button from 'App/Component/UI/Button'
 import Input from 'App/Component/UI/Input'
 import { motion } from 'framer-motion'
-import React, { type ComponentPropsWithoutRef, forwardRef, useState } from 'react'
+import React, { type ComponentPropsWithoutRef, forwardRef, useLayoutEffect, useState } from 'react'
 import { FolderIcon, FolderArrowDownIcon } from '@heroicons/react/24/solid'
 
 const MotionInput = motion(Input)
@@ -21,10 +21,18 @@ const InputDialog = forwardRef<
     defaultValue: string
     onChange?: (newValue: string) => void
     type: 'folder' | 'file'
+    resetOnDisabled?: boolean
   }
->(({ onChange, defaultValue, type, ...props }, ref) => {
+>(({ onChange, defaultValue, resetOnDisabled = false, type, ...props }, ref) => {
   const [value, setValue] = useState(defaultValue)
   const [isHover, setHover] = useState(false)
+
+  useLayoutEffect(() => {
+    if (props.disabled === true && resetOnDisabled) {
+      setValue(defaultValue)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.disabled])
 
   const onClickInput = async (evt: React.MouseEvent<HTMLElement>) => {
     evt.preventDefault()
