@@ -178,6 +178,7 @@ export interface TranslationSchema {
           instance: {
             label: string
           }
+          activateIntegration: string
         }
         theme: {
           title: string
@@ -186,6 +187,7 @@ export interface TranslationSchema {
             light: string
             dark: string
           }
+          activateTelemetry: string
         }
       }
     }

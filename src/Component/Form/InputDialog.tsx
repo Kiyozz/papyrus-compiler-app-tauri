@@ -15,7 +15,7 @@ import { FolderIcon, FolderArrowDownIcon } from '@heroicons/react/24/solid'
 
 const MotionInput = motion(Input)
 
-const TextFieldDialog = forwardRef<
+const InputDialog = forwardRef<
   HTMLInputElement,
   Omit<ComponentPropsWithoutRef<typeof MotionInput>, 'onChange' | 'value'> & {
     defaultValue: string
@@ -52,7 +52,8 @@ const TextFieldDialog = forwardRef<
       leadingAddon={
         <Button
           variant="link"
-          className="-mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50"
+          disabled={props.disabled}
+          className="-mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50 group-aria-disabled:pointer-events-none"
           color={(typeof props.error === 'boolean' ? props.error : props.error != null) ? 'error' : undefined}
           onClick={onClickInput}
           onMouseEnter={() => {
@@ -118,6 +119,6 @@ const TextFieldDialog = forwardRef<
   ) */
 })
 
-TextFieldDialog.displayName = 'TextFieldDialog'
+InputDialog.displayName = 'TextFieldDialog'
 
-export default TextFieldDialog
+export default InputDialog

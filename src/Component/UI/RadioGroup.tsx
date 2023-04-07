@@ -30,7 +30,7 @@ function RadioGroupRoot<T extends string>(
 ) {
   return (
     <fieldset ref={ref} {...props}>
-      {legend != null && <legend>{legend}</legend>}
+      {legend != null && <legend className="sr-only">{legend}</legend>}
       <div className={cx('space-y-3', !col && 'sm:flex sm:items-center sm:space-x-10 sm:space-y-0')}>
         {items.map(({ className, id, label, value: itemValue, ...item }) => {
           return (

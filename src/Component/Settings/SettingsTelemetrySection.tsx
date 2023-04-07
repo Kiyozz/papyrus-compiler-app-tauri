@@ -5,8 +5,7 @@
  *
  */
 
-import Checkbox from '@mui/material/Checkbox'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from 'App/Component/UI/Switch'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
@@ -44,32 +43,26 @@ function SettingsTelemetrySection() {
       title={t('common.telemetry.title')}
       description={t('common.telemetry.text')}
     >
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={telemetryUse}
-            onChange={async (evt) => {
-              const checked = evt.currentTarget.checked
+      <Switch
+        name="telemetry"
+        checked={telemetryUse}
+        onChange={async (checked) => {
+          // If user disable telemetry, we send an event before to track it
+          if (conf.data.telemetry.use && !checked) {
+            trackEvent({
+              category: 'Conf',
+              action: 'Change telemetry',
+              name: 'Disable',
+            })
+          }
 
-              // If user disable telemetry, we send an event before to track it
-              if (conf.data.telemetry.use && !checked) {
-                trackEvent({
-                  category: 'Conf',
-                  action: 'Change telemetry',
-                  name: 'Disable',
-                })
-              }
-
-              await updateConf.mutateAsync({
-                telemetry: {
-                  use: checked,
-                },
-              })
-            }}
-            name="telemetry"
-          />
-        }
-        label={<span className="dark:text-white">{t('common.activate')}</span>}
+          await updateConf.mutateAsync({
+            telemetry: {
+              use: checked,
+            },
+          })
+        }}
+        label={t('page.settings.sections.theme.activateTelemetry')}
       />
     </SettingsSection>
   )

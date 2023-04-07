@@ -8,7 +8,7 @@
 import HelpIcon from '@mui/icons-material/Help'
 import Alert from '@mui/material/Alert'
 import Tooltip from '@mui/material/Tooltip'
-import TextFieldDialog from 'App/Component/Form/TextFieldDialog'
+import InputDialog from 'App/Component/Form/InputDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import RadioGroup from 'App/Component/UI/RadioGroup'
@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { fromNullable } from 'App/Lib/TsResults'
 import { Some } from 'ts-results'
-import { exitAlertAnimate } from 'App/Lib/Framer'
+import { enterPageAnimate } from 'App/Lib/Framer'
 
 const MotionAlert = motion(Alert)
 const MotionRadioGroup = motion(RadioGroup)
@@ -112,7 +112,7 @@ function SettingsGameSection() {
       </TutorialTooltip>
 
       <motion.div className="mt-2" id="settings-game-game-folder" layout layoutId="settings-game-game-folder">
-        <TextFieldDialog
+        <InputDialog
           label={
             <>
               {t('page.settings.sections.game.gameFolder.label')}
@@ -147,7 +147,7 @@ function SettingsGameSection() {
           ref={refs['settings-compiler']}
         >
           <div>
-            <TextFieldDialog
+            <InputDialog
               ref={refs['settings-compiler'] as Ref<HTMLInputElement>}
               label={
                 <>
@@ -185,7 +185,7 @@ function SettingsGameSection() {
             key="error-alert"
             severity="error"
             className="mt-3 dark:bg-red-400/10"
-            {...exitAlertAnimate}
+            {...enterPageAnimate}
             layout
             layoutId="error-alert"
           >

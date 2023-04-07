@@ -191,6 +191,7 @@ const fr: TranslationSchema = {
           instance: {
             label: "Dossier de l'instance",
           },
+          activateIntegration: "Activer l'intégration MO2",
         },
         theme: {
           title: 'Thème',
@@ -199,6 +200,7 @@ const fr: TranslationSchema = {
             light: 'Clair',
             dark: 'Sombre',
           },
+          activateTelemetry: 'Activer l’analyse',
         },
       },
     },
