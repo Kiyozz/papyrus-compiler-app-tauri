@@ -25,7 +25,6 @@ const InputDialog = forwardRef<
   }
 >(({ onChange, defaultValue, resetOnDisabled = false, type, ...props }, ref) => {
   const [value, setValue] = useState(defaultValue)
-  const [isHover, setHover] = useState(false)
 
   useLayoutEffect(() => {
     if (props.disabled === true && resetOnDisabled) {
@@ -37,7 +36,6 @@ const InputDialog = forwardRef<
   const onClickInput = async (evt: React.MouseEvent<HTMLElement>) => {
     evt.preventDefault()
     evt.currentTarget.blur()
-    setHover(false)
 
     const result = await openDialog({
       directory: type === 'folder',
@@ -61,16 +59,16 @@ const InputDialog = forwardRef<
         <Button
           variant="link"
           disabled={props.disabled}
-          className="-mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50 group-aria-disabled:pointer-events-none"
+          className="group/button -mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50 group-aria-disabled:pointer-events-none [&_*]:delay-0"
           color={(typeof props.error === 'boolean' ? props.error : props.error != null) ? 'error' : undefined}
           onClick={onClickInput}
-          onMouseEnter={() => {
-            setHover(true)
-          }}
-          onMouseLeave={() => {
-            setHover(false)
-          }}
-          startIcon={isHover ? <FolderArrowDownIcon /> : <FolderIcon />}
+          startIcon={
+            <div>
+              <FolderArrowDownIcon className="hidden group-hover/button:inline-block" />
+              <FolderIcon className="inline-block group-hover/button:hidden" />
+            </div>
+          }
+          // startIcon={isHover ? <FolderArrowDownIcon /> : <FolderIcon />}
         />
       }
       ref={ref}
