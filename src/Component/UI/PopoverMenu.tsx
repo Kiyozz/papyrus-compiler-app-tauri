@@ -39,7 +39,7 @@ function PopoverMenuPanel(
   return (
     <HeadlessMenu.Items
       className={cx(
-        'absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none',
+        'absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
         className,
       )}
       // className={cx('absolute -right-4 z-10 mt-1 flex w-screen max-w-min px-4', className)}

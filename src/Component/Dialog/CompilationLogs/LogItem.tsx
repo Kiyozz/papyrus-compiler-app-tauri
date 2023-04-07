@@ -44,7 +44,7 @@ const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
                   await copyToClipboard(`${log.script.name}\n\n${log.output.trim()}`)
                 })
 
-                onClickCopy(res.mapErr((reason) => new Error(`Failed to copy to clipboard: ${reason}`)))
+                onClickCopy(res.mapErr((reason) => new Error('Failed to copy to clipboard', { cause: reason })))
               }}
             >
               {t('common.copy')}

@@ -51,7 +51,7 @@ function SettingsMo2Section() {
       title={t('page.settings.sections.mo2.title')}
       id="mo2-section"
       ref={refs['settings-mo2']}
-      description="Si vous utilisez PCA en dehors de MO2, ajoutez les informations de l'instance de MO2 que vous utilisez."
+      description="Si vous utilisez PCA en dehors de MO2, ajoutez les informations de l'instance MO2 que vous utilisez."
     >
       <TutorialTooltip title={t('common.settingsTutorial.settings.mo2')} step="settings-mo2" placement="top-end">
         <MotionFormControlLabel

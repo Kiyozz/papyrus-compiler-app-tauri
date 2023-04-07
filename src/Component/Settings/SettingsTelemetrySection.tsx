@@ -5,10 +5,8 @@
  *
  */
 
-import HelpIcon from '@mui/icons-material/Help'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Tooltip from '@mui/material/Tooltip'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'

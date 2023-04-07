@@ -5,13 +5,6 @@
  *
  */
 
-import {
-  BarsArrowUpIcon,
-  ChevronDownIcon,
-  EnvelopeIcon,
-  QuestionMarkCircleIcon,
-  UsersIcon,
-} from '@heroicons/react/20/solid'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import Button from '@mui/material/Button'
 import Page from 'App/Component/Page/Page'
@@ -54,10 +47,6 @@ function SettingsPage() {
       </PageAppBar>
 
       <Page>
-        <div className="space-y-6">
-          <Input id="eee244email" type="email" label="Email" />
-        </div>
-
         <motion.section className="container mx-auto space-y-4" {...enterPageAnimate}>
           <SettingsGameSection />
           <SettingsCompilationSection />

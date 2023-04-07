@@ -6,6 +6,7 @@
  */
 
 const defaultTheme = require('tailwindcss/defaultTheme')
+const plugin = require('tailwindcss/plugin')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -54,6 +55,13 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require('@headlessui/tailwindcss', { prefix: 'ui' }),
+    plugin(function ({
+      addVariant,
+      matchVariant
+    }) {
+      addVariant('aria-invalid', ['&[aria-invalid="true"]'])
+      addVariant('group-aria-invalid', ':merge(.group)[aria-invalid="true"] &')
+    })
   ],
 }
 
