@@ -76,47 +76,6 @@ const InputDialog = forwardRef<
       {...props}
     />
   )
-  /*
-  return (
-    <MotionFormControl fullWidth variant="outlined" {...props} ref={ref}>
-      <InputLabel className="flex items-center" htmlFor={outlinedInputProps?.id}>
-        {label}
-      </InputLabel>
-      <OutlinedInput
-        classes={{
-          inputSizeSmall: 'text-xs',
-        }}
-        id={outlinedInputProps?.id}
-        label={label}
-        onChange={(evt) => {
-          const newValue = evt.currentTarget.value
-
-          setValue(newValue)
-          onChange?.(newValue)
-        }}
-        placeholder={placeholder ?? t('common.select.folder')}
-        startAdornment={
-          <InputAdornment position="start">
-            <IconButton
-              edge="start"
-              onClick={onClickInput}
-              onMouseEnter={() => {
-                setHover(true)
-              }}
-              onMouseLeave={() => {
-                setHover(false)
-              }}
-              color={props.error === true ? 'error' : 'inherit'}
-            >
-              {isHover ? <FolderOpenIcon /> : <FolderIcon />}
-            </IconButton>
-          </InputAdornment>
-        }
-        value={value}
-        {...outlinedInputProps}
-      />
-    </MotionFormControl>
-  ) */
 })
 
 InputDialog.displayName = 'TextFieldDialog'

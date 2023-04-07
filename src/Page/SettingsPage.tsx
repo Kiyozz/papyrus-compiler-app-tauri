@@ -46,7 +46,7 @@ function SettingsPage() {
       </PageAppBar>
 
       <Page>
-        <motion.section className="container mx-auto space-y-4" {...enterPageAnimate}>
+        <motion.section className="container mx-auto max-w-6xl space-y-4" {...enterPageAnimate}>
           <SettingsGameSection />
           <SettingsCompilationSection />
           <SettingsMo2Section />

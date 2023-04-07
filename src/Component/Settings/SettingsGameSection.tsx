@@ -5,12 +5,12 @@
  *
  */
 
-import HelpIcon from '@mui/icons-material/Help'
-import Alert from '@mui/material/Alert'
+import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid'
 import Tooltip from '@mui/material/Tooltip'
 import InputDialog from 'App/Component/Form/InputDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
+import Alert from 'App/Component/UI/Alert'
 import RadioGroup from 'App/Component/UI/RadioGroup'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
@@ -114,15 +114,17 @@ function SettingsGameSection() {
       <motion.div className="mt-2" id="settings-game-game-folder" layout layoutId="settings-game-game-folder">
         <InputDialog
           label={
-            <>
-              {t('page.settings.sections.game.gameFolder.label')}
+            <div className="flex items-center">
+              <span>{t('page.settings.sections.game.gameFolder.label')}</span>
 
               <Tooltip
                 title={t('page.settings.sections.game.gameFolder.tooltip', { executable: toExecutable(gameType) })}
               >
-                <HelpIcon className="ml-1" />
+                <span className="ml-1">
+                  <QuestionMarkCircleIcon className="h-5 w-5" />
+                </span>
               </Tooltip>
-            </>
+            </div>
           }
           id="settings-game-game-folder-text-field"
           name="settings-game-game-folder-text-field"
@@ -150,13 +152,15 @@ function SettingsGameSection() {
             <InputDialog
               ref={refs['settings-compiler'] as Ref<HTMLInputElement>}
               label={
-                <>
-                  {t('page.settings.sections.game.compiler.label')}
+                <div className="flex items-center">
+                  <span>{t('page.settings.sections.game.compiler.label')}</span>
 
                   <Tooltip title={t('page.settings.sections.game.compiler.tooltip')}>
-                    <HelpIcon className="ml-1" />
+                    <span className="ml-1">
+                      <QuestionMarkCircleIcon className="ml-1 h-5 w-5" />
+                    </span>
                   </Tooltip>
-                </>
+                </div>
               }
               defaultValue={gameCompilerPath}
               type="file"
@@ -184,7 +188,8 @@ function SettingsGameSection() {
           <MotionAlert
             key="error-alert"
             severity="error"
-            className="mt-3 dark:bg-red-400/10"
+            className="mt-3"
+            transition={{ type: 'tween' }}
             {...enterPageAnimate}
             layout
             layoutId="error-alert"

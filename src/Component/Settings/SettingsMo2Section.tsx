@@ -5,10 +5,10 @@
  *
  */
 
-import Alert from '@mui/material/Alert'
 import InputDialog from 'App/Component/Form/InputDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
+import Alert from 'App/Component/UI/Alert'
 import Switch from 'App/Component/UI/Switch'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
@@ -100,7 +100,7 @@ function SettingsMo2Section() {
           <MotionAlert
             key="mo2-error"
             severity="error"
-            className="mt-3 dark:bg-red-400/10"
+            className="mt-3"
             transition={{ type: 'tween' }}
             {...enterPageAnimate}
             layout
