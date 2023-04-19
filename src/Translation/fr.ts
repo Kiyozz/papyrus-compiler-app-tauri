@@ -72,7 +72,7 @@ const fr: TranslationSchema = {
           "C'est votre première utilisation de PCA. Nous vous recommandons de suivre le tutoriel pour vous familiariser avec l'application.",
         documentationText:
           "Assurez-vous d'avoir tous les prérequis. Vous pouvez consulter la <0>documentation</0> pour plus d'informations.",
-        needHelpText: "J'ai besoin d'aide",
+        needHelpText: "C'est la première fois que j'utilise PCA",
       },
       settings: {
         game: 'Commencez par enregistrer les informations de votre jeu',

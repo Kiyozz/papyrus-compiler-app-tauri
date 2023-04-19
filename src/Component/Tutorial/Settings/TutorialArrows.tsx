@@ -28,8 +28,10 @@ const TutorialArrows = ({ onBack, onNext }: { onBack: () => void; onNext: () => 
           <XMarkIcon className="h-5 w-5" />
         )}
       </Button>
-      <div className="mt-4 flex justify-center text-xl">
-        {total.current}/{total.end}
+      <div className="mt-4 flex justify-center">
+        <span className="rounded-md bg-indigo-600 px-2 py-0.5 leading-6 text-white">
+          {total.current}/{total.end}
+        </span>
       </div>
     </>
   )

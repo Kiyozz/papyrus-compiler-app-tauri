@@ -38,6 +38,24 @@ const TutorialBackdrop = ({
     }
   }, [scrollInto, tutorialRef])
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        onNext()
+      } else if (e.key === 'ArrowLeft') {
+        onBack()
+      } else if (e.key === 'Escape') {
+        skip('skipKey')
+      }
+    }
+
+    window.addEventListener('keydown', onKey)
+
+    return () => {
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [onBack, onNext, skip])
+
   return (
     <div className="fixed inset-0 z-30 bg-black/30">
       <TutorialArrows onBack={onBack} onNext={onNext} />

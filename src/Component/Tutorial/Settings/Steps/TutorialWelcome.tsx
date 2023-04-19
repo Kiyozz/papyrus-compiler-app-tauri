@@ -6,7 +6,6 @@
  */
 
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/solid'
-import Typography from '@mui/material/Typography'
 import AnchorExternal, { type AnchorExternalProps } from 'App/Component/AnchorExternal'
 import AnimateAppLogo from 'App/Component/AnimateAppLogo'
 import TutorialContent from 'App/Component/Tutorial/Settings/TutorialContent'
@@ -19,7 +18,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-const MotionTypography = motion(Typography)
 const MotionButton = motion(Button)
 
 const AnchorWithOpenInBrowser = ({ children, ...props }: AnchorExternalProps) => {
@@ -43,29 +41,28 @@ const TutorialWelcome = () => {
       <AnimatePresence>
         {!documentationUrl.isLoading && (
           <motion.div
-            className="container mx-auto flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center"
+            className="container prose mx-auto h-full w-full items-center justify-center px-4 text-center"
             {...enterPageAnimate}
           >
-            <div className="text-9xl">
-              <AnimateAppLogo animate withText />
-            </div>
-            <MotionTypography variant="h4" gutterBottom className="font-normal" {...withDelay(1.4, enterPageAnimate)}>
-              {t('common.settingsTutorial.welcome.title')}
-            </MotionTypography>
-            <MotionTypography gutterBottom className="font-normal" {...withDelay(1.75, enterPageAnimate)}>
+            <AnimateAppLogo animate />
+            <motion.h1 {...withDelay(1.4, enterPageAnimate)}>{t('common.settingsTutorial.welcome.title')}</motion.h1>
+            <motion.p {...withDelay(1.75, enterPageAnimate)}>
               {t('common.settingsTutorial.welcome.firstStartText')}
-            </MotionTypography>
+            </motion.p>
             <AnimatePresence>
               {documentationUrl.isSuccess && (
-                <MotionTypography className="font-bold" {...withDelay(1.75, enterPageAnimate)}>
-                  <Trans i18nKey="common.settingsTutorial.welcome.documentationText">
-                    <AnchorWithOpenInBrowser href={documentationUrl.data} />
-                  </Trans>
-                </MotionTypography>
+                <motion.p className="font-bold" {...withDelay(1.75, enterPageAnimate)}>
+                  <strong>
+                    <Trans i18nKey="common.settingsTutorial.welcome.documentationText">
+                      <AnchorWithOpenInBrowser href={documentationUrl.data} />
+                    </Trans>
+                  </strong>
+                </motion.p>
               )}
             </AnimatePresence>
-            <div className="mt-12 flex gap-2">
+            <div className="mt-12 flex justify-center gap-2">
               <MotionButton
+                size="xl"
                 onClick={() => {
                   navigate('/settings')
                   changeStep('settings-game')

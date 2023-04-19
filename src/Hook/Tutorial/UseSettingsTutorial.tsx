@@ -42,7 +42,7 @@ const Context = createContext({
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   refs: {} as TutorialRefs,
   scrollInto: (ref: keyof TutorialRefs) => {},
-  skip: (reason: 'skip' | 'end' | 'deny') => {},
+  skip: (reason: 'skip' | 'skipKey' | 'end' | 'deny') => {},
   total: {
     current: 0,
     end: 8,
@@ -114,7 +114,7 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
   )
 
   const skip = useCallback(
-    (reason: 'skip' | 'end' | 'deny') => {
+    (reason: 'skip' | 'skipKey' | 'end' | 'deny') => {
       changeStep('end')
       updateConf.mutate({
         tutorial: {
