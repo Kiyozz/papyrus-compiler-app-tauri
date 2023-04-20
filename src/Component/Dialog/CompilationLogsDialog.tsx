@@ -5,7 +5,6 @@
  *
  */
 
-import Snackbar from '@mui/material/Snackbar'
 import is from '@sindresorhus/is'
 import LogItem from 'App/Component/Dialog/CompilationLogs/LogItem'
 import Dialog from 'App/Component/UI/Dialog'
@@ -14,6 +13,7 @@ import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSnackbar } from 'App/Hook/UseSnackbar'
 import { enterPageAnimate } from 'App/Lib/Framer'
+import Toast from 'App/Component/UI/Toast'
 import { AnimatePresence, motion } from 'framer-motion'
 import { type KeyboardEvent, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -28,7 +28,6 @@ function CompilationLogsDialog() {
   const {
     snackbar,
     error: errorCopy,
-    empty: emptyCopy,
     success: successCopy,
     close: closeCopy,
   } = useSnackbar({
@@ -98,18 +97,9 @@ function CompilationLogsDialog() {
           )}
         </AnimatePresence>
       </Dialog>
-      {/* <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={closeCopy}
-        TransitionProps={{
-          onExited: () => {
-            emptyCopy()
-          },
-        }}
-      >
-        <Alert severity={snackbar.status}>{snackbar.message}</Alert>
-      </Snackbar> */}
+      <Toast open={snackbar.open} duration={6000} severity={snackbar.status} dismiss={closeCopy} zIndex="above">
+        {snackbar.message}
+      </Toast>
     </>
   )
 }

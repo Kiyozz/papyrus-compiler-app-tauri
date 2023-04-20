@@ -35,7 +35,6 @@ function App() {
         ) : (
           <motion.div layoutScroll {...fadeAnimate}>
             <SettingsTutorialProvider>
-              {/* <AppDrawer /> */}
               <Drawer />
               <CompilationLogsDialog />
               <OpenDocumentationDialog />

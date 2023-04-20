@@ -5,12 +5,22 @@
  *
  */
 
+import { useConf } from 'App/Hook/Conf/UseConf'
 import cx from 'classnames'
 import { type PropsWithChildren } from 'react'
 
 function PageAppBar({ title, className, children }: PropsWithChildren<{ title: string; className?: string }>) {
+  const conf = useConf()
+  const isDrawerOpen = conf.data?.misc.drawerOpen ?? false
+
   return (
-    <div className={cx('sticky top-0 z-20 bg-white py-4 pl-[calc(56px+1.5rem)] pr-6 dark:bg-gray-800', className)}>
+    <div
+      className={cx(
+        'sticky top-0 z-20 bg-white py-4 pr-6 transition-[padding-left] duration-[225ms] ease-sharp dark:bg-gray-800',
+        isDrawerOpen ? 'pl-[13.5rem]' : 'pl-[calc(56px+1.5rem)]',
+        className,
+      )}
+    >
       <div className="mx-auto max-w-7xl">
         <div className="md:flex md:items-center md:justify-between">
           <div className="min-w-0 flex-1">

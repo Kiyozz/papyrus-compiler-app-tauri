@@ -9,7 +9,7 @@ import { XCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, CheckCircl
 import cx from 'classnames'
 import { type ComponentPropsWithoutRef, forwardRef, type Ref } from 'react'
 
-type AlertProps = ComponentPropsWithoutRef<'div'> & {
+export type AlertProps = ComponentPropsWithoutRef<'div'> & {
   severity?: 'success' | 'error' | 'warning' | 'info'
 }
 

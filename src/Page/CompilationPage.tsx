@@ -6,8 +6,6 @@
  */
 
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid'
-import Alert from '@mui/material/Alert'
-import Snackbar from '@mui/material/Snackbar'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import CreateGroupFromScriptsButton from 'App/Component/Compilation/CreateGroupFromScriptsButton'
@@ -34,6 +32,7 @@ import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScr
 import { enterPageAnimate } from 'App/Lib/Framer'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
+import Toast from 'App/Component/UI/Toast'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { fromNullable } from 'App/Lib/TsResults'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -216,16 +215,14 @@ function CompilationPage() {
         </div>
       </Page>
 
-      <Snackbar open={isCheckConfQueryError(checkConf)} sx={{ zIndex: 30 }}>
-        <Alert severity="error">
-          {conf.isSuccess &&
-            isCheckConfQueryError(checkConf) &&
-            t<string>('common.confCheckError', {
-              context: checkConf.data?.some ? checkConf.data.val.type : undefined,
-              gameExe: toExecutable(conf.data.game.type),
-            })}
-        </Alert>
-      </Snackbar>
+      <Toast open={isCheckConfQueryError(checkConf)} dismissible={false} severity="error">
+        {conf.isSuccess &&
+          isCheckConfQueryError(checkConf) &&
+          t<string>('common.confCheckError', {
+            context: checkConf.data?.some ? checkConf.data.val.type : undefined,
+            gameExe: toExecutable(conf.data.game.type),
+          })}
+      </Toast>
     </div>
   )
 }
