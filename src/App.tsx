@@ -8,7 +8,7 @@
 import CompilationLogsDialog from 'App/Component/Dialog/CompilationLogsDialog'
 import OpenDocumentationDialog from 'App/Component/Dialog/OpenDocumentationDialog'
 import TelemetryDialog from 'App/Component/Dialog/TelemetryDialog'
-import AppDrawer from 'App/Component/Drawer/AppDrawer'
+import Drawer from 'App/Component/Drawer'
 import LatestVersionSnackbar from 'App/Component/Snackbar/LatestVersionSnackbar'
 import SettingsTutorial from 'App/Component/SettingsTutorial'
 import { useConf } from 'App/Hook/Conf/UseConf'
@@ -35,7 +35,8 @@ function App() {
         ) : (
           <motion.div layoutScroll {...fadeAnimate}>
             <SettingsTutorialProvider>
-              <AppDrawer />
+              {/* <AppDrawer /> */}
+              <Drawer />
               <CompilationLogsDialog />
               <OpenDocumentationDialog />
               <LatestVersionSnackbar />

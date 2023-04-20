@@ -28,6 +28,41 @@ export const fadeAnimate: AnimationProps = {
   transition: { type: 'tween' },
 }
 
+export const fadeEaseAnimate: AnimationProps = {
+  animate: {
+    transition: {
+      ease: 'easeOut',
+      duration: 0.2,
+    },
+    opacity: 1,
+  },
+  initial: { opacity: 0 },
+  exit: {
+    opacity: 0,
+    transition: { ease: 'easeIn', duration: 0.2 },
+  },
+}
+
+export const fadeScaleAnimate: AnimationProps = {
+  animate: {
+    transition: {
+      ease: 'easeOut',
+      duration: 0.3,
+    },
+    opacity: 1,
+    scale: 1,
+  },
+  initial: {
+    opacity: 0,
+    scale: 0.97,
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.97,
+    transition: { ease: 'easeIn', duration: 0.2 },
+  },
+}
+
 export function withDelay(delay: number, props: AnimationProps): AnimationProps {
   return {
     ...props,

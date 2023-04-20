@@ -5,6 +5,7 @@
  *
  */
 
+import cx from 'classnames'
 import { type Variants, motion } from 'framer-motion'
 import appLogo from 'App/Asset/app-logo.png'
 
@@ -25,14 +26,14 @@ const svgVariants: Variants = {
   },
 }
 
-const AnimateAppLogo = ({ animate = false }: { animate?: boolean }) => {
+const AnimateAppLogo = ({ animate = false, className }: { animate?: boolean; className?: string }) => {
   return (
     <motion.img
       src={appLogo}
       initial="hidden"
       animate="visible"
       variants={animate ? svgVariants : undefined}
-      className="inline-block h-72"
+      className={cx('inline-block', className)}
     />
   )
 }

@@ -10,7 +10,7 @@ import { type PropsWithChildren } from 'react'
 
 function PageAppBar({ title, className, children }: PropsWithChildren<{ title: string; className?: string }>) {
   return (
-    <div className={cx('sticky top-0 z-20 bg-white px-6 py-4 dark:bg-gray-800', className)}>
+    <div className={cx('sticky top-0 z-20 bg-white py-4 pl-[calc(56px+1.5rem)] pr-6 dark:bg-gray-800', className)}>
       <div className="mx-auto max-w-7xl">
         <div className="md:flex md:items-center md:justify-between">
           <div className="min-w-0 flex-1">

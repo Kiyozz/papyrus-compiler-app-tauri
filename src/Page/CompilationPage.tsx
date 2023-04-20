@@ -160,7 +160,7 @@ function CompilationPage() {
                     }}
                     startIcon={<XMarkIcon />}
                   >
-                    {t('common.clear')}
+                    {t('common.clearList')}
                   </Button>
 
                   <TutorialTooltip

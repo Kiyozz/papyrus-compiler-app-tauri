@@ -88,7 +88,6 @@ function SettingsGameSection() {
               value: game.value,
             }))}
             onChange={(evt, value) => {
-              console.log(value)
               trackEvent({
                 category: 'Conf',
                 action: 'Change game',

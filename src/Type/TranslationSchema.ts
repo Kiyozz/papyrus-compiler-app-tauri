@@ -12,7 +12,7 @@ export interface TranslationSchema {
     skip: string
     close: string
     cancel: string
-    clear: string
+    clearList: string
     confirm: string
     create: string
     start: string
@@ -25,6 +25,8 @@ export interface TranslationSchema {
     group: string
     recentFiles: string
     activate: string
+    failed: string
+    succeeded: string
     select: {
       file: string
       folder: string

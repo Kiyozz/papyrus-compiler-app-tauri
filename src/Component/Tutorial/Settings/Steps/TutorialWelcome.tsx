@@ -44,7 +44,7 @@ const TutorialWelcome = () => {
             className="container prose mx-auto h-full w-full items-center justify-center px-4 text-center"
             {...enterPageAnimate}
           >
-            <AnimateAppLogo animate />
+            <AnimateAppLogo animate className="h-72" />
             <motion.h1 {...withDelay(1.4, enterPageAnimate)}>{t('common.settingsTutorial.welcome.title')}</motion.h1>
             <motion.p {...withDelay(1.75, enterPageAnimate)}>
               {t('common.settingsTutorial.welcome.firstStartText')}

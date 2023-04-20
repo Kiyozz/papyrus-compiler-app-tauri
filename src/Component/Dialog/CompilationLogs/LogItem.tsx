@@ -5,40 +5,42 @@
  *
  */
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import ErrorIcon from '@mui/icons-material/Error'
-import Button from '@mui/material/Button'
-import Paper from '@mui/material/Paper'
-import Typography from '@mui/material/Typography'
+import { ClipboardIcon } from '@heroicons/react/24/outline'
 import { writeText as copyToClipboard } from '@tauri-apps/api/clipboard'
+import Badge from 'App/Component/UI/Badge'
+import Button from 'App/Component/UI/Button'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
-import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { Result } from 'ts-results'
 
-const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res: Result<void, Error>) => void }) => {
+function LogItem({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res: Result<void, Error>) => void }) {
   const { t } = useTranslation()
   const { remove } = useCompilationLogs()
   const isSuccessful = log.status === 'success'
   const isError = log.status === 'error'
 
   return (
-    <Paper aria-describedby={`${log.script.id}-logs`} aria-labelledby={`${log.script.id}-title`} elevation={3}>
-      <Paper elevation={3} className="sticky -top-3 rounded-b-none p-2 shadow-none">
-        <Typography
-          component="div"
-          id={`${log.script.id}-title`}
-          aria-label={log.script.name}
-          className="flex items-center justify-between"
-        >
-          <Typography className={cx('flex items-center gap-2 overflow-x-hidden')} variant="h6">
-            {isSuccessful && <CheckCircleIcon className="text-green-500" />}
-            {isError && <ErrorIcon className="text-red-300" />} {log.script.name}
-          </Typography>
-          <div className="flex">
+    <li aria-describedby={`${log.script.id}-logs`} aria-labelledby={`${log.script.id}-title`} className="py-4">
+      <div className="sticky -top-1 rounded-b-none bg-white px-6 pb-2">
+        <div id={`${log.script.id}-title`} aria-label={log.script.name} className="flex items-center justify-between">
+          <div className="flex items-center gap-2 overflow-x-hidden">
+            <span>{log.script.name}</span>
+            {isSuccessful && <Badge variant="success">{t('common.succeeded')}</Badge>}
+            {isError && <Badge variant="error">{t('common.failed')}</Badge>}
+          </div>
+          <div className="flex gap-4">
             <Button
-              color="inherit"
+              variant="soft"
+              color="error"
+              onClick={() => {
+                remove(log.script)
+              }}
+            >
+              {t('common.remove')}
+            </Button>
+            <Button
+              startIcon={<ClipboardIcon />}
               onClick={async () => {
                 const res = await Result.wrapAsync(async () => {
                   await copyToClipboard(`${log.script.name}\n\n${log.output.trim()}`)
@@ -49,31 +51,17 @@ const LogItem = ({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
             >
               {t('common.copy')}
             </Button>
-            <Button
-              color="inherit"
-              onClick={() => {
-                remove(log.script)
-              }}
-            >
-              {t('common.remove')}
-            </Button>
           </div>
-        </Typography>
-      </Paper>
-      <Paper
-        className="block w-full rounded-t-none bg-gray-800 p-4 text-white dark:bg-black"
-        component="code"
-        elevation={0}
-        id={`${log.script.id}-logs`}
-        role="log"
-      >
+        </div>
+      </div>
+      <code className="block w-full bg-gray-800 p-4 text-white dark:bg-black" id={`${log.script.id}-logs`} role="log">
         {log.output.split('\n').map((outputLine, i) => (
           <span className="block select-text break-words text-justify font-mono text-xs" key={i}>
             {outputLine}
           </span>
         ))}
-      </Paper>
-    </Paper>
+      </code>
+    </li>
   )
 }
 

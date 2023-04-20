@@ -13,17 +13,19 @@ type ActiveLinkProps = NavLinkProps & {
   to: string
   className?: string
   activeClassName?: string
+  nonActiveClassName?: string
+  children?: NavLinkProps['children']
 }
 
 const ActiveLink = forwardRef<HTMLAnchorElement, ActiveLinkProps>(function ActiveLink(
-  { className, activeClassName, children, ...props },
+  { className, activeClassName, nonActiveClassName, children, ...props },
   ref,
 ) {
   return (
     <NavLink
       {...props}
       className={({ isActive }) => {
-        return cx(className, isActive && activeClassName)
+        return cx(className, isActive ? activeClassName : nonActiveClassName)
       }}
       ref={ref}
     >

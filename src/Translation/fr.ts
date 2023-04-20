@@ -14,7 +14,7 @@ const fr: TranslationSchema = {
     skip: 'Passer',
     close: 'Fermer',
     cancel: 'Annuler',
-    clear: 'Vider',
+    clearList: 'Vider la liste',
     confirm: 'Confirmer',
     create: 'Créer',
     start: 'Démarrer',
@@ -27,6 +27,8 @@ const fr: TranslationSchema = {
     recentFiles: 'Fichiers récents',
     group: 'Groupe',
     activate: 'Activer',
+    failed: 'Échec',
+    succeeded: 'Succès',
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',

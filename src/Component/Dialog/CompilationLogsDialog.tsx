@@ -5,28 +5,22 @@
  *
  */
 
-import Alert from '@mui/material/Alert'
-import Button from '@mui/material/Button'
-import Dialog, { type DialogProps } from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
 import Snackbar from '@mui/material/Snackbar'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import is from '@sindresorhus/is'
 import LogItem from 'App/Component/Dialog/CompilationLogs/LogItem'
+import Dialog from 'App/Component/UI/Dialog'
+import Button from 'App/Component/UI/Button'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSnackbar } from 'App/Hook/UseSnackbar'
 import { enterPageAnimate } from 'App/Lib/Framer'
-import cx from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
-import { type KeyboardEvent } from 'react'
+import { type KeyboardEvent, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'onKeyDown'>) => {
+function CompilationLogsDialog() {
   const { t } = useTranslation()
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
   const {
     compilationLogs: [isOpen, setOpen],
   } = useDialogs()
@@ -53,64 +47,58 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
   return (
     <>
       <Dialog
-        aria-describedby="logs-content"
-        aria-labelledby="logs-title"
-        fullScreen
+        title={t('dialog.logs.title')}
+        actions={
+          <>
+            <Button className="mr-4" disabled={hasNoLogs} onClick={clear} variant="secondary">
+              {t('common.clearList')}
+            </Button>
+            <div className="ml-auto">
+              <Button
+                ref={closeButtonRef}
+                color="inherit"
+                onClick={() => {
+                  setOpen(false)
+                }}
+              >
+                {t('common.close')}
+              </Button>
+            </div>
+          </>
+        }
         open={isOpen}
         onKeyDown={handleDialogKeyDown}
-        onClose={() => {
-          setOpen(false)
-        }}
-        {...props}
+        onClose={setOpen}
+        initialFocus={closeButtonRef}
       >
-        <Toolbar className="p-0">
-          <DialogTitle className="grow" id="logs-title">
-            {t('dialog.logs.title')}
-          </DialogTitle>
-          <Button className="mr-4" disabled={hasNoLogs} onClick={clear} color="inherit">
-            {t('common.clear')}
-          </Button>
-        </Toolbar>
-        <DialogContent className={cx('flex flex-col gap-4')} dividers id="logs-content">
-          <AnimatePresence mode="wait">
-            {hasNoLogs ? (
-              <motion.div key="no-logs" className="flex grow items-center justify-center" {...enterPageAnimate}>
-                <Typography key="no-logs" variant="h5">
-                  {t('dialog.logs.noLogs')}
-                </Typography>
-              </motion.div>
-            ) : (
-              <motion.div key="logs-list" className="flex flex-col gap-4" {...enterPageAnimate}>
-                {logs.map((log) => (
-                  <LogItem
-                    key={log.script.id}
-                    log={log}
-                    onClickCopy={(res) => {
-                      if (res.err) {
-                        console.error(res.val)
-                        errorCopy(res.val)
-                      } else {
-                        successCopy()
-                      }
-                    }}
-                  />
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            color="inherit"
-            onClick={() => {
-              setOpen(false)
-            }}
-          >
-            {t('common.close')}
-          </Button>
-        </DialogActions>
+        <AnimatePresence mode="wait" initial={false}>
+          {hasNoLogs ? (
+            <motion.div key="no-logs" className="flex grow items-center justify-center" {...enterPageAnimate}>
+              <h5 className="text-xl leading-6 text-gray-900" key="no-logs">
+                {t('dialog.logs.noLogs')}
+              </h5>
+            </motion.div>
+          ) : (
+            <motion.ul key="logs-list" role="list" className="divide-y divide-gray-200" {...enterPageAnimate}>
+              {logs.map((log) => (
+                <LogItem
+                  key={log.script.id}
+                  log={log}
+                  onClickCopy={(res) => {
+                    if (res.err) {
+                      console.error(res.val)
+                      errorCopy(res.val)
+                    } else {
+                      successCopy()
+                    }
+                  }}
+                />
+              ))}
+            </motion.ul>
+          )}
+        </AnimatePresence>
       </Dialog>
-      <Snackbar
+      {/* <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={closeCopy}
@@ -121,7 +109,7 @@ const CompilationLogsDialog = (props: Omit<DialogProps, 'open' | 'onClose' | 'on
         }}
       >
         <Alert severity={snackbar.status}>{snackbar.message}</Alert>
-      </Snackbar>
+      </Snackbar> */}
     </>
   )
 }

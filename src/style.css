@@ -11,6 +11,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*:not(input):not(textarea):not(select):not(a):not(button) {
+*:not(input):not(textarea):not(select):not(a):not(button):not(button *):not(a *) {
   user-select: none;
+  cursor: default;
 }
