@@ -24,13 +24,12 @@ import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import cx from 'classnames'
-import { type ElementType } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type DrawerLink = {
   id: string
   label: string
-  icon: ElementType
+  icon: JSX.Element
   tutorial?: Omit<TutorialTooltipProps, 'children'>
 } & (
   | {
@@ -42,16 +41,6 @@ type DrawerLink = {
       onClick: () => void
     }
 )
-
-const DrawerIcon = ({ icon: Icon, className: defaultClassName }: { icon: ElementType; className?: string }) => {
-  const Comp = ({ className }: { className?: string }) => (
-    <Icon className={cx('h-6 w-6 shrink-0', defaultClassName, className)} aria-hidden="true" />
-  )
-
-  Comp.displayName = 'DrawerIcon'
-
-  return Comp
-}
 
 function Drawer() {
   const { t } = useTranslation()
@@ -71,19 +60,19 @@ function Drawer() {
     {
       id: 'compilation',
       label: t('nav.compilation'),
-      icon: DrawerIcon({ icon: QuestionMarkCircleIcon }),
+      icon: <QuestionMarkCircleIcon />,
       path: '/',
     },
     {
       id: 'groups',
       label: t('nav.groups'),
-      icon: DrawerIcon({ icon: RectangleGroupIcon }),
+      icon: <RectangleGroupIcon />,
       path: '/groups',
     },
     {
       id: 'settings',
       label: t('nav.settings'),
-      icon: DrawerIcon({ icon: Cog8ToothIcon }),
+      icon: <Cog8ToothIcon />,
       path: '/settings',
     },
   ] satisfies DrawerLink[]
@@ -92,15 +81,11 @@ function Drawer() {
     {
       id: 'logs',
       label: t('nav.logs'),
-      icon: hasAllSuccess
-        ? DrawerIcon({
-            icon: CheckCircleIcon,
-            className: 'text-green-500',
-          })
-        : DrawerIcon({
-            icon: ExclamationTriangleIcon,
-            className: cx(hasAnyError && 'text-red-300'),
-          }),
+      icon: hasAllSuccess ? (
+        <CheckCircleIcon className="text-green-500 group-hover:text-green-400" />
+      ) : (
+        <ExclamationTriangleIcon className={cx(hasAnyError && 'text-red-400 group-hover:text-red-600')} />
+      ),
       onClick: () => {
         // open logs dialog
         setCompilationLogsDialogOpen(true)
@@ -109,7 +94,7 @@ function Drawer() {
     {
       id: 'help',
       label: t('nav.help'),
-      icon: DrawerIcon({ icon: QuestionMarkCircleIcon }),
+      icon: <QuestionMarkCircleIcon />,
       onClick: () => {
         // open the doc website
         if (conf.data.misc.documentation.reminder) {
@@ -128,13 +113,14 @@ function Drawer() {
     {
       id: 'drawer-expand',
       label: t('nav.drawerClose'),
-      icon: DrawerIcon({
-        icon: ChevronLeftIcon,
-        className: cx(
-          'transition-transform duration-[225ms] ease-sharp',
-          conf.data?.misc.drawerOpen ? 'rotate-0' : 'rotate-180',
-        ),
-      }),
+      icon: (
+        <ChevronLeftIcon
+          className={cx(
+            'transition-transform duration-[225ms] ease-sharp',
+            conf.data.misc.drawerOpen ? 'scale-100' : 'scale-[-1]',
+          )}
+        />
+      ),
       onClick: () => {
         updateConf.mutate({
           misc: {
@@ -161,7 +147,7 @@ function Drawer() {
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
             <li className="mt-4">
               <ul role="list" className="-mx-2 space-y-1">
-                {links.map(({ id, label, path, icon: Icon }) => (
+                {links.map(({ id, label, path, icon }) => (
                   <li key={id}>
                     <ActiveLink
                       to={path}
@@ -169,12 +155,10 @@ function Drawer() {
                       activeClassName="bg-indigo-700 text-white"
                       nonActiveClassName="text-indigo-200 hover:bg-indigo-700 hover:text-white"
                     >
-                      {({ isActive }) => (
-                        <>
-                          <Icon className={cx(isActive ? 'text-white' : 'text-indigo-200 group-hover:text-white')} />
-                          <span className="truncate">{label}</span>
-                        </>
-                      )}
+                      <>
+                        <span className="flex h-6 w-6 shrink-0 group-hover:text-white">{icon}</span>
+                        <span className="truncate">{label}</span>
+                      </>
                     </ActiveLink>
                   </li>
                 ))}
@@ -182,15 +166,13 @@ function Drawer() {
             </li>
             <li className="mb-4 mt-auto">
               <ul role="list" className="-mx-2 mt-2 space-y-1">
-                {endLinks.map(({ id, label, icon: Icon, tutorial, onClick }) => {
+                {endLinks.map(({ id, label, icon, tutorial, onClick }) => {
                   const item = (
                     <button
                       onClick={onClick}
                       className="group flex w-full gap-x-3 rounded-md p-2 px-6 text-sm font-semibold leading-6 text-indigo-200 hover:bg-indigo-700 hover:text-white"
                     >
-                      <span className="flex h-6 w-6 shrink-0 group-hover:text-white">
-                        <Icon />
-                      </span>
+                      <span className="flex h-6 w-6 shrink-0 group-hover:text-white">{icon}</span>
                       <span className="truncate">{label}</span>
                     </button>
                   )
