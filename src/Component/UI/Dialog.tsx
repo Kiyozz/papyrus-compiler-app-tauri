@@ -29,7 +29,7 @@ function Dialog({
             <>
               <motion.div {...fadeEaseAnimate} className="fixed inset-0 bg-gray-500/75" aria-hidden="true" />
 
-              <motion.div {...fadeScaleAnimate} className="fixed inset-0 z-30 mx-auto max-w-6xl p-4">
+              <motion.div {...fadeScaleAnimate} className="fixed inset-0 mx-auto max-w-6xl p-4">
                 <HeadlessDialog.Panel className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-xl">
                   <div className="flex h-full flex-col">
                     <div className="p-6">

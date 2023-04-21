@@ -110,7 +110,7 @@ function SettingsMo2Section() {
           <MotionAlert
             key="mo2-error"
             severity="error"
-            className="mt-3"
+            className="mt-3 p-4"
             transition={{ type: 'tween' }}
             {...enterPageAnimate}
             layout

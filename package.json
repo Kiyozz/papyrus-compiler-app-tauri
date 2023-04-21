@@ -48,6 +48,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
+    "react-hot-toast": "^2.4.0",
     "react-i18next": "^12.2.0",
     "react-markdown": "^8.0.6",
     "react-polymorphic-box": "^3.0.3",
@@ -100,7 +101,8 @@
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
-        "@babel/core"
+        "@babel/core",
+        "csstype"
       ]
     }
   }

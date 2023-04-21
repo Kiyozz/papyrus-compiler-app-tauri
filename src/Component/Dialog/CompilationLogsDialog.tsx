@@ -11,11 +11,10 @@ import Dialog from 'App/Component/UI/Dialog'
 import Button from 'App/Component/UI/Button'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useDialogs } from 'App/Hook/UseDialogs'
-import { useSnackbar } from 'App/Hook/UseSnackbar'
 import { enterPageAnimate } from 'App/Lib/Framer'
-import Toast from 'App/Component/UI/Toast'
+import { toast } from 'App/Lib/Toaster'
 import { AnimatePresence, motion } from 'framer-motion'
-import { type KeyboardEvent, useRef } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function CompilationLogsDialog() {
@@ -25,23 +24,8 @@ function CompilationLogsDialog() {
     compilationLogs: [isOpen, setOpen],
   } = useDialogs()
   const { logs, clear } = useCompilationLogs()
-  const {
-    snackbar,
-    error: errorCopy,
-    success: successCopy,
-    close: closeCopy,
-  } = useSnackbar({
-    errorMessage: (error) => t('common.copyError', { error }),
-    successMessage: () => t('common.copySuccess'),
-  })
 
   const hasNoLogs = is.emptyArray(logs)
-
-  const handleDialogKeyDown = (evt: KeyboardEvent) => {
-    if (evt.key === 'Enter') {
-      setOpen(false)
-    }
-  }
 
   return (
     <>
@@ -66,7 +50,6 @@ function CompilationLogsDialog() {
           </>
         }
         open={isOpen}
-        onKeyDown={handleDialogKeyDown}
         onClose={setOpen}
         initialFocus={closeButtonRef}
       >
@@ -86,9 +69,9 @@ function CompilationLogsDialog() {
                   onClickCopy={(res) => {
                     if (res.err) {
                       console.error(res.val)
-                      errorCopy(res.val)
+                      toast.error(t('common.copyError', { error: res.val }))
                     } else {
-                      successCopy()
+                      toast.success(t('common.copySuccess'))
                     }
                   }}
                 />
@@ -97,9 +80,6 @@ function CompilationLogsDialog() {
           )}
         </AnimatePresence>
       </Dialog>
-      <Toast open={snackbar.open} duration={6000} severity={snackbar.status} dismiss={closeCopy} zIndex="above">
-        {snackbar.message}
-      </Toast>
     </>
   )
 }

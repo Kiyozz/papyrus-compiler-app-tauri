@@ -5,7 +5,7 @@
  *
  */
 
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import is from '@sindresorhus/is'
 import { open as openFileDialog } from '@tauri-apps/api/dialog'
 import Button, { type ButtonProps } from 'App/Component/UI/Button'

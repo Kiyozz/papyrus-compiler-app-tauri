@@ -17,6 +17,9 @@ import { useRootTheme } from 'App/Hook/UseRootTheme'
 import SettingsTutorialProvider from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { fadeAnimate } from 'App/Lib/Framer'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useMemo } from 'react'
+import { createPortal } from 'react-dom'
+import { Toaster } from 'react-hot-toast'
 import { Outlet } from 'react-router-dom'
 
 function App() {
@@ -25,8 +28,15 @@ function App() {
 
   useListenConfReset()
 
+  console.log('yo')
+
+  const memoizedToaster = useMemo(() => {
+    return createPortal(<Toaster position="bottom-left" />, document.body)
+  }, [])
+
   return (
     <>
+      {memoizedToaster}
       <AnimatePresence>
         {isLoading ? (
           <motion.div {...fadeAnimate} transition={{ delay: 0.3 }}>

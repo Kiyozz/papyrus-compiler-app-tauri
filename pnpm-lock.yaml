@@ -60,6 +60,7 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   react-hook-form: ^7.43.9
+  react-hot-toast: ^2.4.0
   react-i18next: ^12.2.0
   react-markdown: ^8.0.6
   react-polymorphic-box: ^3.0.3
@@ -111,6 +112,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.43.9_react@18.2.0
+  react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
   react-i18next: 12.2.0_2rh65uwnd6kial3dj4kteywnti
   react-markdown: 8.0.6_o2wclmlv6kymw75psj4clbbe6a
   react-polymorphic-box: 3.0.3_react@18.2.0
@@ -2708,6 +2710,12 @@ packages:
       slash: 3.0.0
     dev: true
 
+  /goober/2.1.13:
+    resolution: {integrity: sha512-jFj3BQeleOoy7t93E9rZ2de+ScC4lQICLwiAQmKMg9F6roKGaLSHoCDYKkWlSafg138jejvq/mTdvmnwDQgqoQ==}
+    peerDependencies:
+      csstype: ^3.0.10
+    dev: false
+
   /gopd/1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
     dependencies:
@@ -3766,6 +3774,20 @@ packages:
       react: ^16.8.0 || ^17 || ^18
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /react-hot-toast/2.4.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-qnnVbXropKuwUpriVVosgo8QrB+IaPJCpL8oBI6Ov84uvHZ5QQcTp2qg6ku2wNfgJl6rlQXJIQU5q+5lmPOutA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      goober: 2.1.13
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - csstype
     dev: false
 
   /react-i18next/12.2.0_2rh65uwnd6kial3dj4kteywnti:

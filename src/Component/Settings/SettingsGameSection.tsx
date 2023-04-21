@@ -185,7 +185,7 @@ function SettingsGameSection() {
           <MotionAlert
             key="error-alert"
             severity="error"
-            className="mt-3"
+            className="mt-3 p-4"
             transition={{ type: 'tween' }}
             {...enterPageAnimate}
             layout

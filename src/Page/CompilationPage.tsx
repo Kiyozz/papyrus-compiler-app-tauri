@@ -17,6 +17,7 @@ import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
+import { AlertContent, AlertIcon, AlertMessage } from 'App/Component/UI/Alert'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
@@ -29,10 +30,9 @@ import { createLogs } from 'App/Lib/CreateLog'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
 import { isBusy, isRunning } from 'App/Lib/FileScriptCompilation'
 import { fileScriptsToFileScriptCompilation } from 'App/Lib/FileScriptsToFileScriptCompilation'
-import { enterPageAnimate } from 'App/Lib/Framer'
+import { enterPageAnimate, fadeScaleAnimate } from 'App/Lib/Framer'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
-import Toast from 'App/Component/UI/Toast'
 import { toExecutable } from 'App/Lib/ToExecutable'
 import { fromNullable } from 'App/Lib/TsResults'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -41,8 +41,10 @@ import { useTranslation } from 'react-i18next'
 import { R } from 'App/Lib/FpTs'
 import Button from 'App/Component/UI/Button'
 import { ClockIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Link } from 'react-router-dom'
 
 const logs = createLogs('CompilationPage')
+const MotionAlertContent = motion(AlertContent)
 
 function CompilationPage() {
   const { t } = useTranslation()
@@ -123,6 +125,28 @@ function CompilationPage() {
 
       <Page className="flex flex-col">
         <div className="container mx-auto flex w-full max-w-6xl grow flex-col">
+          <AnimatePresence>
+            {conf.isSuccess && isCheckConfQueryError(checkConf) && (
+              <MotionAlertContent severity="error" className="flex" {...fadeScaleAnimate}>
+                <AlertIcon severity="error" className="py-4 pl-4" />
+                <AlertMessage severity="error" className="flex items-center divide-x">
+                  <p className="py-4">
+                    {t<string>('common.confCheckError', {
+                      context: checkConf.data?.some ? checkConf.data.val.type : undefined,
+                      gameExe: toExecutable(conf.data.game.type),
+                    })}
+                  </p>
+
+                  <Link
+                    to="/settings"
+                    className="flex grow items-center justify-center self-stretch rounded-r-md p-4 ring-inset focus-visible:outline-none focus-visible:ring focus-visible:ring-inherit"
+                  >
+                    Configuration
+                  </Link>
+                </AlertMessage>
+              </MotionAlertContent>
+            )}
+          </AnimatePresence>
           <AnimatePresence mode="wait">
             {scripts.length > 0 ? (
               <motion.div key="file-list" {...enterPageAnimate}>
@@ -214,15 +238,6 @@ function CompilationPage() {
           </AnimatePresence>
         </div>
       </Page>
-
-      <Toast open={isCheckConfQueryError(checkConf)} dismissible={false} severity="error">
-        {conf.isSuccess &&
-          isCheckConfQueryError(checkConf) &&
-          t<string>('common.confCheckError', {
-            context: checkConf.data?.some ? checkConf.data.val.type : undefined,
-            gameExe: toExecutable(conf.data.game.type),
-          })}
-      </Toast>
     </div>
   )
 }

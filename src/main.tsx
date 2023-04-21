@@ -116,7 +116,6 @@ rootRef.render(
       <DialogsProvider>
         <CompilationLogsProvider>
           <CompilationScriptsProvider>
-            {/* <MuiTheme> */}
             <MemoryRouter>
               <Matomo>
                 <RouterListen>
@@ -130,7 +129,6 @@ rootRef.render(
                 </RouterListen>
               </Matomo>
             </MemoryRouter>
-            {/* </MuiTheme> */}
           </CompilationScriptsProvider>
         </CompilationLogsProvider>
       </DialogsProvider>
