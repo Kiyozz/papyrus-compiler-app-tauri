@@ -62,6 +62,7 @@ function SettingsMo2Section() {
       >
         <motion.div layout>
           <Switch
+            className="mt-5"
             name="mo2"
             key="mo2"
             checked={mo2Use}

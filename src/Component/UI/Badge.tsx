@@ -8,7 +8,11 @@
 import cx from 'classnames'
 import { type PropsWithChildren } from 'react'
 
-function Badge({ children, variant = 'default' }: PropsWithChildren<{ variant?: 'error' | 'success' | 'default' }>) {
+function Badge({
+  children,
+  variant = 'default',
+  className,
+}: PropsWithChildren<{ variant?: 'error' | 'success' | 'default'; className?: string }>) {
   return (
     <span
       className={cx(
@@ -16,6 +20,7 @@ function Badge({ children, variant = 'default' }: PropsWithChildren<{ variant?: 
         variant === 'error' && 'bg-red-100 text-red-700',
         variant === 'default' && 'bg-gray-100 text-gray-600',
         variant === 'success' && 'bg-green-100 text-green-700',
+        className,
       )}
     >
       {children}

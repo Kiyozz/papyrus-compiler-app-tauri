@@ -59,8 +59,10 @@ module.exports = {
     plugin(function ({
       addVariant,
     }) {
+      addVariant('aria-not-disabled', ['&:not([aria-disabled="true"])'])
       addVariant('aria-invalid', ['&[aria-invalid="true"]'])
       addVariant('group-aria-invalid', ':merge(.group)[aria-invalid="true"] &')
+      addVariant('group-aria-not-disabled', ':merge(.group):not([aria-disabled="true"]) &')
     })
   ],
 }

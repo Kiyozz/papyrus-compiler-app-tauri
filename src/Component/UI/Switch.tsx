@@ -16,14 +16,20 @@ type SwitchProps = {
   label: string
   name: string
   id?: string
+  disabled?: boolean
 }
 
 function SwitchRoot(
-  { checked, onChange, label, name, id = name, className, ...props }: SwitchProps,
+  { checked, onChange, label, name, id = name, className, disabled = false, ...props }: SwitchProps,
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <HeadlessSwitch.Group as="div" ref={ref} className="mt-5 flex items-center">
+    <HeadlessSwitch.Group
+      as="div"
+      ref={ref}
+      className="group flex items-center aria-disabled:pointer-events-none aria-disabled:opacity-50"
+      aria-disabled={disabled ? 'true' : undefined}
+    >
       <HeadlessSwitch
         checked={checked}
         onChange={onChange}

@@ -28,8 +28,6 @@ function App() {
 
   useListenConfReset()
 
-  console.log('yo')
-
   const memoizedToaster = useMemo(() => {
     return createPortal(<Toaster position="bottom-left" />, document.body)
   }, [])

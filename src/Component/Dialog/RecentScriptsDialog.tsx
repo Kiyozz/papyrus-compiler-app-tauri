@@ -5,48 +5,36 @@
  *
  */
 
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import Alert from '@mui/material/Alert'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import Dialog, { type DialogProps } from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormGroup from '@mui/material/FormGroup'
-import IconButton from '@mui/material/IconButton'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import Snackbar from '@mui/material/Snackbar'
-import Toolbar from '@mui/material/Toolbar'
+import { type DialogProps } from '@headlessui/react'
+import { TrashIcon } from '@heroicons/react/20/solid'
 import is from '@sindresorhus/is'
-import RecentScriptsDialogContextMenu from 'App/Component/Dialog/RecentScriptsDialog/RecentScriptsDialogContextMenu'
+import RecentScriptsDialogActions from 'App/Component/Dialog/RecentScriptsDialog/RecentScriptsDialogActions'
+import Button from 'App/Component/UI/Button'
+import Dialog from 'App/Component/UI/Dialog'
+import Switch from 'App/Component/UI/Switch'
 import { useRecentScripts } from 'App/Hook/RecentScripts/UseRecentScripts'
 import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentScripts'
-import { useContextMenu } from 'App/Hook/UseContextMenu'
-import { useDialogOpen } from 'App/Hook/UseDialogOpen'
 import { useKey } from 'App/Hook/UseKey'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { useScriptsList } from 'App/Hook/UseScriptsList'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
+import { enterPageAnimate } from 'App/Lib/Framer'
 import { isFileScriptInArray } from 'App/Lib/IsFileScriptInArray'
+import { toast } from 'App/Lib/Toaster'
 import { fromNullable } from 'App/Lib/TsResults'
-import cx from 'classnames'
-import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { None, Result } from 'ts-results'
+import { Result } from 'ts-results'
+import { useBoolean } from 'usehooks-ts'
 
 function RecentScriptsDialog({
   currentScripts,
   onScriptsLoad,
   onClose,
+  open = false,
   ...props
-}: Omit<DialogProps, 'onClose' | 'onKeyDown'> & {
+}: Omit<DialogProps<'div'>, 'onClose' | 'onKeyDown' | 'children' | 'className'> & {
   onClose: () => void
   currentScripts: FileScript[]
   onScriptsLoad: (scripts: FileScript[]) => void
@@ -57,13 +45,7 @@ function RecentScriptsDialog({
     refetchOnWindowFocus: false,
   })
   const updateRecentScripts = useUpdateRecentScripts()
-  const {
-    handleClose: handleCloseContextMenu,
-    handleContextMenu,
-    contextMenu,
-    open: isContextMenuOpen,
-  } = useContextMenu()
-  const [isMoreDetails, setMoreDetails] = useState(false)
+  const { value: isMoreDetails, toggle: toggleMoreDetails, setValue: setMoreDetails } = useBoolean(false)
   const {
     scripts: scriptsToLoad,
     add: addScriptsToLoad,
@@ -71,9 +53,6 @@ function RecentScriptsDialog({
     clear: clearScriptsToLoad,
   } = useScriptsList({
     initialScripts: [] as FileScript[],
-  })
-  const { open, isOpen, close, TransitionProps, state } = useDialogOpen<Error>({
-    defaultState: None,
   })
 
   const effectiveClearScriptsToLoad = () => {
@@ -114,70 +93,58 @@ function RecentScriptsDialog({
     ).mapErr((reason) => new Error(t('common.removeRecentScriptsError', { error: reason })))
 
     if (res.err) {
-      open(res.val)
+      toast.error(res.val.message, { duration: 2000 })
     }
   }
+
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   return (
     <>
       <Dialog
-        aria-describedby="recent-scripts-content"
-        aria-labelledby="recent-scripts-title"
-        fullScreen
         onClose={handleOnClose}
         onKeyDown={onDialogEnter}
-        {...props}
-      >
-        <Toolbar className="p-0">
-          <DialogTitle className="grow" id="recent-scripts-title">
-            {t('dialog.recentFiles.title')}
-          </DialogTitle>
-          <FormGroup id="recent-scripts-content">
-            <FormControlLabel
-              disabled={fromNullable(recentScripts.data)
-                .map((scripts) => is.emptyArray(scripts))
-                .unwrapOr(false)}
-              control={
-                <Checkbox
-                  checked={isMoreDetails}
-                  onChange={() => {
-                    setMoreDetails((v) => !v)
-                  }}
-                />
-              }
-              label={t('dialog.recentFiles.actions.moreDetails')}
-            />
-          </FormGroup>
-        </Toolbar>
-        <DialogContent className={cx(recentScripts.data?.length !== 0 && 'p-0')} dividers>
-          {/* eslint-disable react/jsx-key */}
-          {fromNullable(recentScripts.data)
-            .map((allScripts) => {
-              if (is.emptyArray(allScripts)) {
-                return <DialogContentText>{t('dialog.recentFiles.noRecentFiles')}</DialogContentText>
-              }
+        title={
+          <div>
+            <h2>{t('dialog.recentFiles.title')}</h2>
+            <div className="mt-4 flex items-center">
+              <Switch
+                checked={isMoreDetails}
+                onChange={setMoreDetails}
+                label={t('dialog.recentFiles.actions.moreDetails')}
+                name="more-details"
+                disabled={fromNullable(recentScripts.data)
+                  .map((scripts) => is.emptyArray(scripts))
+                  .unwrapOr(false)}
+              />
+            </div>
+          </div>
+        }
+        actions={
+          <div className="flex w-full justify-end gap-4">
+            {fromNullable(recentScripts.data)
+              .map((allScripts) => {
+                const notInCurrentCompilationScripts = allScripts.filter(
+                  (script) => !isFileScriptInArray(script, currentScripts),
+                )
+                const hasNoScripts = is.emptyArray(allScripts)
+                const hasNoScriptsToLoad = is.emptyArray(scriptsToLoad)
+                const hasNoMoreScriptsToLoad = notInCurrentCompilationScripts.length === scriptsToLoad.length
 
-              const notInCurrentScripts = allScripts.filter((script) => !isFileScriptInArray(script, currentScripts))
-
-              return (
-                <List className="overflow-x-hidden" onContextMenu={handleContextMenu}>
-                  <RecentScriptsDialogContextMenu
-                    open={isContextMenuOpen}
-                    anchorPosition={
-                      contextMenu.some ? { top: contextMenu.val.mouseY, left: contextMenu.val.mouseX } : undefined
-                    }
-                    onClose={handleCloseContextMenu}
+                return (
+                  <RecentScriptsDialogActions
+                    key="recent-scripts-dialog-actions"
+                    className="mr-auto"
+                    position="top-right"
                     onAll={() => {
-                      addScriptsToLoad(notInCurrentScripts)
+                      addScriptsToLoad(notInCurrentCompilationScripts)
                     }}
-                    onNone={() => {
-                      clearScriptsToLoad()
-                    }}
+                    onNone={clearScriptsToLoad}
                     onInvert={() => {
-                      const toAdd = notInCurrentScripts.filter((script) => {
+                      const toAdd = notInCurrentCompilationScripts.filter((script) => {
                         return !isFileScriptInArray(script, scriptsToLoad)
                       })
-                      const toRemove = notInCurrentScripts.filter((script) => {
+                      const toRemove = notInCurrentCompilationScripts.filter((script) => {
                         return isFileScriptInArray(script, scriptsToLoad)
                       })
 
@@ -189,100 +156,118 @@ function RecentScriptsDialog({
                         recentScripts: [],
                         override: true,
                       })
-                      handleCloseContextMenu()
                     }}
-                    onDetails={() => {
-                      setMoreDetails((v) => !v)
-                      handleCloseContextMenu()
-                    }}
-                    onLoad={() => {
-                      handleCloseContextMenu()
-                      handleOnLoad()
-                    }}
+                    onDetails={toggleMoreDetails}
                     detailsText={t(isMoreDetails ? 'common.lessDetails' : 'common.moreDetails')}
                     scriptsToLoad={scriptsToLoad}
                     disabled={{
-                      all: scriptsToLoad.length === allScripts.length,
-                      none: is.emptyArray(scriptsToLoad),
-                      clear: is.emptyArray(allScripts),
-                      load: is.emptyArray(scriptsToLoad),
-                      details: is.emptyArray(allScripts),
+                      all:
+                        hasNoMoreScriptsToLoad ||
+                        hasNoScripts ||
+                        is.emptyArray(notInCurrentCompilationScripts) ||
+                        scriptsToLoad.length === allScripts.length,
+                      none: hasNoScriptsToLoad,
+                      clear: hasNoScripts,
+                      load: hasNoScriptsToLoad,
+                      details: hasNoScripts,
+                      invert: is.emptyArray(notInCurrentCompilationScripts) || hasNoScripts,
+                      button: hasNoScripts,
                     }}
                   />
-                  {allScripts.map((script) => {
-                    const isAlreadyAddedInCurrentScripts = isFileScriptInArray(script, currentScripts)
-                    const isAlreadyAddedInScriptsToLoad = scriptsToLoad.includes(script)
+                )
+              })
+              .unwrapOr(null)}
+            <Button onClick={handleOnClose} tabIndex={4} variant="secondary" ref={closeButtonRef}>
+              {t('common.close')}
+            </Button>
+            <Button disabled={is.emptyArray(scriptsToLoad)} onClick={handleOnLoad} tabIndex={3}>
+              {t('dialog.recentFiles.actions.load')}
+            </Button>
+          </div>
+        }
+        open={open}
+        initialFocus={closeButtonRef}
+        {...props}
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          {/* eslint-disable react/jsx-key */}
+          {fromNullable(recentScripts.data)
+            .map((allScripts) => {
+              if (is.emptyArray(allScripts)) {
+                return (
+                  <motion.p className="flex grow items-center justify-center text-xl leading-6" {...enterPageAnimate}>
+                    {t('dialog.recentFiles.noRecentFiles')}
+                  </motion.p>
+                )
+              }
 
-                    return (
-                      <ListItem
-                        disablePadding
-                        key={script.id}
-                        secondaryAction={
-                          <IconButton
-                            color="error"
-                            onClick={async () => {
-                              await removeScriptFromRecentScripts(script)
-                            }}
-                            tabIndex={2}
-                          >
-                            <DeleteOutlinedIcon />
-                          </IconButton>
-                        }
-                      >
-                        <ListItemButton
-                          classes={{ root: 'py-0' }}
-                          component="button"
-                          disableRipple
-                          disabled={isAlreadyAddedInCurrentScripts}
-                          onClick={() => {
-                            if (isAlreadyAddedInScriptsToLoad) {
-                              removeScriptToLoad([script])
-                            } else {
-                              addScriptsToLoad([script])
-                            }
-                          }}
-                          role="checkbox"
-                          tabIndex={1}
+              return (
+                <motion.div
+                  transition={{ duration: 0.15, type: 'spring', stiffness: 500, damping: 30 }}
+                  {...enterPageAnimate}
+                  className="grow"
+                >
+                  <ul className="group divide-y overflow-x-hidden border-y">
+                    {allScripts.map((script) => {
+                      const isAlreadyAddedInCurrentScripts = isFileScriptInArray(script, currentScripts)
+                      const isAlreadyAddedInScriptsToLoad = scriptsToLoad.includes(script)
+
+                      return (
+                        <li
+                          className="group relative flex items-center aria-not-disabled:hover:bg-gray-50"
+                          aria-disabled={isAlreadyAddedInCurrentScripts ? 'true' : undefined}
                         >
-                          <ListItemIcon>
-                            <Checkbox
-                              checked={isAlreadyAddedInScriptsToLoad}
-                              disableRipple
-                              edge="start"
-                              inputProps={{
-                                'aria-labelledby': script.name,
+                          <label htmlFor={script.id} className="flex grow p-3 group-aria-disabled:opacity-50">
+                            <div className="mr-3 mt-2 flex h-6 items-start">
+                              <input
+                                id={script.id}
+                                aria-describedby={isMoreDetails ? `${script.id}-text` : undefined}
+                                name={script.id}
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 disabled:opacity-70"
+                                checked={isAlreadyAddedInScriptsToLoad}
+                                disabled={isAlreadyAddedInCurrentScripts}
+                                onChange={() => {
+                                  if (isAlreadyAddedInScriptsToLoad) {
+                                    removeScriptToLoad([script])
+                                  } else {
+                                    addScriptsToLoad([script])
+                                  }
+                                }}
+                                tabIndex={1}
+                              />
+                            </div>
+                            <div className="flex min-w-0 flex-1 flex-col justify-center text-sm leading-6">
+                              <span className="font-medium text-gray-900">{script.name}</span>
+                              {isMoreDetails ? (
+                                <p id={`${script.id}-text`} className="text-xs font-light leading-tight text-gray-500">
+                                  {script.path}
+                                </p>
+                              ) : undefined}
+                            </div>
+                          </label>
+                          <div className="pr-4">
+                            <Button
+                              color="error"
+                              variant="link"
+                              startIcon={<TrashIcon className="h-4 w-4 shrink-0" />}
+                              onClick={async () => {
+                                await removeScriptFromRecentScripts(script)
+                                removeScriptToLoad([script])
                               }}
-                              tabIndex={-1}
+                              tabIndex={2}
                             />
-                          </ListItemIcon>
-                          <ListItemText
-                            id={script.name}
-                            primary={script.name}
-                            secondary={isMoreDetails ? script.path : undefined}
-                            secondaryTypographyProps={{ variant: 'caption' }}
-                          />
-                        </ListItemButton>
-                      </ListItem>
-                    )
-                  })}
-                </List>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </motion.div>
               )
             })
             .unwrapOr(null)}
-          {/* eslint-enable react/jsx-key */}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleOnClose} tabIndex={4} color="inherit">
-            {t('common.close')}
-          </Button>
-          <Button disabled={is.emptyArray(scriptsToLoad)} onClick={handleOnLoad} tabIndex={3} color="inherit">
-            {t('dialog.recentFiles.actions.load')}
-          </Button>
-        </DialogActions>
+        </AnimatePresence>
       </Dialog>
-      <Snackbar TransitionProps={TransitionProps} open={isOpen} onClose={close} autoHideDuration={2_000}>
-        <Alert severity="error">{state.some && state.val.message}</Alert>
-      </Snackbar>
     </>
   )
 }

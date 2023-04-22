@@ -44,6 +44,7 @@ function SettingsTelemetrySection() {
       description={t('common.telemetry.text')}
     >
       <Switch
+        className="mt-5"
         name="telemetry"
         checked={telemetryUse}
         onChange={async (checked) => {

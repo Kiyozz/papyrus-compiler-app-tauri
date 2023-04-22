@@ -27,6 +27,7 @@ export interface TranslationSchema {
     activate: string
     failed: string
     succeeded: string
+    actions: string
     select: {
       file: string
       folder: string

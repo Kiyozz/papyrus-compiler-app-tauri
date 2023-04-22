@@ -29,6 +29,7 @@ const fr: TranslationSchema = {
     activate: 'Activer',
     failed: 'Échec',
     succeeded: 'Succès',
+    actions: 'Actions',
     select: {
       file: 'Sélectionner un fichier',
       folder: 'Sélectionner un dossier',

@@ -23,7 +23,7 @@ function PopoverMenuItem(
     <HeadlessMenu.Item
       as="button"
       className={cx(
-        'block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 ui-active:bg-gray-100',
+        'block w-full px-4 py-2 text-left text-sm text-gray-700 ui-active:bg-gray-50 ui-disabled:opacity-50 ui-not-disabled:hover:bg-gray-100',
         className,
       )}
       ref={ref}
@@ -33,34 +33,30 @@ function PopoverMenuItem(
 }
 
 function PopoverMenuPanel(
-  { className, children, ...props }: ComponentPropsWithoutRef<typeof HeadlessMenu.Items>,
+  {
+    className,
+    children,
+    position = 'bottom',
+    ...props
+  }: ComponentPropsWithoutRef<typeof HeadlessMenu.Items> & { position?: 'top-right' | 'bottom' },
   ref: Ref<HTMLDivElement>,
 ) {
   return (
     <HeadlessMenu.Items
       className={cx(
         'absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
+        position === 'top-right' && '-top-1/2 origin-bottom-left -translate-y-full translate-x-1/2',
         className,
       )}
-      // className={cx('absolute -right-4 z-10 mt-1 flex w-screen max-w-min px-4', className)}
       ref={ref}
       {...props}
     >
-      {(state) => (
-        <>
-          {/* <div className="shrink rounded-xl bg-body-light p-4 text-sm font-semibold leading-6 text-gray-900 shadow-lg ring-1 ring-gray-900/5"> */}
-          {typeof children === 'function' ? children(state) : children}
-          {/* </div> */}
-        </>
-      )}
+      {(state) => <>{typeof children === 'function' ? children(state) : children}</>}
     </HeadlessMenu.Items>
   )
 }
 
-function PopoverMenuButton(
-  { className, ...props }: ComponentPropsWithoutRef<typeof HeadlessMenu.Button>,
-  ref: Ref<typeof Button>,
-) {
+function PopoverMenuButton(props: ComponentPropsWithoutRef<typeof HeadlessMenu.Button>, ref: Ref<typeof Button>) {
   return (
     <Button
       as={HeadlessMenu.Button}
