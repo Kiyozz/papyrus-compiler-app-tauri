@@ -8,7 +8,7 @@
 import { ClipboardIcon } from '@heroicons/react/24/outline'
 import { writeText as copyToClipboard } from '@tauri-apps/api/clipboard'
 import Badge from 'App/Component/UI/Badge'
-import Button from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +30,7 @@ function LogItem({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
             {isError && <Badge variant="error">{t('common.failed')}</Badge>}
           </div>
           <div className="flex gap-4">
-            <Button
+            <Button.Root
               variant="soft"
               color="error"
               onClick={() => {
@@ -38,9 +38,8 @@ function LogItem({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
               }}
             >
               {t('common.remove')}
-            </Button>
-            <Button
-              startIcon={<ClipboardIcon />}
+            </Button.Root>
+            <Button.Root
               onClick={async () => {
                 const res = await Result.wrapAsync(async () => {
                   await copyToClipboard(`${log.script.name}\n\n${log.output.trim()}`)
@@ -49,8 +48,11 @@ function LogItem({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
                 onClickCopy(res.mapErr((reason) => new Error('Failed to copy to clipboard', { cause: reason })))
               }}
             >
+              <Button.Icon>
+                <ClipboardIcon />
+              </Button.Icon>
               {t('common.copy')}
-            </Button>
+            </Button.Root>
           </div>
         </div>
       </div>

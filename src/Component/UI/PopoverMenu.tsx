@@ -7,19 +7,16 @@
 
 import { Transition, Menu as HeadlessMenu } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import Button from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import cx from 'classnames'
-import { type ComponentPropsWithoutRef, forwardRef, Fragment, type Ref } from 'react'
+import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, Fragment } from 'react'
 
 function PopoverMenu({ className, ...props }: ComponentPropsWithoutRef<typeof HeadlessMenu>) {
   return <HeadlessMenu className={cx('relative', className)} {...props} />
 }
 
-function PopoverMenuItem(
-  { className, ...props }: ComponentPropsWithoutRef<typeof HeadlessMenu.Item>,
-  ref: Ref<HTMLButtonElement>,
-) {
-  return (
+const PopoverMenuItem = forwardRef<ElementRef<'button'>, ComponentPropsWithoutRef<typeof HeadlessMenu.Item>>(
+  ({ className, ...props }, ref) => (
     <HeadlessMenu.Item
       as="button"
       className={cx(
@@ -29,45 +26,53 @@ function PopoverMenuItem(
       ref={ref}
       {...props}
     />
-  )
-}
+  ),
+)
 
-function PopoverMenuPanel(
-  {
-    className,
-    children,
-    position = 'bottom',
-    ...props
-  }: ComponentPropsWithoutRef<typeof HeadlessMenu.Items> & { position?: 'top-right' | 'bottom' },
-  ref: Ref<HTMLDivElement>,
-) {
-  return (
-    <HeadlessMenu.Items
-      className={cx(
-        'absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
-        position === 'top-right' && '-top-1/2 origin-bottom-left -translate-y-full translate-x-1/2',
-        className,
-      )}
-      ref={ref}
-      {...props}
-    >
-      {(state) => <>{typeof children === 'function' ? children(state) : children}</>}
-    </HeadlessMenu.Items>
-  )
-}
+PopoverMenuItem.displayName = 'PopoverMenu.Item'
 
-function PopoverMenuButton(props: ComponentPropsWithoutRef<typeof HeadlessMenu.Button>, ref: Ref<typeof Button>) {
-  return (
-    <Button
-      as={HeadlessMenu.Button}
-      startIcon={<ChevronDownIcon />}
-      variant="secondary"
-      color="inherit"
-      ref={ref}
-      {...props}
-    />
-  )
-}
+const PopoverMenuPanel = forwardRef<
+  ElementRef<'div'>,
+  ComponentPropsWithoutRef<typeof HeadlessMenu.Items> & { position?: 'top-right' | 'bottom' }
+>(({ className, children, position = 'bottom', ...props }, ref) => (
+  <HeadlessMenu.Items
+    className={cx(
+      'absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
+      position === 'top-right' && '-top-1/2 origin-bottom-left -translate-y-full translate-x-1/2',
+      className,
+    )}
+    ref={ref}
+    {...props}
+  >
+    {(state) => <>{typeof children === 'function' ? children(state) : children}</>}
+  </HeadlessMenu.Items>
+))
+
+PopoverMenuPanel.displayName = 'PopoverMenu.Panel'
+
+export type PopoverMenuButtonElement = ElementRef<typeof HeadlessMenu.Button>
+export type PopoverMenuButtonProps = ComponentPropsWithoutRef<typeof HeadlessMenu.Button>
+
+const PopoverMenuButton = forwardRef<PopoverMenuButtonElement, PopoverMenuButtonProps>(
+  ({ children, ...props }, ref) => {
+    if (typeof children === 'function') {
+      throw new TypeError('PopoverMenu.Button children must be a node, not a function')
+    }
+
+    return (
+      <Button.Root asChild variant="secondary" color="inherit" ref={ref}>
+        <HeadlessMenu.Button ref={ref} {...props}>
+          <Button.Icon>
+            <ChevronDownIcon />
+          </Button.Icon>
+          {children}
+        </HeadlessMenu.Button>
+      </Button.Root>
+    )
+  },
+)
+
+PopoverMenuButton.displayName = 'PopoverMenu.Button'
 
 function PopoverMenuTransition(props: ComponentPropsWithoutRef<typeof Transition>) {
   return (
@@ -84,14 +89,10 @@ function PopoverMenuTransition(props: ComponentPropsWithoutRef<typeof Transition
   )
 }
 
-PopoverMenu.Button = forwardRef(PopoverMenuButton)
-PopoverMenu.Item = forwardRef(PopoverMenuItem)
-PopoverMenu.Transition = PopoverMenuTransition
-PopoverMenu.Panel = forwardRef(PopoverMenuPanel)
-
-export default PopoverMenu as typeof PopoverMenu & {
-  Item: typeof PopoverMenuItem
-  Button: typeof PopoverMenuButton
-  Transition: typeof PopoverMenuTransition
-  Panel: typeof PopoverMenuPanel
+export {
+  PopoverMenu as Root,
+  PopoverMenuButton as Button,
+  PopoverMenuItem as Item,
+  PopoverMenuTransition as Transition,
+  PopoverMenuPanel as Panel,
 }

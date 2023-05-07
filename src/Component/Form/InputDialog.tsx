@@ -7,7 +7,7 @@
 
 import is from '@sindresorhus/is'
 import { open as openDialog } from '@tauri-apps/api/dialog'
-import Button from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import Input from 'App/Component/UI/Input'
 import { motion } from 'framer-motion'
 import React, { type ComponentPropsWithoutRef, forwardRef, useLayoutEffect, useState } from 'react'
@@ -56,20 +56,20 @@ const InputDialog = forwardRef<
   return (
     <MotionInput
       leadingAddon={
-        <Button
+        <Button.Root
           variant="link"
           disabled={props.disabled}
           className="group/button -mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50 group-aria-disabled:pointer-events-none [&_*]:delay-0"
           color={(typeof props.error === 'boolean' ? props.error : props.error != null) ? 'error' : 'default'}
           onClick={onClickInput}
-          startIcon={
+        >
+          <Button.Icon>
             <div>
               <FolderArrowDownIcon className="hidden group-hover/button:inline-block" />
               <FolderIcon className="inline-block group-hover/button:hidden" />
             </div>
-          }
-          // startIcon={isHover ? <FolderArrowDownIcon /> : <FolderIcon />}
-        />
+          </Button.Icon>
+        </Button.Root>
       }
       ref={ref}
       value={value}

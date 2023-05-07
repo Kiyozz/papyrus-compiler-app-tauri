@@ -6,7 +6,7 @@
  */
 
 import { type MenuProps } from '@headlessui/react'
-import PopoverMenu from 'App/Component/UI/PopoverMenu'
+import * as PopoverMenu from 'App/Component/UI/PopoverMenu'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -33,7 +33,7 @@ export const PopoverMenuActionsList = ({
   const { t } = useTranslation()
 
   return (
-    <PopoverMenu as="div" key="actions-popover" {...props}>
+    <PopoverMenu.Root as="div" key="actions-popover" {...props}>
       {(state) => (
         <>
           <PopoverMenu.Button disabled={disabled.button}>{t('common.actions')}</PopoverMenu.Button>
@@ -56,6 +56,6 @@ export const PopoverMenuActionsList = ({
           </PopoverMenu.Transition>
         </>
       )}
-    </PopoverMenu>
+    </PopoverMenu.Root>
   )
 }

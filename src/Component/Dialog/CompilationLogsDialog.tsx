@@ -8,7 +8,7 @@
 import is from '@sindresorhus/is'
 import LogItem from 'App/Component/Dialog/CompilationLogs/LogItem'
 import Dialog from 'App/Component/UI/Dialog'
-import Button from 'App/Component/UI/Button'
+import ButtonRoot from 'App/Component/UI/Button'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { enterPageAnimate } from 'App/Lib/Framer'
@@ -33,11 +33,11 @@ function CompilationLogsDialog() {
         title={t('dialog.logs.title')}
         actions={
           <>
-            <Button className="mr-4" disabled={hasNoLogs} onClick={clear} variant="secondary">
+            <ButtonRoot className="mr-4" disabled={hasNoLogs} onClick={clear} variant="secondary">
               {t('common.clearList')}
-            </Button>
+            </ButtonRoot>
             <div className="ml-auto">
-              <Button
+              <ButtonRoot
                 ref={closeButtonRef}
                 color="inherit"
                 onClick={() => {
@@ -45,7 +45,7 @@ function CompilationLogsDialog() {
                 }}
               >
                 {t('common.close')}
-              </Button>
+              </ButtonRoot>
             </div>
           </>
         }

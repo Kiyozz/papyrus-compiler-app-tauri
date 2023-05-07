@@ -5,6 +5,8 @@
  *
  */
 
+import { type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
+import { Slot } from '@radix-ui/react-slot'
 import cx from 'classnames'
 import { forwardRef, type ChangeEvent, type Ref, type ComponentPropsWithoutRef } from 'react'
 
@@ -14,7 +16,7 @@ type ItemProps<T extends string> = Omit<ComponentPropsWithoutRef<'input'>, 'id' 
   value: T
 }
 
-type RadioGroupProps<T extends string> = Omit<ComponentPropsWithoutRef<'fieldset'>, 'onChange' | 'name'> & {
+type RadioGroupProps<T extends string> = Omit<PrimitivePropsWithRef<'fieldset'>, 'onChange' | 'name'> & {
   value: T
   col?: boolean
   name: string
@@ -24,41 +26,43 @@ type RadioGroupProps<T extends string> = Omit<ComponentPropsWithoutRef<'fieldset
   error?: boolean
 }
 
-function RadioGroupRoot<T extends string>(
-  { value, onChange, items, col = false, legend, name, error, ...props }: RadioGroupProps<T>,
-  ref: Ref<HTMLFieldSetElement>,
-) {
-  return (
-    <fieldset ref={ref} {...props}>
-      {legend != null && <legend className="sr-only">{legend}</legend>}
-      <div className={cx('space-y-3', !col && 'sm:flex sm:items-center sm:space-x-10 sm:space-y-0')}>
-        {items.map(({ className, id, label, value: itemValue, ...item }) => {
-          return (
-            <div key={id} className="flex items-center space-x-3">
-              <input
-                type="radio"
-                id={id}
-                name={name}
-                className={cx('h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600', className)}
-                checked={value === itemValue}
-                onChange={(evt) => {
-                  onChange?.(evt, itemValue)
-                }}
-                {...item}
-              />
-              <label htmlFor={id} className="block text-sm font-medium leading-6 text-gray-900">
-                {label}
-              </label>
-            </div>
-          )
-        })}
-      </div>
-    </fieldset>
-  )
-}
+const RadioGroup = forwardRef(
+  <T extends string>(
+    { value, onChange, items, col = false, legend, asChild = false, name, error, ...props }: RadioGroupProps<T>,
+    ref: Ref<HTMLFieldSetElement>,
+  ) => {
+    const Comp = asChild ? Slot : 'fieldset'
 
-RadioGroupRoot.displayName = 'RadioGroup'
+    return (
+      <Comp ref={ref} {...props}>
+        {legend != null && <legend className="sr-only">{legend}</legend>}
+        <div className={cx('space-y-3', !col && 'sm:flex sm:items-center sm:space-x-10 sm:space-y-0')}>
+          {items.map(({ className, id, label, value: itemValue, ...item }) => {
+            return (
+              <div key={id} className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id={id}
+                  name={name}
+                  className={cx('h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600', className)}
+                  checked={value === itemValue}
+                  onChange={(evt) => {
+                    onChange?.(evt, itemValue)
+                  }}
+                  {...item}
+                />
+                <label htmlFor={id} className="block text-sm font-medium leading-6 text-gray-900">
+                  {label}
+                </label>
+              </div>
+            )
+          })}
+        </div>
+      </Comp>
+    )
+  },
+)
 
-const RadioGroup = forwardRef(RadioGroupRoot) as <T extends string>(props: RadioGroupProps<T>) => JSX.Element
+RadioGroup.displayName = 'RadioGroup'
 
-export default RadioGroup
+export default RadioGroup as <T extends string>(props: RadioGroupProps<T>) => JSX.Element

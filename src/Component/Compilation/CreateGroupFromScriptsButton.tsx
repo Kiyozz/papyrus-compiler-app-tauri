@@ -1,25 +1,26 @@
 import { PlusIcon } from '@heroicons/react/24/solid'
+import { Slottable } from '@radix-ui/react-slot'
 import is from '@sindresorhus/is'
-import Button, { type ButtonProps } from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
 import { fileScriptsCompilationToFileScripts } from 'App/Lib/FileScriptsCompilationToFileScripts'
-import { forwardRef } from 'react'
+import { forwardRef, type PropsWithoutRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 const CreateGroupFromScriptsButton = forwardRef<
-  HTMLButtonElement,
-  {
+  Button.ButtonElement,
+  PropsWithoutRef<Button.ButtonProps> & {
     scripts: FileScriptCompilation[]
-  } & Omit<ButtonProps, 'ref'>
+  }
 >(({ scripts, className, ...props }, ref) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { trackEvent } = useMatomo()
 
   return (
-    <Button
+    <Button.Root
       {...props}
       ref={ref}
       className={className}
@@ -37,12 +38,14 @@ const CreateGroupFromScriptsButton = forwardRef<
           },
         })
       }}
-      startIcon={<PlusIcon />}
       variant="secondary"
       color="inherit"
     >
-      {t('common.createGroup')}
-    </Button>
+      <Button.Icon>
+        <PlusIcon />
+      </Button.Icon>
+      <Slottable>{t('common.createGroup')}</Slottable>
+    </Button.Root>
   )
 })
 

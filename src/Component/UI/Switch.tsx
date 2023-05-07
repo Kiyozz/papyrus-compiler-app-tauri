@@ -7,7 +7,7 @@
 
 import { Switch as HeadlessSwitch } from '@headlessui/react'
 import cx from 'classnames'
-import { forwardRef, type Ref } from 'react'
+import { forwardRef } from 'react'
 
 type SwitchProps = {
   checked: boolean
@@ -19,16 +19,16 @@ type SwitchProps = {
   disabled?: boolean
 }
 
-function SwitchRoot(
-  { checked, onChange, label, name, id = name, className, disabled = false, ...props }: SwitchProps,
-  ref: Ref<HTMLDivElement>,
-) {
-  return (
+export type SwitchElement = HTMLDivElement
+
+const Switch = forwardRef<SwitchElement, SwitchProps>(
+  ({ checked, onChange, label, name, id = name, className, disabled = false, ...props }, ref) => (
     <HeadlessSwitch.Group
       as="div"
       ref={ref}
-      className="group flex items-center aria-disabled:pointer-events-none aria-disabled:opacity-50"
+      className={cx('group flex items-center aria-disabled:pointer-events-none aria-disabled:opacity-50', className)}
       aria-disabled={disabled ? 'true' : undefined}
+      {...props}
     >
       <HeadlessSwitch
         checked={checked}
@@ -36,11 +36,9 @@ function SwitchRoot(
         className={cx(
           'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2',
           checked ? 'bg-indigo-600' : 'bg-gray-200',
-          className,
         )}
         id={id}
         name={name}
-        {...props}
       >
         <span className="sr-only">{label}</span>
         <span
@@ -55,10 +53,8 @@ function SwitchRoot(
         <span className="font-medium text-gray-900">{label}</span>
       </HeadlessSwitch.Label>
     </HeadlessSwitch.Group>
-  )
-}
-
-const Switch = forwardRef(SwitchRoot)
+  ),
+)
 
 Switch.displayName = 'Switch'
 

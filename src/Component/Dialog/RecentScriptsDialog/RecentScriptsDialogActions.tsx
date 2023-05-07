@@ -6,7 +6,7 @@
  */
 
 import { PopoverMenuActionsList } from 'App/Component/PopoverMenuActionsList'
-import PopoverMenu from 'App/Component/UI/PopoverMenu'
+import * as PopoverMenu from 'App/Component/UI/PopoverMenu'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { type ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'

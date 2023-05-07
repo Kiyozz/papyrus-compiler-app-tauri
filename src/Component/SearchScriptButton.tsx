@@ -6,25 +6,22 @@
  */
 
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import { Slottable } from '@radix-ui/react-slot'
 import is from '@sindresorhus/is'
 import { open as openFileDialog } from '@tauri-apps/api/dialog'
-import Button, { type ButtonProps } from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import { useListenFileDrop } from 'App/Hook/UseListenFileDrop'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { pathsToFileScriptAndFilterPscFile } from 'App/Lib/PathsToFileScriptAndFilterPscFile'
 import { fromNullable } from 'App/Lib/TsResults'
-import { forwardRef, type Ref, useState } from 'react'
+import { forwardRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { None, Some } from 'ts-results'
 
-function SearchScriptButtonRoot(
-  {
-    onFileSelect,
-    disabled = false,
-    ...props
-  }: { onFileSelect: (files: FileScript[], reason: 'Drop' | 'Select') => void } & ButtonProps,
-  ref: Ref<HTMLButtonElement>,
-) {
+const SearchScriptButton = forwardRef<
+  Button.ButtonElement,
+  { onFileSelect: (files: FileScript[], reason: 'Drop' | 'Select') => void } & Button.ButtonProps
+>(({ onFileSelect, disabled = false, children, ...props }, ref) => {
   const { t } = useTranslation()
   useListenFileDrop({
     onDrop: (evt) => {
@@ -37,8 +34,7 @@ function SearchScriptButtonRoot(
   const [isDialogOpen, setDialogOpen] = useState(false)
 
   return (
-    <Button
-      startIcon={<MagnifyingGlassIcon />}
+    <Button.Root
       disabled={disabled || isDialogOpen}
       onClick={() => {
         setDialogOpen(true)
@@ -68,12 +64,15 @@ function SearchScriptButtonRoot(
       }}
       ref={ref}
       {...props}
-    />
+    >
+      <Button.Icon>
+        <MagnifyingGlassIcon />
+      </Button.Icon>
+      <Slottable>{children}</Slottable>
+    </Button.Root>
   )
-}
+})
 
-SearchScriptButtonRoot.displayName = 'SearchScriptButton'
-
-const SearchScriptButton = forwardRef(SearchScriptButtonRoot) as typeof SearchScriptButtonRoot
+SearchScriptButton.displayName = 'SearchScriptButton'
 
 export default SearchScriptButton

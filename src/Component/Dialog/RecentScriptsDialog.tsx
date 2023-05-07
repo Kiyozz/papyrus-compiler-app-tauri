@@ -9,7 +9,7 @@ import { type DialogProps } from '@headlessui/react'
 import { TrashIcon } from '@heroicons/react/20/solid'
 import is from '@sindresorhus/is'
 import RecentScriptsDialogActions from 'App/Component/Dialog/RecentScriptsDialog/RecentScriptsDialogActions'
-import Button from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import Dialog from 'App/Component/UI/Dialog'
 import Switch from 'App/Component/UI/Switch'
 import { useRecentScripts } from 'App/Hook/RecentScripts/UseRecentScripts'
@@ -177,12 +177,12 @@ function RecentScriptsDialog({
                 )
               })
               .unwrapOr(null)}
-            <Button onClick={handleOnClose} tabIndex={4} variant="secondary" ref={closeButtonRef}>
+            <Button.Root onClick={handleOnClose} tabIndex={4} variant="secondary" ref={closeButtonRef}>
               {t('common.close')}
-            </Button>
-            <Button disabled={is.emptyArray(scriptsToLoad)} onClick={handleOnLoad} tabIndex={3}>
+            </Button.Root>
+            <Button.Root disabled={is.emptyArray(scriptsToLoad)} onClick={handleOnLoad} tabIndex={3}>
               {t('dialog.recentFiles.actions.load')}
-            </Button>
+            </Button.Root>
           </div>
         }
         open={open}
@@ -214,6 +214,7 @@ function RecentScriptsDialog({
 
                       return (
                         <li
+                          key={script.path}
                           className="group relative flex items-center aria-not-disabled:hover:bg-gray-50"
                           aria-disabled={isAlreadyAddedInCurrentScripts ? 'true' : undefined}
                         >
@@ -247,16 +248,19 @@ function RecentScriptsDialog({
                             </div>
                           </label>
                           <div className="pr-4">
-                            <Button
+                            <Button.Root
                               color="error"
                               variant="link"
-                              startIcon={<TrashIcon className="h-4 w-4 shrink-0" />}
                               onClick={async () => {
                                 await removeScriptFromRecentScripts(script)
                                 removeScriptToLoad([script])
                               }}
                               tabIndex={2}
-                            />
+                            >
+                              <Button.Icon>
+                                <TrashIcon className="h-4 w-4 shrink-0" />
+                              </Button.Icon>
+                            </Button.Root>
                           </div>
                         </li>
                       )

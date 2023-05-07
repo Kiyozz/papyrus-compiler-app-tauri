@@ -17,7 +17,7 @@ import GroupMoreDetailsCheckbox from 'App/Component/Groups/GroupMoreDetailsCheck
 import GroupsList from 'App/Component/Groups/GroupsList'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
-import Button from 'App/Component/UI/Button'
+import ButtonRoot from 'App/Component/UI/Button'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
@@ -192,7 +192,7 @@ function GroupsPage() {
       ) : null}
 
       <PageAppBar title={t('page.groups.appBar.title')}>
-        <Button
+        <ButtonRoot
           disabled={updateGroups.isLoading}
           startIcon={<PlusCircleIcon />}
           onClick={() => {
@@ -200,7 +200,7 @@ function GroupsPage() {
           }}
         >
           {t('common.create')}
-        </Button>
+        </ButtonRoot>
       </PageAppBar>
 
       <Page className="pt-0">

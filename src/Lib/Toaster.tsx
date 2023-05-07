@@ -6,7 +6,7 @@
  */
 import { Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { AlertContent, AlertIcon, AlertMessage } from 'App/Component/UI/Alert'
+import * as Alert from 'App/Component/UI/Alert'
 import { type Severity } from 'App/Type/Severity'
 import { Fragment, type ReactNode } from 'react'
 import { toast as hotToast, type ToastOptions } from 'react-hot-toast'
@@ -37,18 +37,18 @@ const Toast = ({
       leaveFrom="opacity-100 scale-100"
       leaveTo="opacity-0 scale-95"
     >
-      <AlertContent severity={severity} className="shadow-lg ring-1 ring-black/5">
+      <Alert.Content severity={severity} className="shadow-lg ring-1 ring-black/5">
         <div className="flex">
-          <AlertIcon severity={severity} className="py-4 pl-4" />
-          <AlertMessage severity={severity} className="py-4">
+          <Alert.Icon severity={severity} className="py-4 pl-4" />
+          <Alert.Message severity={severity} className="py-4">
             {message}
-          </AlertMessage>
+          </Alert.Message>
 
           <button onClick={onDismiss} className="p-4">
             <XMarkIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
           </button>
         </div>
-      </AlertContent>
+      </Alert.Content>
     </Transition>
   )
 }

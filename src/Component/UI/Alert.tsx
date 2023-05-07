@@ -5,120 +5,135 @@
  *
  */
 
+import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
 import { XCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
+import { Slot } from '@radix-ui/react-slot'
 import { type Severity } from 'App/Type/Severity'
 import cx from 'classnames'
-import { type ComponentPropsWithoutRef, forwardRef, type Ref } from 'react'
+import { type ElementRef, forwardRef } from 'react'
 
-export type AlertProps = ComponentPropsWithoutRef<'div'> & {
+export type AlertIconElement = ElementRef<typeof Primitive.div>
+export type AlertIconProps = PrimitivePropsWithRef<'div'> & { severity: Severity }
+
+export const AlertIcon = forwardRef<AlertIconElement, AlertIconProps>(
+  ({ asChild = false, className, severity, ...props }, ref) => {
+    const isError = severity === 'error'
+    const isWarning = severity === 'warning'
+    const isInfo = severity === 'info'
+    const isSuccess = severity === 'success'
+    const Comp = asChild ? Slot : 'div'
+
+    return (
+      <Comp className={cx('shrink-0', className)} ref={ref}>
+        {isError && <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />}
+        {isWarning && <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />}
+        {isInfo && <InformationCircleIcon className="h-5 w-5 text-blue-400" aria-hidden="true" />}
+        {isSuccess && <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />}
+      </Comp>
+    )
+  },
+)
+
+AlertIcon.displayName = 'Alert.Icon'
+
+export type AlertMessageElement = ElementRef<typeof Primitive.div>
+export type AlertMessageProps = PrimitivePropsWithRef<'div'> & { severity: Severity }
+
+const AlertMessage = forwardRef<AlertMessageElement, AlertMessageProps>(
+  ({ children, severity, asChild = false, className }: PrimitivePropsWithRef<'div'> & { severity: Severity }, ref) => {
+    const Comp = asChild ? Slot : Primitive.div
+    const isError = severity === 'error'
+    const isWarning = severity === 'warning'
+    const isInfo = severity === 'info'
+    const isSuccess = severity === 'success'
+
+    return (
+      <Comp
+        className={cx(
+          'ml-3 grow text-sm font-medium',
+          isInfo && 'text-blue-700',
+          isError && 'text-red-700',
+          isWarning && 'text-yellow-700',
+          isSuccess && 'text-green-700',
+          className,
+        )}
+        ref={ref}
+      >
+        {children}
+      </Comp>
+    )
+  },
+)
+
+AlertMessage.displayName = 'Alert.Message'
+
+export type AlertContentElement = ElementRef<typeof Primitive.div>
+export type AlertContentProps = PrimitivePropsWithRef<'div'> & { severity: Severity }
+
+const AlertContent = forwardRef<AlertContentElement, AlertContentProps>(
+  ({ children, severity, asChild = false, className }, ref) => {
+    const Comp = asChild ? Slot : Primitive.div
+    const isError = severity === 'error'
+    const isWarning = severity === 'warning'
+    const isInfo = severity === 'info'
+    const isSuccess = severity === 'success'
+
+    return (
+      <Comp
+        className={cx(
+          'rounded-md',
+          isInfo && 'bg-blue-50',
+          isWarning && 'bg-yellow-50',
+          isError && 'bg-red-50',
+          isSuccess && 'bg-green-50',
+          className,
+        )}
+        ref={ref}
+      >
+        {children}
+      </Comp>
+    )
+  },
+)
+
+AlertContent.displayName = 'Alert.Content'
+
+export type AlertElement = ElementRef<typeof AlertContent>
+export type AlertProps = PrimitivePropsWithRef<'div'> & {
   severity?: Severity
 }
 
-export function AlertIcon({
-  className,
-  severity,
-}: Omit<ComponentPropsWithoutRef<'div'>, 'children'> & { severity: Severity }) {
-  const isError = severity === 'error'
-  const isWarning = severity === 'warning'
-  const isInfo = severity === 'info'
-  const isSuccess = severity === 'success'
+const Alert = forwardRef<AlertElement, AlertProps>(
+  ({ severity = 'info', asChild = false, className, children, ...props }, ref) => {
+    const Comp = asChild ? Slot : AlertContent
+    const isError = severity === 'error'
+    const isWarning = severity === 'warning'
+    const isInfo = severity === 'info'
+    const isSuccess = severity === 'success'
 
-  return (
-    <div className={cx('shrink-0', className)}>
-      {isError && <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />}
-      {isWarning && <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />}
-      {isInfo && <InformationCircleIcon className="h-5 w-5 text-blue-400" aria-hidden="true" />}
-      {isSuccess && <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />}
-    </div>
-  )
-}
-
-export function AlertMessage({
-  children,
-  severity,
-  className,
-}: ComponentPropsWithoutRef<'div'> & { severity: Severity }) {
-  const isError = severity === 'error'
-  const isWarning = severity === 'warning'
-  const isInfo = severity === 'info'
-  const isSuccess = severity === 'success'
-
-  return (
-    <div
-      className={cx(
-        'ml-3 grow text-sm font-medium',
-        isInfo && 'text-blue-700',
-        isError && 'text-red-700',
-        isWarning && 'text-yellow-700',
-        isSuccess && 'text-green-700',
-        className,
-      )}
-    >
-      {children}
-    </div>
-  )
-}
-
-function AlertContentRoot(
-  { children, severity, className }: ComponentPropsWithoutRef<'div'> & { severity: Severity },
-  ref: Ref<HTMLDivElement>,
-) {
-  const isError = severity === 'error'
-  const isWarning = severity === 'warning'
-  const isInfo = severity === 'info'
-  const isSuccess = severity === 'success'
-
-  return (
-    <div
-      className={cx(
-        'rounded-md',
-        isInfo && 'bg-blue-50',
-        isWarning && 'bg-yellow-50',
-        isError && 'bg-red-50',
-        isSuccess && 'bg-green-50',
-        className,
-      )}
-      ref={ref}
-    >
-      {children}
-    </div>
-  )
-}
-
-export const AlertContent = forwardRef(AlertContentRoot)
-
-AlertContent.displayName = 'AlertContent'
-
-function AlertRoot({ severity = 'info', className, children, ...props }: AlertProps, ref: Ref<HTMLDivElement>) {
-  const isError = severity === 'error'
-  const isWarning = severity === 'warning'
-  const isInfo = severity === 'info'
-  const isSuccess = severity === 'success'
-
-  return (
-    <AlertContent
-      severity={severity}
-      className={cx(
-        'rounded-md',
-        isInfo && 'bg-blue-50',
-        isWarning && 'bg-yellow-50',
-        isError && 'bg-red-50',
-        isSuccess && 'bg-green-50',
-        className,
-      )}
-      ref={ref}
-      {...props}
-    >
-      <div className="flex">
-        <AlertIcon severity={severity} />
-        <AlertMessage severity={severity}>{children}</AlertMessage>
-      </div>
-    </AlertContent>
-  )
-}
-
-const Alert = forwardRef(AlertRoot)
+    return (
+      <Comp
+        severity={severity}
+        className={cx(
+          'rounded-md',
+          isInfo && 'bg-blue-50',
+          isWarning && 'bg-yellow-50',
+          isError && 'bg-red-50',
+          isSuccess && 'bg-green-50',
+          className,
+        )}
+        ref={ref}
+        {...props}
+      >
+        <div className="flex">
+          <AlertIcon severity={severity} />
+          <AlertMessage severity={severity}>{children}</AlertMessage>
+        </div>
+      </Comp>
+    )
+  },
+)
 
 Alert.displayName = 'Alert'
 
-export default Alert
+export { AlertContent as Content, AlertIcon as Icon, AlertMessage as Message, Alert }

@@ -17,7 +17,7 @@ import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
-import { AlertContent, AlertIcon, AlertMessage } from 'App/Component/UI/Alert'
+import * as Alert from 'App/Component/UI/Alert'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
@@ -39,12 +39,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { type RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { R } from 'App/Lib/FpTs'
-import Button from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import { ClockIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 
 const logs = createLogs('CompilationPage')
-const MotionAlertContent = motion(AlertContent)
+const MotionAlertContent = motion(Alert.Content)
 
 function CompilationPage() {
   const { t } = useTranslation()
@@ -81,16 +81,18 @@ function CompilationPage() {
 
       <PageAppBar title={t('page.compilation.appBar.title')}>
         <div className="flex gap-x-2">
-          <Button
+          <Button.Root
             variant="secondary"
             color="inherit"
             onClick={() => {
               setRecentFilesDialogOpen(true)
             }}
-            startIcon={<ClockIcon />}
           >
+            <Button.Icon>
+              <ClockIcon />
+            </Button.Icon>
             {t('common.recentFiles')}
-          </Button>
+          </Button.Root>
           {isQueryNonNullable(groups) && R.size(groups.data) > 0 ? (
             <GroupChooseButton
               className="px-3 py-2"
@@ -128,8 +130,8 @@ function CompilationPage() {
           <AnimatePresence>
             {conf.isSuccess && isCheckConfQueryError(checkConf) && (
               <MotionAlertContent severity="error" className="flex" {...fadeScaleAnimate}>
-                <AlertIcon severity="error" className="py-4 pl-4" />
-                <AlertMessage severity="error" className="flex items-center divide-x">
+                <Alert.Icon severity="error" className="py-4 pl-4" />
+                <Alert.Message severity="error" className="flex items-center divide-x">
                   <p className="py-4">
                     {t<string>('common.confCheckError', {
                       context: checkConf.data?.some ? checkConf.data.val.type : undefined,
@@ -143,7 +145,7 @@ function CompilationPage() {
                   >
                     Configuration
                   </Link>
-                </AlertMessage>
+                </Alert.Message>
               </MotionAlertContent>
             )}
           </AnimatePresence>
@@ -169,7 +171,7 @@ function CompilationPage() {
                     disabled={isAllScriptsRunningOrBusy || isCheckConfQueryError(checkConf)}
                   />
 
-                  <Button
+                  <Button.Root
                     variant="secondary"
                     disabled={isAllScriptsRunningOrBusy}
                     onClick={() => {
@@ -181,10 +183,12 @@ function CompilationPage() {
                         action: 'Clear',
                       })
                     }}
-                    startIcon={<XMarkIcon />}
                   >
+                    <Button.Icon>
+                      <XMarkIcon />
+                    </Button.Icon>
                     {t('common.clearList')}
-                  </Button>
+                  </Button.Root>
 
                   <TutorialTooltip
                     title={t('common.settingsTutorial.compilation.createGroupFromScriptsList')}
