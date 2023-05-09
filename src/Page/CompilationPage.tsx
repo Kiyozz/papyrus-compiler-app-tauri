@@ -88,7 +88,7 @@ function CompilationPage() {
               setRecentFilesDialogOpen(true)
             }}
           >
-            <Button.Icon>
+            <Button.Icon edge="start">
               <ClockIcon />
             </Button.Icon>
             {t('common.recentFiles')}
@@ -184,7 +184,7 @@ function CompilationPage() {
                       })
                     }}
                   >
-                    <Button.Icon>
+                    <Button.Icon edge="start">
                       <XMarkIcon />
                     </Button.Icon>
                     {t('common.clearList')}

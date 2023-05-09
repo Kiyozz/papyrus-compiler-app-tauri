@@ -18,7 +18,7 @@ const StartCompilationButton = ({
 
   return (
     <Button.Root disabled={disabled} onClick={onCompilationStart} {...props}>
-      <Button.Icon>
+      <Button.Icon edge="start">
         <PlayIcon />
       </Button.Icon>
       {t('common.start')}

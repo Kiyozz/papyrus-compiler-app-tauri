@@ -23,11 +23,11 @@ export type ButtonProps = PrimitivePropsWithRef<typeof Primitive.button> & {
 }
 
 export type ButtonIconProps = ComponentPropsWithoutRef<typeof Slot> & {
-  placement?: 'start' | 'end'
+  edge?: 'start' | 'end'
   size?: Size
 }
 
-const ButtonIcon = forwardRef<HTMLElement, ButtonIconProps>(({ size = 'md', children, placement, ...props }, ref) => (
+const ButtonIcon = forwardRef<HTMLElement, ButtonIconProps>(({ size = 'md', children, edge, ...props }, ref) => (
   <Slot
     className={cx(
       {
@@ -37,7 +37,7 @@ const ButtonIcon = forwardRef<HTMLElement, ButtonIconProps>(({ size = 'md', chil
         lg: 'h-6 w-6',
         xl: 'h-7 w-7',
       }[size],
-      placement === 'start' ? '-ml-0.5' : '-mr-0.5',
+      edge === 'start' ? '-ml-0.5' : edge === 'end' ? '-mr-0.5' : '',
     )}
     ref={ref}
     {...props}

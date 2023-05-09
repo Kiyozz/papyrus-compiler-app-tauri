@@ -41,7 +41,7 @@ const CreateGroupFromScriptsButton = forwardRef<
       variant="secondary"
       color="inherit"
     >
-      <Button.Icon>
+      <Button.Icon edge="start">
         <PlusIcon />
       </Button.Icon>
       <Slottable>{t('common.createGroup')}</Slottable>

@@ -48,7 +48,7 @@ function LogItem({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res:
                 onClickCopy(res.mapErr((reason) => new Error('Failed to copy to clipboard', { cause: reason })))
               }}
             >
-              <Button.Icon>
+              <Button.Icon edge="start">
                 <ClipboardIcon />
               </Button.Icon>
               {t('common.copy')}

@@ -62,7 +62,7 @@ const PopoverMenuButton = forwardRef<PopoverMenuButtonElement, PopoverMenuButton
     return (
       <Button.Root asChild variant="secondary" color="inherit" ref={ref}>
         <HeadlessMenu.Button ref={ref} {...props}>
-          <Button.Icon>
+          <Button.Icon edge={children != null ? 'start' : undefined}>
             <ChevronDownIcon />
           </Button.Icon>
           {children}

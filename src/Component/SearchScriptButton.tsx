@@ -65,7 +65,7 @@ const SearchScriptButton = forwardRef<
       ref={ref}
       {...props}
     >
-      <Button.Icon>
+      <Button.Icon edge={children != null ? 'start' : undefined}>
         <MagnifyingGlassIcon />
       </Button.Icon>
       <Slottable>{children}</Slottable>

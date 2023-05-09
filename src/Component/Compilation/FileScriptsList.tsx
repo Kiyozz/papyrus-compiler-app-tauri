@@ -5,14 +5,8 @@
  *
  */
 
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import PlayCircleIcon from '@mui/icons-material/PlayCircle'
-import IconButton from '@mui/material/IconButton'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import Paper from '@mui/material/Paper'
+import { PlayCircleIcon } from '@heroicons/react/24/solid'
+import { TrashIcon } from '@heroicons/react/24/outline'
 import { CompilationIcon } from 'App/Component/CompilationIcon'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import * as Button from 'App/Component/UI/Button'
@@ -22,8 +16,6 @@ import { isBusy, isDone, isFileScriptCompilation, isRunning } from 'App/Lib/File
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion } from 'framer-motion'
-
-const MotionPaper = motion(Paper)
 
 function FileScriptsList<T extends FileScript>({
   scripts,
@@ -49,64 +41,60 @@ function FileScriptsList<T extends FileScript>({
       step="compilation-compile"
       ref={refs['compilation-compile']}
     >
-      <List className={cx('', className)} key="list">
+      <motion.ul className={cx('divide-y divide-gray-100 py-1.5', className)} key="list">
         {scripts.map((script) => {
           return (
-            <ListItem
+            <motion.li
               key={script.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring' }}
-              component={MotionPaper}
-              className="mt-0.5 [&:first-child]:mt-0"
-              secondaryAction={
-                <IconButton
-                  aria-disabled={isFileScriptCompilation(script) ? isRunning(script) || isBusy(script) : false}
-                  aria-label={t('common.remove')}
-                  color="error"
-                  disabled={isFileScriptCompilation(script) ? isRunning(script) || isBusy(script) : false}
-                  onClick={() => {
-                    onRemove(script)
-                  }}
-                >
-                  <DeleteOutlinedIcon />
-                </IconButton>
-              }
-              variant="outlined"
+              className="flex items-center gap-x-3 px-4 py-2"
             >
               {isFileScriptCompilation(script) ? (
-                <ListItemIcon>
-                  <IconButton
-                    disabled={disabled || isRunning(script) || isBusy(script)}
-                    onClick={async () => await onStart?.(script)}
-                    className="text-primary-400"
-                    edge="end"
-                    size="small"
-                  >
-                    <PlayCircleIcon />
-                  </IconButton>
-                </ListItemIcon>
-              ) : null}
-              <ListItemText aria-label={script.name} primary={script.name} />
-              {isFileScriptCompilation(script) ? (
                 <Button.Root
-                  className="mr-3"
                   variant="link"
-                  onClick={() => onClickOnError?.(script)}
-                  size="xs"
-                  disabled={isRunning(script) || isDone(script) || isBusy(script)}
+                  className="hover:text-indigo-500"
+                  disabled={disabled || isRunning(script) || isBusy(script)}
+                  onClick={async () => await onStart?.(script)}
                 >
-                  <Button.Icon>
-                    <AnimatePresence>
-                      <CompilationIcon script={script} />
-                    </AnimatePresence>
+                  <Button.Icon size="lg">
+                    <PlayCircleIcon />
                   </Button.Icon>
                 </Button.Root>
               ) : null}
-            </ListItem>
+              <p className="grow">{script.name}</p>
+              {isFileScriptCompilation(script) ? (
+                <Button.Root
+                  variant="link"
+                  size="xs"
+                  disabled={isRunning(script) || isDone(script) || isBusy(script)}
+                  onClick={() => onClickOnError?.(script)}
+                >
+                  <AnimatePresence>
+                    <Button.Icon>
+                      <CompilationIcon script={script} />
+                    </Button.Icon>
+                  </AnimatePresence>
+                </Button.Root>
+              ) : null}
+              <Button.Root
+                color="error"
+                variant="link"
+                disabled={isFileScriptCompilation(script) ? isRunning(script) || isBusy(script) : false}
+                onClick={() => {
+                  onRemove(script)
+                }}
+              >
+                <span className="sr-only">{t('common.remove')}</span>
+                <Button.Icon>
+                  <TrashIcon />
+                </Button.Icon>
+              </Button.Root>
+            </motion.li>
           )
         })}
-      </List>
+      </motion.ul>
     </TutorialTooltip>
   )
 }
