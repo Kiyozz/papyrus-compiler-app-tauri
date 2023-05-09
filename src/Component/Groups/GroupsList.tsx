@@ -45,7 +45,6 @@ function GroupsList({
               {secondaryText.some && <p className="text-xs leading-4 text-gray-600">{secondaryText.val}</p>}
             </div>
             <GroupsListItemSecondaryAction
-              groupId={group.id}
               onTryRemove={() => {
                 onTryRemove(group)
               }}

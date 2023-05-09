@@ -6,10 +6,9 @@
  */
 
 import { Transition, Menu as HeadlessMenu } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import * as Button from 'App/Component/UI/Button'
 import cx from 'classnames'
-import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, Fragment } from 'react'
+import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, Fragment, type PropsWithChildren } from 'react'
 
 function PopoverMenu({ className, ...props }: ComponentPropsWithoutRef<typeof HeadlessMenu>) {
   return <HeadlessMenu className={cx('relative', className)} {...props} />
@@ -51,20 +50,21 @@ const PopoverMenuPanel = forwardRef<
 PopoverMenuPanel.displayName = 'PopoverMenu.Panel'
 
 export type PopoverMenuButtonElement = ElementRef<typeof HeadlessMenu.Button>
-export type PopoverMenuButtonProps = ComponentPropsWithoutRef<typeof HeadlessMenu.Button>
+export type PopoverMenuButtonProps = PropsWithChildren<
+  Omit<ComponentPropsWithoutRef<typeof HeadlessMenu.Button>, 'children'>
+> & {
+  variant?: Button.ButtonProps['variant']
+}
 
 const PopoverMenuButton = forwardRef<PopoverMenuButtonElement, PopoverMenuButtonProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, variant, ...props }, ref) => {
     if (typeof children === 'function') {
       throw new TypeError('PopoverMenu.Button children must be a node, not a function')
     }
 
     return (
-      <Button.Root asChild variant="secondary" color="inherit" ref={ref}>
+      <Button.Root asChild variant={variant ?? 'secondary'} color="inherit" ref={ref}>
         <HeadlessMenu.Button ref={ref} {...props}>
-          <Button.Icon edge={children != null ? 'start' : undefined}>
-            <ChevronDownIcon />
-          </Button.Icon>
           {children}
         </HeadlessMenu.Button>
       </Button.Root>

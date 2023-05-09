@@ -144,24 +144,26 @@ const EditGroupDialog = ({
           >
             {t('common.searchScripts')}
           </SearchScriptButton>
-          <Button.Root
-            ref={closeButtonRef}
-            disabled={actionsDisabled}
-            onClick={() => {
-              handleDialogClose()
-            }}
-            variant="secondary"
-          >
-            {t('common.cancel')}
-          </Button.Root>
-          <Button.Root
-            type="submit"
-            disabled={actionsDisabled || actionsIsLoading || !formState.isValid}
-            color="inherit"
-            // loading={actionsIsLoading}
-          >
-            {t('common.edit')}
-          </Button.Root>
+          <div className="flex gap-x-4">
+            <Button.Root
+              ref={closeButtonRef}
+              disabled={actionsDisabled}
+              onClick={() => {
+                handleDialogClose()
+              }}
+              variant="secondary"
+            >
+              {t('common.cancel')}
+            </Button.Root>
+            <Button.Root
+              type="submit"
+              disabled={actionsDisabled || actionsIsLoading || !formState.isValid}
+              color="inherit"
+              // loading={actionsIsLoading}
+            >
+              {t('common.edit')}
+            </Button.Root>
+          </div>
         </Dialog.Actions>
       </form>
     </Dialog.Root>
