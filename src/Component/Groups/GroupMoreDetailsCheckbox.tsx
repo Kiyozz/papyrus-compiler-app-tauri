@@ -5,9 +5,8 @@
  *
  */
 
-import Checkbox from '@mui/material/Checkbox'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormGroup from '@mui/material/FormGroup'
+import Switch from 'App/Component/UI/Switch'
+import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 const GroupMoreDetailsCheckbox = ({
@@ -22,19 +21,13 @@ const GroupMoreDetailsCheckbox = ({
   const { t } = useTranslation()
 
   return (
-    <FormGroup className={className}>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={checked}
-            onChange={(evt) => {
-              onChange(evt.currentTarget.checked)
-            }}
-          />
-        }
-        label={t('common.moreDetails')}
-      />
-    </FormGroup>
+    <Switch
+      className={cx('ml-auto', className)}
+      checked={checked}
+      onChange={onChange}
+      label={t('common.moreDetails')}
+      name="group-more-details"
+    />
   )
 }
 

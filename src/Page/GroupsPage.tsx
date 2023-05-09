@@ -7,7 +7,6 @@
 
 import { PlusCircleIcon } from '@heroicons/react/24/solid'
 import CircularProgress from '@mui/material/CircularProgress'
-import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import is from '@sindresorhus/is'
 import AddGroupDialog from 'App/Component/Dialog/AddGroupDialog'
@@ -17,7 +16,7 @@ import GroupMoreDetailsCheckbox from 'App/Component/Groups/GroupMoreDetailsCheck
 import GroupsList from 'App/Component/Groups/GroupsList'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
-import ButtonRoot from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
@@ -192,7 +191,7 @@ function GroupsPage() {
       ) : null}
 
       <PageAppBar title={t('page.groups.appBar.title')}>
-        <ButtonRoot
+        <Button.Root
           disabled={updateGroups.isLoading}
           startIcon={<PlusCircleIcon />}
           onClick={() => {
@@ -200,10 +199,10 @@ function GroupsPage() {
           }}
         >
           {t('common.create')}
-        </ButtonRoot>
+        </Button.Root>
       </PageAppBar>
 
-      <Page className="pt-0">
+      <Page>
         <div className="container mx-auto">
           <AnimatePresence>
             {groups.isLoading && (
@@ -228,23 +227,19 @@ function GroupsPage() {
                     }
 
                     return (
-                      <>
-                        <Toolbar className="p-0">
-                          <GroupMoreDetailsCheckbox
-                            className="ml-auto"
-                            checked={isMoreDetails}
-                            onChange={(checked) => {
-                              setMoreDetails(checked)
-                            }}
-                          />
-                        </Toolbar>
+                      <div className="flex flex-col space-y-3">
+                        <GroupMoreDetailsCheckbox
+                          className="ml-auto"
+                          checked={isMoreDetails}
+                          onChange={setMoreDetails}
+                        />
                         <GroupsList
                           groups={groups}
                           isMoreDetails={isMoreDetails}
                           onTryRemove={openRemoveGroupDialog}
                           onClickEdit={openEditGroupDialog}
                         />
-                      </>
+                      </div>
                     )
                     /* eslint-enable react/jsx-key */
                   })
