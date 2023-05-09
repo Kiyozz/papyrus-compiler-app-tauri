@@ -5,12 +5,11 @@
  *
  */
 
-import { type DialogProps } from '@headlessui/react'
 import { TrashIcon } from '@heroicons/react/20/solid'
 import is from '@sindresorhus/is'
 import RecentScriptsDialogActions from 'App/Component/Dialog/RecentScriptsDialog/RecentScriptsDialogActions'
 import * as Button from 'App/Component/UI/Button'
-import Dialog from 'App/Component/UI/Dialog'
+import * as Dialog from 'App/Component/UI/Dialog'
 import Switch from 'App/Component/UI/Switch'
 import { useRecentScripts } from 'App/Hook/RecentScripts/UseRecentScripts'
 import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentScripts'
@@ -34,7 +33,7 @@ function RecentScriptsDialog({
   onClose,
   open = false,
   ...props
-}: Omit<DialogProps<'div'>, 'onClose' | 'onKeyDown' | 'children' | 'className'> & {
+}: Omit<Dialog.DialogProps, 'onClose' | 'onKeyDown' | 'children' | 'className'> & {
   onClose: () => void
   currentScripts: FileScript[]
   onScriptsLoad: (scripts: FileScript[]) => void
@@ -101,26 +100,115 @@ function RecentScriptsDialog({
 
   return (
     <>
-      <Dialog
+      <Dialog.Root
         onClose={handleOnClose}
         onKeyDown={onDialogEnter}
-        title={
-          <div>
-            <h2>{t('dialog.recentFiles.title')}</h2>
-            <div className="mt-4 flex items-center">
-              <Switch
-                checked={isMoreDetails}
-                onChange={setMoreDetails}
-                label={t('dialog.recentFiles.actions.moreDetails')}
-                name="more-details"
-                disabled={fromNullable(recentScripts.data)
-                  .map((scripts) => is.emptyArray(scripts))
-                  .unwrapOr(false)}
-              />
-            </div>
+        open={open}
+        initialFocus={closeButtonRef}
+        {...props}
+      >
+        <Dialog.Title>
+          <h2>{t('dialog.recentFiles.title')}</h2>
+          <div className="mt-4 flex items-center">
+            <Switch
+              checked={isMoreDetails}
+              onChange={setMoreDetails}
+              label={t('dialog.recentFiles.actions.moreDetails')}
+              name="more-details"
+              disabled={fromNullable(recentScripts.data)
+                .map((scripts) => is.emptyArray(scripts))
+                .unwrapOr(false)}
+            />
           </div>
-        }
-        actions={
+        </Dialog.Title>
+        <Dialog.Content>
+          <AnimatePresence mode="wait" initial={false}>
+            {/* eslint-disable react/jsx-key */}
+            {fromNullable(recentScripts.data)
+              .map((allScripts) => {
+                if (is.emptyArray(allScripts)) {
+                  return (
+                    <motion.p className="flex grow items-center justify-center text-xl leading-6" {...enterPageAnimate}>
+                      {t('dialog.recentFiles.noRecentFiles')}
+                    </motion.p>
+                  )
+                }
+
+                return (
+                  <motion.div
+                    transition={{ duration: 0.15, type: 'spring', stiffness: 500, damping: 30 }}
+                    {...enterPageAnimate}
+                    className="grow"
+                  >
+                    <ul className="group divide-y overflow-x-hidden border-y">
+                      {allScripts.map((script) => {
+                        const isAlreadyAddedInCurrentScripts = isFileScriptInArray(script, currentScripts)
+                        const isAlreadyAddedInScriptsToLoad = scriptsToLoad.includes(script)
+
+                        return (
+                          <li
+                            key={script.path}
+                            className="group relative flex items-center aria-not-disabled:hover:bg-gray-50"
+                            aria-disabled={isAlreadyAddedInCurrentScripts ? 'true' : undefined}
+                          >
+                            <label htmlFor={script.id} className="flex grow p-3 group-aria-disabled:opacity-50">
+                              <div className="mr-3 mt-2 flex h-6 items-start">
+                                <input
+                                  id={script.id}
+                                  aria-describedby={isMoreDetails ? `${script.id}-text` : undefined}
+                                  name={script.id}
+                                  type="checkbox"
+                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 disabled:opacity-70"
+                                  checked={isAlreadyAddedInScriptsToLoad}
+                                  disabled={isAlreadyAddedInCurrentScripts}
+                                  onChange={() => {
+                                    if (isAlreadyAddedInScriptsToLoad) {
+                                      removeScriptToLoad([script])
+                                    } else {
+                                      addScriptsToLoad([script])
+                                    }
+                                  }}
+                                  tabIndex={1}
+                                />
+                              </div>
+                              <div className="flex min-w-0 flex-1 flex-col justify-center text-sm leading-6">
+                                <span className="font-medium text-gray-900">{script.name}</span>
+                                {isMoreDetails ? (
+                                  <p
+                                    id={`${script.id}-text`}
+                                    className="text-xs font-light leading-tight text-gray-500"
+                                  >
+                                    {script.path}
+                                  </p>
+                                ) : undefined}
+                              </div>
+                            </label>
+                            <div className="pr-4">
+                              <Button.Root
+                                color="error"
+                                variant="link"
+                                onClick={async () => {
+                                  await removeScriptFromRecentScripts(script)
+                                  removeScriptToLoad([script])
+                                }}
+                                tabIndex={2}
+                              >
+                                <Button.Icon>
+                                  <TrashIcon className="h-4 w-4 shrink-0" />
+                                </Button.Icon>
+                              </Button.Root>
+                            </div>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </motion.div>
+                )
+              })
+              .unwrapOr(null)}
+          </AnimatePresence>
+        </Dialog.Content>
+        <Dialog.Actions>
           <div className="flex w-full justify-end gap-4">
             {fromNullable(recentScripts.data)
               .map((allScripts) => {
@@ -184,94 +272,8 @@ function RecentScriptsDialog({
               {t('dialog.recentFiles.actions.load')}
             </Button.Root>
           </div>
-        }
-        open={open}
-        initialFocus={closeButtonRef}
-        {...props}
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          {/* eslint-disable react/jsx-key */}
-          {fromNullable(recentScripts.data)
-            .map((allScripts) => {
-              if (is.emptyArray(allScripts)) {
-                return (
-                  <motion.p className="flex grow items-center justify-center text-xl leading-6" {...enterPageAnimate}>
-                    {t('dialog.recentFiles.noRecentFiles')}
-                  </motion.p>
-                )
-              }
-
-              return (
-                <motion.div
-                  transition={{ duration: 0.15, type: 'spring', stiffness: 500, damping: 30 }}
-                  {...enterPageAnimate}
-                  className="grow"
-                >
-                  <ul className="group divide-y overflow-x-hidden border-y">
-                    {allScripts.map((script) => {
-                      const isAlreadyAddedInCurrentScripts = isFileScriptInArray(script, currentScripts)
-                      const isAlreadyAddedInScriptsToLoad = scriptsToLoad.includes(script)
-
-                      return (
-                        <li
-                          key={script.path}
-                          className="group relative flex items-center aria-not-disabled:hover:bg-gray-50"
-                          aria-disabled={isAlreadyAddedInCurrentScripts ? 'true' : undefined}
-                        >
-                          <label htmlFor={script.id} className="flex grow p-3 group-aria-disabled:opacity-50">
-                            <div className="mr-3 mt-2 flex h-6 items-start">
-                              <input
-                                id={script.id}
-                                aria-describedby={isMoreDetails ? `${script.id}-text` : undefined}
-                                name={script.id}
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 disabled:opacity-70"
-                                checked={isAlreadyAddedInScriptsToLoad}
-                                disabled={isAlreadyAddedInCurrentScripts}
-                                onChange={() => {
-                                  if (isAlreadyAddedInScriptsToLoad) {
-                                    removeScriptToLoad([script])
-                                  } else {
-                                    addScriptsToLoad([script])
-                                  }
-                                }}
-                                tabIndex={1}
-                              />
-                            </div>
-                            <div className="flex min-w-0 flex-1 flex-col justify-center text-sm leading-6">
-                              <span className="font-medium text-gray-900">{script.name}</span>
-                              {isMoreDetails ? (
-                                <p id={`${script.id}-text`} className="text-xs font-light leading-tight text-gray-500">
-                                  {script.path}
-                                </p>
-                              ) : undefined}
-                            </div>
-                          </label>
-                          <div className="pr-4">
-                            <Button.Root
-                              color="error"
-                              variant="link"
-                              onClick={async () => {
-                                await removeScriptFromRecentScripts(script)
-                                removeScriptToLoad([script])
-                              }}
-                              tabIndex={2}
-                            >
-                              <Button.Icon>
-                                <TrashIcon className="h-4 w-4 shrink-0" />
-                              </Button.Icon>
-                            </Button.Root>
-                          </div>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </motion.div>
-              )
-            })
-            .unwrapOr(null)}
-        </AnimatePresence>
-      </Dialog>
+        </Dialog.Actions>
+      </Dialog.Root>
     </>
   )
 }

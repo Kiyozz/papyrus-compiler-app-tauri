@@ -71,7 +71,6 @@ function GroupsPage() {
     open: openAddGroupDialog,
     state: addGroupDefaultScripts,
     close: closeAddGroupDialog,
-    TransitionProps: addDialogTransitionProps,
   } = useDialogOpen({
     defaultState: None as Option<FileScript[]>,
   })
@@ -115,7 +114,6 @@ function GroupsPage() {
           closeDialogs()
         }}
         onCancel={closeDialogs}
-        TransitionProps={removeDialogTransitionProps}
       />
 
       {groups.isSuccess ? (
@@ -146,7 +144,6 @@ function GroupsPage() {
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}
-            TransitionProps={addDialogTransitionProps}
           />
           <EditGroupDialog
             open={isEditGroupDialogOpen}
@@ -185,7 +182,6 @@ function GroupsPage() {
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}
-            TransitionProps={editDialogTransitionProps}
           />
         </>
       ) : null}
