@@ -110,6 +110,7 @@ export interface TranslationSchema {
     logs: {
       title: string
       noLogs: string
+      displayErrorOnly: string
     }
     group: {
       dropScripts: string

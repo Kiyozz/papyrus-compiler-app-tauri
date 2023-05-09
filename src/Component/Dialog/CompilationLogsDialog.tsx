@@ -9,12 +9,13 @@ import is from '@sindresorhus/is'
 import LogItem from 'App/Component/Dialog/CompilationLogs/LogItem'
 import Dialog from 'App/Component/UI/Dialog'
 import ButtonRoot from 'App/Component/UI/Button'
+import Switch from 'App/Component/UI/Switch'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { enterPageAnimate } from 'App/Lib/Framer'
 import { toast } from 'App/Lib/Toaster'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function CompilationLogsDialog() {
@@ -24,13 +25,26 @@ function CompilationLogsDialog() {
     compilationLogs: [isOpen, setOpen],
   } = useDialogs()
   const { logs, clear } = useCompilationLogs()
+  const [isDisplayErrorOnly, setDisplayErrorOnly] = useState(false)
 
   const hasNoLogs = is.emptyArray(logs)
 
   return (
     <>
       <Dialog
-        title={t('dialog.logs.title')}
+        title={
+          <div>
+            <h2>{t('dialog.logs.title')}</h2>
+            <div className="mt-4 flex items-center">
+              <Switch
+                checked={isDisplayErrorOnly}
+                onChange={setDisplayErrorOnly}
+                label={t('dialog.logs.displayErrorOnly')}
+                name="display-error-only"
+              />
+            </div>
+          </div>
+        }
         actions={
           <>
             <ButtonRoot className="mr-4" disabled={hasNoLogs} onClick={clear} variant="secondary">
@@ -66,6 +80,7 @@ function CompilationLogsDialog() {
                 <LogItem
                   key={log.script.id}
                   log={log}
+                  hidden={log.status === 'success' && isDisplayErrorOnly}
                   onClickCopy={(res) => {
                     if (res.err) {
                       console.error(res.val)

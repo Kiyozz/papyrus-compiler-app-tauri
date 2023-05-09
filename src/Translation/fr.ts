@@ -121,6 +121,7 @@ const fr: TranslationSchema = {
     logs: {
       title: 'Logs',
       noLogs: 'Aucun log',
+      displayErrorOnly: 'Afficher uniquement les erreurs',
     },
     group: {
       dropScripts: 'Glisser-déposer vos scripts ici',

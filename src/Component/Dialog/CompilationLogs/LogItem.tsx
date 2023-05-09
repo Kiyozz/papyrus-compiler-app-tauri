@@ -14,14 +14,27 @@ import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
 import { useTranslation } from 'react-i18next'
 import { Result } from 'ts-results'
 
-function LogItem({ log, onClickCopy }: { log: CompilationLog; onClickCopy: (res: Result<void, Error>) => void }) {
+function LogItem({
+  log,
+  onClickCopy,
+  hidden,
+}: {
+  log: CompilationLog
+  onClickCopy: (res: Result<void, Error>) => void
+  hidden: boolean
+}) {
   const { t } = useTranslation()
   const { remove } = useCompilationLogs()
   const isSuccessful = log.status === 'success'
   const isError = log.status === 'error'
 
   return (
-    <li aria-describedby={`${log.script.id}-logs`} aria-labelledby={`${log.script.id}-title`} className="py-4">
+    <li
+      aria-describedby={`${log.script.id}-logs`}
+      aria-labelledby={`${log.script.id}-title`}
+      className="py-4"
+      hidden={hidden}
+    >
       <div className="sticky -top-1 rounded-b-none bg-white px-6 pb-2">
         <div id={`${log.script.id}-title`} aria-label={log.script.name} className="flex items-center justify-between">
           <div className="flex items-center gap-2 overflow-x-hidden">
