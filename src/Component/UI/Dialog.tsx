@@ -102,7 +102,7 @@ const DialogContent = forwardRef<DialogContentElement, DialogContentProps>(
     const Comp = asChild ? Slot : Primitive.div
 
     return (
-      <Comp className="flex grow flex-col overflow-y-auto" ref={ref}>
+      <Comp className={cx('flex grow flex-col overflow-y-auto', className)} ref={ref}>
         {children}
       </Comp>
     )
@@ -112,5 +112,3 @@ const DialogContent = forwardRef<DialogContentElement, DialogContentProps>(
 DialogContent.displayName = 'Dialog.Content'
 
 export { DialogTitle as Title, Dialog as Root, DialogActions as Actions, DialogContent as Content }
-
-export default Dialog

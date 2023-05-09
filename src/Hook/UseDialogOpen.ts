@@ -5,23 +5,19 @@
  *
  */
 
-import { type DialogProps } from '@mui/material/Dialog'
 import { fromNullable } from 'App/Lib/TsResults'
 import { useState } from 'react'
-import { None, type Option } from 'ts-results'
+import { type Option } from 'ts-results'
 
 export const useDialogOpen = <S>({
-  onExited,
   defaultState,
 }: {
   defaultState: Option<S>
-  onExited?: () => void
 }): {
   isOpen: boolean
   open: (state?: S) => void
   state: Option<S>
   close: () => void
-  TransitionProps: DialogProps['TransitionProps']
 } => {
   const [state, setState] = useState<Option<S>>(defaultState)
   const [open, setOpen] = useState(false)
@@ -35,13 +31,6 @@ export const useDialogOpen = <S>({
     state,
     close: () => {
       setOpen(false)
-    },
-    TransitionProps: {
-      onExited: () => {
-        setState(None)
-
-        return onExited?.()
-      },
     },
   }
 }

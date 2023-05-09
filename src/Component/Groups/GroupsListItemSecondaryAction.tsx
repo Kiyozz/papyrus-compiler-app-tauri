@@ -17,7 +17,6 @@ import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import { None, type Option, Some } from 'ts-results'
-import { motion } from 'framer-motion'
 
 const GroupsListItemSecondaryAction = ({
   groupId,
@@ -48,7 +47,7 @@ const GroupsListItemSecondaryAction = ({
   }
 
   return (
-    <motion.div className={cx('relative', className)} layout>
+    <div className={cx('relative', className)}>
       <IconButton
         aria-controls={anchor.some ? `${groupId}-group-button-menu` : undefined}
         aria-expanded={anchor.some ? 'true' : undefined}
@@ -82,7 +81,7 @@ const GroupsListItemSecondaryAction = ({
           <ListItemText primary={t('common.remove')} />
         </MenuItem>
       </Menu>
-    </motion.div>
+    </div>
   )
 }
 

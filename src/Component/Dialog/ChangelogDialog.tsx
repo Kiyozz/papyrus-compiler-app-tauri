@@ -5,15 +5,7 @@
  *
  */
 
-import OpenInBrowser from '@mui/icons-material/OpenInNew'
-import DownloadIcon from '@mui/icons-material/Download'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
+import { ArrowDownTrayIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/solid'
 import Code from 'App/Component/Markdown/Code'
 import Li from 'App/Component/Markdown/Li'
 import P from 'App/Component/Markdown/P'
@@ -28,6 +20,8 @@ import Markdown from 'react-markdown'
 import A from '../Markdown/A'
 import Img from '../Markdown/Img'
 import { open as openExternal } from '@tauri-apps/api/shell'
+import * as Dialog from 'App/Component/UI/Dialog'
+import * as Button from 'App/Component/UI/Button'
 
 const ChangelogDialog = ({
   open,
@@ -44,34 +38,32 @@ const ChangelogDialog = ({
   const { t } = useTranslation()
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      aria-describedby="dialog-changelogs-content"
-      aria-labelledby="dialog-changelogs-title"
-      fullScreen
-    >
-      <DialogTitle id="dialog-changelogs-title">
-        <Trans i18nKey="common.changelogs" values={{ version }}>
-          <strong />
-        </Trans>
-        <Tooltip title={t('common.openInBrowser')} enterDelay={0}>
-          <IconButton
-            size="small"
-            className="ml-2"
-            disabled={documentationUrl.data === undefined}
-            aria-label={t('common.openInBrowser')}
-            onClick={() => {
-              if (documentationUrl.data === undefined) return
+    <Dialog.Root open={open} onClose={onClose} fullScreen>
+      <Dialog.Title id="dialog-changelogs-title" className="flex items-center">
+        <span className="grow">
+          <Trans i18nKey="common.changelogs" values={{ version }}>
+            <strong />
+          </Trans>
+        </span>
+        <Button.Root
+          size="sm"
+          color="inherit"
+          variant="soft"
+          disabled={documentationUrl.data === undefined}
+          aria-label={t('common.openInBrowser')}
+          onClick={() => {
+            if (documentationUrl.data === undefined) return
 
-              void openExternal(`${documentationUrl.data}/changelogs/${version.replace('v', '')}`)
-            }}
-          >
-            <OpenInBrowser />
-          </IconButton>
-        </Tooltip>
-      </DialogTitle>
-      <DialogContent dividers id="dialog-changelogs-content">
+            void openExternal(`${documentationUrl.data}/changelogs/${version.replace('v', '')}`)
+          }}
+        >
+          <Button.Icon edge="start" size="sm">
+            <ArrowTopRightOnSquareIcon />
+          </Button.Icon>
+          <span>{t('common.openInBrowser')}</span>
+        </Button.Root>
+      </Dialog.Title>
+      <Dialog.Content className="px-4" id="dialog-changelogs-content">
         <Markdown
           components={{
             p: P,
@@ -88,22 +80,25 @@ const ChangelogDialog = ({
         >
           {markdownNotes}
         </Markdown>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="inherit">
+      </Dialog.Content>
+      <Dialog.Actions className="flex justify-end gap-x-4">
+        <Button.Root onClick={onClose} color="inherit" variant="secondary">
           {t('common.close')}
-        </Button>
-        <Button
+        </Button.Root>
+        <Button.Root
           onClick={() => {
             // TODO: Download update
           }}
           color="inherit"
-          startIcon={<DownloadIcon />}
+          disabled
         >
+          <Button.Icon edge="start">
+            <ArrowDownTrayIcon />
+          </Button.Icon>
           {t('common.download')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </Button.Root>
+      </Dialog.Actions>
+    </Dialog.Root>
   )
 }
 

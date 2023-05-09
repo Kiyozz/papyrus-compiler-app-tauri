@@ -105,6 +105,7 @@ function RecentScriptsDialog({
         onKeyDown={onDialogEnter}
         open={open}
         initialFocus={closeButtonRef}
+        fullScreen
         {...props}
       >
         <Dialog.Title>

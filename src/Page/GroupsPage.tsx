@@ -53,7 +53,6 @@ function GroupsPage() {
     open: openRemoveGroupDialog,
     state: groupToRemove,
     close: closeRemoveGroupDialog,
-    TransitionProps: removeDialogTransitionProps,
   } = useDialogOpen({
     defaultState: None as Option<GroupWithId>,
   })
@@ -62,7 +61,6 @@ function GroupsPage() {
     open: openEditGroupDialog,
     state: groupToEdit,
     close: closeEditGroupDialog,
-    TransitionProps: editDialogTransitionProps,
   } = useDialogOpen({
     defaultState: None as Option<GroupWithId>,
   })
@@ -223,7 +221,7 @@ function GroupsPage() {
                     }
 
                     return (
-                      <div className="flex flex-col space-y-3">
+                      <div className="flex flex-col space-y-4">
                         <GroupMoreDetailsCheckbox
                           className="ml-auto"
                           checked={isMoreDetails}

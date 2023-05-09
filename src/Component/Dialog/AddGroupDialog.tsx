@@ -59,7 +59,7 @@ const AddGroupDialog = ({
   }, [defaultScripts, resetScripts])
 
   const { t } = useTranslation()
-  const { register, reset, handleSubmit, formState, getValues } = useForm({
+  const { register, reset, handleSubmit, formState } = useForm({
     defaultValues: {
       name: '',
     },
