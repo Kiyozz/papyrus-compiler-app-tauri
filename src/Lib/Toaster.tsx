@@ -37,8 +37,8 @@ const Toast = ({
       leaveFrom="opacity-100 scale-100"
       leaveTo="opacity-0 scale-95"
     >
-      <Alert.Content severity={severity} className="shadow-lg ring-1 ring-black/5">
-        <div className="flex">
+      <Alert.Root severity={severity} className="shadow-lg ring-1 ring-black/5">
+        <Alert.Content>
           <Alert.Icon severity={severity} className="py-4 pl-4" />
           <Alert.Message severity={severity} className="py-4">
             {message}
@@ -47,8 +47,8 @@ const Toast = ({
           <button onClick={onDismiss} className="p-4">
             <XMarkIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
           </button>
-        </div>
-      </Alert.Content>
+        </Alert.Content>
+      </Alert.Root>
     </Transition>
   )
 }

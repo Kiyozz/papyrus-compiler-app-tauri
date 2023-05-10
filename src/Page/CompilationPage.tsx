@@ -42,7 +42,6 @@ import { Link } from 'react-router-dom'
 import * as EmptyState from 'App/Component/UI/EmptyState'
 
 const logs = createLogs('CompilationPage')
-const MotionAlertContent = motion(Alert.Content)
 
 function CompilationPage() {
   const { t } = useTranslation()
@@ -127,24 +126,28 @@ function CompilationPage() {
         <div className="container mx-auto flex w-full max-w-6xl grow flex-col">
           <AnimatePresence>
             {conf.isSuccess && isCheckConfQueryError(checkConf) && (
-              <MotionAlertContent severity="error" className="flex" {...fadeScaleAnimate}>
-                <Alert.Icon severity="error" className="py-4 pl-4" />
-                <Alert.Message severity="error" className="flex items-center divide-x">
-                  <p className="py-4">
-                    {t<string>('common.confCheckError', {
-                      context: checkConf.data?.some ? checkConf.data.val.type : undefined,
-                      gameExe: toExecutable(conf.data.game.type),
-                    })}
-                  </p>
+              <Alert.Root severity="error" asChild>
+                <motion.div {...fadeScaleAnimate}>
+                  <Alert.Content>
+                    <Alert.Icon severity="error" className="py-4 pl-4" />
+                    <Alert.Message severity="error" className="flex items-center divide-x">
+                      <p className="py-4">
+                        {t<string>('common.confCheckError', {
+                          context: checkConf.data?.some ? checkConf.data.val.type : undefined,
+                          gameExe: toExecutable(conf.data.game.type),
+                        })}
+                      </p>
 
-                  <Link
-                    to="/settings"
-                    className="flex grow items-center justify-center self-stretch rounded-r-md p-4 ring-inset focus-visible:outline-none focus-visible:ring focus-visible:ring-inherit"
-                  >
-                    Configuration
-                  </Link>
-                </Alert.Message>
-              </MotionAlertContent>
+                      <Link
+                        to="/settings"
+                        className="flex grow items-center justify-center self-stretch rounded-r-md p-4 ring-inset focus-visible:outline-none focus-visible:ring focus-visible:ring-inherit"
+                      >
+                        Configuration
+                      </Link>
+                    </Alert.Message>
+                  </Alert.Content>
+                </motion.div>
+              </Alert.Root>
             )}
           </AnimatePresence>
           <AnimatePresence mode="wait">
@@ -235,8 +238,8 @@ function CompilationPage() {
                       <DocumentArrowDownIcon />
                     </EmptyState.Icon>
                     <EmptyState.Text className="flex flex-col space-y-4">
-                      <p>{t('page.compilation.dragAndDropText')}</p>
-                      <p className="font-normal">{t('page.compilation.dragAndDropAdmin')}</p>
+                      <span>{t('page.compilation.dragAndDropText')}</span>
+                      <span className="font-normal">{t('page.compilation.dragAndDropAdmin')}</span>
                     </EmptyState.Text>
                   </motion.div>
                 </EmptyState.Root>

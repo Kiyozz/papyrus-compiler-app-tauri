@@ -8,7 +8,7 @@
 import InputDialog from 'App/Component/Form/InputDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
-import { Alert } from 'App/Component/UI/Alert'
+import * as Alert from 'App/Component/UI/Alert'
 import Switch from 'App/Component/UI/Switch'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
@@ -23,8 +23,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Trans, useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { Some } from 'ts-results'
-
-const MotionAlert = motion(Alert)
 
 function SettingsMo2Section() {
   const { t } = useTranslation()
@@ -108,20 +106,19 @@ function SettingsMo2Section() {
 
       <AnimatePresence mode="sync">
         {hasAnyMo2Error && (
-          <MotionAlert
-            key="mo2-error"
-            severity="error"
-            className="mt-3 p-4"
-            transition={{ type: 'tween' }}
-            {...enterPageAnimate}
-            layout
-            layoutId="mo2-error"
-          >
-            {t<string>('common.confCheckError', {
-              context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
-              gameExe: toExecutable(conf.data.game.type),
-            })}
-          </MotionAlert>
+          <Alert.Root key="mo2-error" severity="error" className="mt-3 p-4" asChild>
+            <motion.div transition={{ type: 'tween' }} {...enterPageAnimate} layout layoutId="mo2-error">
+              <Alert.Content>
+                <Alert.Icon severity="error" />
+                <Alert.Message severity="error">
+                  {t<string>('common.confCheckError', {
+                    context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
+                    gameExe: toExecutable(conf.data.game.type),
+                  })}
+                </Alert.Message>
+              </Alert.Content>
+            </motion.div>
+          </Alert.Root>
         )}
       </AnimatePresence>
     </SettingsSection>

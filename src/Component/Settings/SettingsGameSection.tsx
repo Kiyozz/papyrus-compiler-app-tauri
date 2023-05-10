@@ -10,7 +10,7 @@ import Tooltip from '@mui/material/Tooltip'
 import InputDialog from 'App/Component/Form/InputDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
-import { Alert } from 'App/Component/UI/Alert'
+import * as Alert from 'App/Component/UI/Alert'
 import RadioGroup from 'App/Component/UI/RadioGroup'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
@@ -26,8 +26,6 @@ import { Navigate } from 'react-router-dom'
 import { fromNullable } from 'App/Lib/TsResults'
 import { Some } from 'ts-results'
 import { enterPageAnimate } from 'App/Lib/Framer'
-
-const MotionAlert = motion(Alert)
 
 function SettingsGameSection() {
   const { t } = useTranslation()
@@ -182,20 +180,25 @@ function SettingsGameSection() {
           checkConf,
           Some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist'] as const),
         ) && (
-          <MotionAlert
-            key="error-alert"
-            severity="error"
-            className="mt-3 p-4"
-            transition={{ type: 'tween' }}
-            {...enterPageAnimate}
-            layout
-            layoutId="error-alert"
-          >
-            {t<string>('common.confCheckError', {
-              context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
-              gameExe: toExecutable(conf.data.game.type),
-            })}
-          </MotionAlert>
+          <Alert.Root key="error-alert" severity="error" className="mt-3 p-4" asChild>
+            <motion.div
+              key="error-alert"
+              transition={{ type: 'tween' }}
+              {...enterPageAnimate}
+              layout
+              layoutId="error-alert"
+            >
+              <Alert.Content>
+                <Alert.Icon severity="error" />
+                <Alert.Message severity="error">
+                  {t<string>('common.confCheckError', {
+                    context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
+                    gameExe: toExecutable(conf.data.game.type),
+                  })}
+                </Alert.Message>
+              </Alert.Content>
+            </motion.div>
+          </Alert.Root>
         )}
       </AnimatePresence>
     </SettingsSection>

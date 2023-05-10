@@ -68,10 +68,29 @@ const AlertMessage = forwardRef<AlertMessageElement, AlertMessageProps>(
 AlertMessage.displayName = 'Alert.Message'
 
 export type AlertContentElement = ElementRef<typeof Primitive.div>
-export type AlertContentProps = PrimitivePropsWithRef<'div'> & { severity: Severity }
+export type AlertContentProps = PrimitivePropsWithRef<typeof Primitive.div>
 
 const AlertContent = forwardRef<AlertContentElement, AlertContentProps>(
-  ({ children, severity, asChild = false, className }, ref) => {
+  ({ children, asChild = false, className }, ref) => {
+    const Comp = asChild ? Slot : Primitive.div
+
+    return (
+      <Comp className={cx('flex', className)} ref={ref}>
+        {children}
+      </Comp>
+    )
+  },
+)
+
+AlertContent.displayName = 'Alert.Content'
+
+export type AlertElement = ElementRef<typeof Primitive.div>
+export type AlertProps = PrimitivePropsWithRef<typeof Primitive.div> & {
+  severity?: Severity
+}
+
+const Alert = forwardRef<AlertElement, AlertProps>(
+  ({ severity = 'info', asChild = false, className, children, ...props }, ref) => {
     const Comp = asChild ? Slot : Primitive.div
     const isError = severity === 'error'
     const isWarning = severity === 'warning'
@@ -89,6 +108,7 @@ const AlertContent = forwardRef<AlertContentElement, AlertContentProps>(
           className,
         )}
         ref={ref}
+        {...props}
       >
         {children}
       </Comp>
@@ -96,44 +116,6 @@ const AlertContent = forwardRef<AlertContentElement, AlertContentProps>(
   },
 )
 
-AlertContent.displayName = 'Alert.Content'
+Alert.displayName = 'Alert.Root'
 
-export type AlertElement = ElementRef<typeof AlertContent>
-export type AlertProps = PrimitivePropsWithRef<'div'> & {
-  severity?: Severity
-}
-
-const Alert = forwardRef<AlertElement, AlertProps>(
-  ({ severity = 'info', asChild = false, className, children, ...props }, ref) => {
-    const Comp = asChild ? Slot : AlertContent
-    const isError = severity === 'error'
-    const isWarning = severity === 'warning'
-    const isInfo = severity === 'info'
-    const isSuccess = severity === 'success'
-
-    return (
-      <Comp
-        severity={severity}
-        className={cx(
-          'rounded-md',
-          isInfo && 'bg-blue-50',
-          isWarning && 'bg-yellow-50',
-          isError && 'bg-red-50',
-          isSuccess && 'bg-green-50',
-          className,
-        )}
-        ref={ref}
-        {...props}
-      >
-        <div className="flex">
-          <AlertIcon severity={severity} />
-          <AlertMessage severity={severity}>{children}</AlertMessage>
-        </div>
-      </Comp>
-    )
-  },
-)
-
-Alert.displayName = 'Alert'
-
-export { AlertContent as Content, AlertIcon as Icon, AlertMessage as Message, Alert }
+export { AlertContent as Content, AlertIcon as Icon, AlertMessage as Message, Alert, Alert as Root }
