@@ -7,6 +7,7 @@
 
 import { type PrimitivePropsWithRef, Primitive } from '@radix-ui/react-primitive'
 import { Slot } from '@radix-ui/react-slot'
+import cx from 'classnames'
 import { type ElementRef, forwardRef } from 'react'
 
 export type EmptyStateElement = ElementRef<typeof Primitive.div>
@@ -39,11 +40,11 @@ export type EmptyStateTextElement = ElementRef<typeof Primitive.p>
 export type EmptyStateTextProps = PrimitivePropsWithRef<typeof Primitive.p>
 
 const EmptyStateText = forwardRef<EmptyStateTextElement, EmptyStateTextProps>(
-  ({ asChild = false, children, ...props }, ref) => {
+  ({ asChild = false, children, className, ...props }, ref) => {
     const Comp = asChild ? Slot : Primitive.p
 
     return (
-      <Comp className="text-sm font-semibold text-gray-900" {...props} ref={ref}>
+      <Comp className={cx('text-sm font-semibold text-gray-900', className)} {...props} ref={ref}>
         {children}
       </Comp>
     )

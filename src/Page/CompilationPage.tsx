@@ -5,9 +5,6 @@
  *
  */
 
-import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid'
-import Tooltip from '@mui/material/Tooltip'
-import Typography from '@mui/material/Typography'
 import CreateGroupFromScriptsButton from 'App/Component/Compilation/CreateGroupFromScriptsButton'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
 import StartCompilationButton from 'App/Component/Compilation/StartCompilationButton'
@@ -40,8 +37,9 @@ import { type RefObject, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { R } from 'App/Lib/FpTs'
 import * as Button from 'App/Component/UI/Button'
-import { ClockIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ClockIcon, DocumentArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
+import * as EmptyState from 'App/Component/UI/EmptyState'
 
 const logs = createLogs('CompilationPage')
 const MotionAlertContent = motion(Alert.Content)
@@ -230,14 +228,19 @@ function CompilationPage() {
                 />
               </motion.div>
             ) : (
-              <motion.div className="m-auto text-center" key="page-description" {...enterPageAnimate}>
-                <Typography variant="h5">
-                  <span>{t('page.compilation.dragAndDropText')}</span>
-                </Typography>
-                <Tooltip title={t('page.compilation.dragAndDropAdmin')}>
-                  <QuestionMarkCircleIcon className="mt-3 inline-block h-8 w-8" />
-                </Tooltip>
-              </motion.div>
+              <>
+                <EmptyState.Root asChild>
+                  <motion.div {...enterPageAnimate}>
+                    <EmptyState.Icon>
+                      <DocumentArrowDownIcon />
+                    </EmptyState.Icon>
+                    <EmptyState.Text className="flex flex-col space-y-4">
+                      <p>{t('page.compilation.dragAndDropText')}</p>
+                      <p className="font-normal">{t('page.compilation.dragAndDropAdmin')}</p>
+                    </EmptyState.Text>
+                  </motion.div>
+                </EmptyState.Root>
+              </>
             )}
           </AnimatePresence>
         </div>
