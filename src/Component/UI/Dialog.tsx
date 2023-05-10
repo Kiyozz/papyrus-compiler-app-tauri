@@ -13,10 +13,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { type ElementRef, forwardRef } from 'react'
 
 export type DialogElement = ElementRef<typeof Primitive.div>
-export type DialogProps = { open: boolean; className?: string; fullScreen?: boolean } & Omit<
-  HeadlessDialogProps<'div'>,
-  'unmount' | 'className' | 'open'
-> & { asChild?: boolean }
+export type DialogProps = {
+  open: boolean
+  className?: string
+  fullScreen?: boolean
+  onClose?: (open: boolean) => void
+} & Omit<HeadlessDialogProps<typeof Primitive.div>, 'unmount' | 'className' | 'open' | 'onClose'>
 
 const Dialog = forwardRef<DialogElement, DialogProps>(
   ({ asChild = false, fullScreen = false, open, children, className, ...props }, ref) => {
@@ -25,7 +27,14 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
     return (
       <AnimatePresence>
         {open && (
-          <HeadlessDialog static as={motion.div} open={open} className="relative z-40" {...props}>
+          <HeadlessDialog
+            static
+            as={motion.div}
+            open={open}
+            className="relative z-40"
+            onClose={props.onClose ?? (() => {})}
+            {...props}
+          >
             {(state) => (
               <>
                 <motion.div {...fadeEaseAnimate} className="fixed inset-0 bg-gray-500/75" aria-hidden="true" />

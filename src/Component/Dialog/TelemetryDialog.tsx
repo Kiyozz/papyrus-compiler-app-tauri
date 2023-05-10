@@ -5,11 +5,8 @@
  *
  */
 
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
+import * as Button from 'App/Component/UI/Button'
+import * as Dialog from 'App/Component/UI/Dialog'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
@@ -33,29 +30,31 @@ const TelemetryDialog = () => {
   }
 
   return (
-    <Dialog open={step.some && step.val === 'end' && conf.isSuccess && conf.data.tutorial.telemetry}>
-      <DialogTitle>{t('common.telemetry.title')}</DialogTitle>
-      <DialogContent>{t('common.telemetry.text')}</DialogContent>
-      <DialogActions>
-        <Button
+    <Dialog.Root
+      className="w-full max-w-xl"
+      open={step.some && step.val === 'end' && conf.isSuccess && conf.data.tutorial.telemetry}
+    >
+      <Dialog.Title>{t('common.telemetry.title')}</Dialog.Title>
+      <Dialog.Content className="px-6 py-4">{t('common.telemetry.text')}</Dialog.Content>
+      <Dialog.Actions className="flex justify-end space-x-4">
+        <Button.Root
           color="inherit"
+          variant="secondary"
           onClick={() => {
             updateTelemetry(false)
           }}
         >
           {t('common.refuse')}
-        </Button>
-        <Button
-          color="primary"
-          variant="contained"
+        </Button.Root>
+        <Button.Root
           onClick={() => {
             updateTelemetry(true)
           }}
         >
           {t('common.accept')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </Button.Root>
+      </Dialog.Actions>
+    </Dialog.Root>
   )
 }
 
