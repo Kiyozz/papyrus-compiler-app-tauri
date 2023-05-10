@@ -6,7 +6,8 @@
  */
 
 import { type GroupWithId } from 'App/Type/GroupWithId'
-import React from 'react'
+import cx from 'classnames'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type Option } from 'ts-results'
 import * as Dialog from 'App/Component/UI/Dialog'
@@ -16,6 +17,7 @@ const RemovingGroupDialog = ({
   groupToRemove,
   onConfirm,
   onCancel,
+  className,
   ...props
 }: Omit<Dialog.DialogProps, 'onClose'> & {
   groupToRemove: Option<GroupWithId>
@@ -23,20 +25,26 @@ const RemovingGroupDialog = ({
   onCancel: () => void
 }) => {
   const { t } = useTranslation()
+  const cancelButtonRef = useRef<HTMLButtonElement>(null)
 
   return (
-    <Dialog.Root onClose={onCancel} {...props}>
+    <Dialog.Root
+      onClose={onCancel}
+      className={cx('w-full max-w-xl', className)}
+      initialFocus={cancelButtonRef}
+      {...props}
+    >
       <Dialog.Title>{t('dialog.group.removing.title')}</Dialog.Title>
       <Dialog.Content asChild>
-        <p className="flex grow items-center justify-center px-4 py-12">
+        <p className="grow px-6 py-4">
           {t('dialog.group.removing.content', groupToRemove.map((g) => ({ name: g.name })).unwrapOr({}))}
         </p>
       </Dialog.Content>
       <Dialog.Actions className="flex justify-end gap-x-4">
-        <Button.Root onClick={onCancel} color="inherit" variant="soft">
+        <Button.Root ref={cancelButtonRef} onClick={onCancel} color="inherit" variant="secondary">
           {t('common.cancel')}
         </Button.Root>
-        <Button.Root onClick={onConfirm} color="error" variant="soft" autoFocus>
+        <Button.Root color="error" onClick={onConfirm}>
           {t('common.confirm')}
         </Button.Root>
       </Dialog.Actions>

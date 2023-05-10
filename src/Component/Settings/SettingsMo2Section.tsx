@@ -104,7 +104,7 @@ function SettingsMo2Section() {
         />
       </motion.div>
 
-      <AnimatePresence mode="sync">
+      <AnimatePresence mode="popLayout">
         {hasAnyMo2Error && (
           <Alert.Root key="mo2-error" severity="error" className="mt-3 p-4" asChild>
             <motion.div transition={{ type: 'tween' }} {...enterPageAnimate} layout layoutId="mo2-error">

@@ -25,7 +25,7 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
     return (
       <AnimatePresence>
         {open && (
-          <HeadlessDialog static as={motion.div} open={open} className={cx('relative z-40', className)} {...props}>
+          <HeadlessDialog static as={motion.div} open={open} className="relative z-40" {...props}>
             {(state) => (
               <>
                 <motion.div {...fadeEaseAnimate} className="fixed inset-0 bg-gray-500/75" aria-hidden="true" />
@@ -35,6 +35,7 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
                     className={cx(
                       'fixed mx-auto max-w-6xl p-4',
                       fullScreen ? 'inset-0' : 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+                      className,
                     )}
                   >
                     <HeadlessDialog.Panel className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-xl">

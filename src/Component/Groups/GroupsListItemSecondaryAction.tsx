@@ -28,7 +28,7 @@ const GroupsListItemSecondaryAction = ({
       </PopoverMenu.Button>
 
       <PopoverMenu.Transition>
-        <PopoverMenu.Panel>
+        <PopoverMenu.Panel className="mt-0">
           <PopoverMenu.Item onClick={onClickEdit} className="flex gap-x-3">
             <Button.Icon edge="start">
               <PencilIcon color="error" />

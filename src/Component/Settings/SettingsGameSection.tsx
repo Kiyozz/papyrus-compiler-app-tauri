@@ -175,7 +175,7 @@ function SettingsGameSection() {
           </div>
         </TutorialTooltip>
       </motion.div>
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
         {isCheckConfQueryError(
           checkConf,
           Some(['gameExeDoesNotExist', 'gamePathDoesNotExist', 'compilerPathDoesNotExist'] as const),

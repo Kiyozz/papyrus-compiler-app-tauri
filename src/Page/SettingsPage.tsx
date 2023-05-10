@@ -13,7 +13,7 @@ import SettingsGameSection from 'App/Component/Settings/SettingsGameSection'
 import SettingsMo2Section from 'App/Component/Settings/SettingsMo2Section'
 import SettingsTelemetrySection from 'App/Component/Settings/SettingsTelemetrySection'
 import SettingsThemeSection from 'App/Component/Settings/SettingsThemeSection'
-import ButtonRoot from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import { useRefreshConf } from 'App/Hook/Conf/UseRefreshConf'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { enterPageAnimate } from 'App/Lib/Framer'
@@ -28,8 +28,7 @@ function SettingsPage() {
   return (
     <div>
       <PageAppBar title={t('page.settings.appBar.title')}>
-        <ButtonRoot
-          startIcon={<ArrowPathIcon />}
+        <Button.Root
           onClick={() => {
             void refreshConf()
             trackEvent({
@@ -39,8 +38,11 @@ function SettingsPage() {
             })
           }}
         >
+          <Button.Icon edge="start">
+            <ArrowPathIcon />
+          </Button.Icon>
           {t('common.refresh')}
-        </ButtonRoot>
+        </Button.Root>
       </PageAppBar>
 
       <Page>

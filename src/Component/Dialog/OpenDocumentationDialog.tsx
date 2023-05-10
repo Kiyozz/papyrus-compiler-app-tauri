@@ -5,30 +5,25 @@
  *
  */
 
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import Dialog, { type DialogProps } from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormGroup from '@mui/material/FormGroup'
+import * as Button from 'App/Component/UI/Button'
+import * as Dialog from 'App/Component/UI/Dialog'
+import Switch from 'App/Component/UI/Switch'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
-import React from 'react'
+import React, { Fragment, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose' | 'open'>) {
+function OpenDocumentationDialog(props: Omit<Dialog.DialogProps, 'onKeyDown' | 'onClose' | 'open'>) {
   const { t } = useTranslation()
   const {
     openDocumentation: [isOpen, setOpen],
   } = useDialogs()
   const conf = useConf()
   const updateConf = useUpdateConf()
+  const confirmButtonRef = useRef<HTMLButtonElement>(null)
   const { open: openTheDocumentation } = useDocumentation()
 
   if (!isQueryNonNullable(conf)) return <>Waiting...</>
@@ -56,44 +51,53 @@ function OpenDocumentationDialog(props: Omit<DialogProps, 'onKeyDown' | 'onClose
   }
 
   return (
-    <Dialog
+    <Dialog.Root
       open={isOpen}
       onClose={() => {
         setOpen(false)
       }}
       onKeyDown={onDialogKeyDown}
+      className="w-full max-w-xl"
+      initialFocus={confirmButtonRef}
       {...props}
     >
-      <DialogTitle>{t('dialog.openDocumentation.title')}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{t('dialog.openDocumentation.text')}</DialogContentText>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={!conf.data.misc.documentation.reminder}
-                inputProps={{ 'aria-label': 'controlled' }}
-                onChange={toggleRememberDocumentationDialog}
-              />
-            }
-            label={t('dialog.openDocumentation.actions.doNotShowAgain')}
-          />
-        </FormGroup>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() => {
-            setOpen(false)
-          }}
-          color="inherit"
-        >
-          {t('common.cancel')}
-        </Button>
-        <Button onClick={onConfirm} color="inherit" autoFocus>
-          {t('common.confirm')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+      <Dialog.Title>{t('dialog.openDocumentation.title')}</Dialog.Title>
+      <Dialog.Content className="px-6 py-4">
+        <p>
+          {t('dialog.openDocumentation.text')
+            .split('\n')
+            .map((text) => (
+              <Fragment key={text}>
+                {text}
+                <br />
+              </Fragment>
+            ))}
+        </p>
+      </Dialog.Content>
+      <Dialog.Actions className="flex justify-between">
+        <Switch
+          checked={!conf.data.misc.documentation.reminder}
+          onChange={toggleRememberDocumentationDialog}
+          label={t('dialog.openDocumentation.actions.doNotShowAgain')}
+          name="reminder"
+        />
+
+        <div className="space-x-4">
+          <Button.Root
+            onClick={() => {
+              setOpen(false)
+            }}
+            color="inherit"
+            variant="secondary"
+          >
+            {t('common.cancel')}
+          </Button.Root>
+          <Button.Root ref={confirmButtonRef} onClick={onConfirm}>
+            {t('common.confirm')}
+          </Button.Root>
+        </div>
+      </Dialog.Actions>
+    </Dialog.Root>
   )
 }
 

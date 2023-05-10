@@ -5,7 +5,8 @@
  *
  */
 
-import { Transition, Menu as HeadlessMenu } from '@headlessui/react'
+import { Transition, Menu as HeadlessMenu, type MenuItemsProps } from '@headlessui/react'
+import { type Primitive } from '@radix-ui/react-primitive'
 import * as Button from 'App/Component/UI/Button'
 import cx from 'classnames'
 import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, Fragment, type PropsWithChildren } from 'react'
@@ -30,22 +31,29 @@ const PopoverMenuItem = forwardRef<ElementRef<'button'>, ComponentPropsWithoutRe
 
 PopoverMenuItem.displayName = 'PopoverMenu.Item'
 
-const PopoverMenuPanel = forwardRef<
-  ElementRef<'div'>,
-  ComponentPropsWithoutRef<typeof HeadlessMenu.Items> & { position?: 'top-right' | 'bottom' }
->(({ className, children, position = 'bottom', ...props }, ref) => (
-  <HeadlessMenu.Items
-    className={cx(
-      'absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
-      position === 'top-right' && '-top-1/2 origin-bottom-left -translate-y-full translate-x-1/2',
-      className,
-    )}
-    ref={ref}
-    {...props}
-  >
-    {(state) => <>{typeof children === 'function' ? children(state) : children}</>}
-  </HeadlessMenu.Items>
-))
+export type PopoverMenuPanelElement = ElementRef<typeof Primitive.div>
+export type PopoverMenuPanelProps = MenuItemsProps<typeof Primitive.div> & {
+  position?: 'top-right' | 'bottom'
+  className?: string
+}
+
+const PopoverMenuPanel = forwardRef<PopoverMenuPanelElement, PopoverMenuPanelProps>(
+  ({ className, children, position = 'bottom', ...props }, ref) => (
+    <HeadlessMenu.Items
+      className={cx(
+        'absolute right-0 z-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
+        position === 'top-right' && '-top-1/2 origin-bottom-left -translate-y-full translate-x-1/2',
+        className,
+        (typeof className === 'string' || typeof className === 'undefined') &&
+          (className?.includes('mt-') ?? false ? '' : 'mt-2'),
+      )}
+      ref={ref}
+      {...props}
+    >
+      {(state) => <>{typeof children === 'function' ? children(state) : children}</>}
+    </HeadlessMenu.Items>
+  ),
+)
 
 PopoverMenuPanel.displayName = 'PopoverMenu.Panel'
 

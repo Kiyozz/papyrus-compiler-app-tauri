@@ -5,7 +5,7 @@
  *
  */
 
-import { PlusCircleIcon } from '@heroicons/react/24/solid'
+import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import is from '@sindresorhus/is'
@@ -187,11 +187,13 @@ function GroupsPage() {
       <PageAppBar title={t('page.groups.appBar.title')}>
         <Button.Root
           disabled={updateGroups.isLoading}
-          startIcon={<PlusCircleIcon />}
           onClick={() => {
             openAddGroupDialog()
           }}
         >
+          <Button.Icon edge="start">
+            <PlusCircleIcon />
+          </Button.Icon>
           {t('common.create')}
         </Button.Root>
       </PageAppBar>

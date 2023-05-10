@@ -134,6 +134,9 @@ const Button = forwardRef<ButtonElement, ButtonProps>(
             inherit:
               'text-inherit hover:opacity-80 focus-visible:ring-inherit dark:text-inherit dark:hover:text-inherit dark:focus-visible:ring-inherit',
           }[color],
+          variant === 'brand' &&
+            color === 'error' &&
+            'bg-red-600 text-white hover:bg-red-500 hover:text-white focus-visible:ring-red-400',
           className,
         )}
         type="button"

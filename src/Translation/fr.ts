@@ -134,8 +134,8 @@ const fr: TranslationSchema = {
       },
     },
     openDocumentation: {
-      title: 'Ouvrir le site web de la documentation de PCA ?',
-      text: "Trouvez toutes les infos sur l'utilisation de PCA",
+      title: 'Documentation de PCA',
+      text: 'Vous allez ouvrir le site web de la documentation de PCA.\nVous pourrez trouver toutes les informations nécessaires à l\'utilisation de PCA et à son paramétrage.\n\nSi vous avez un soucis, vous pouvez soumettre un message sur NexusMods après avoir lu la section "Troubleshooting" de la documentation.',
       actions: {
         doNotShowAgain: 'Ne plus afficher',
       },
