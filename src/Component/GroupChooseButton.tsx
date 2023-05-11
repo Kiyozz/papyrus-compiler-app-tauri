@@ -8,8 +8,7 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import is from '@sindresorhus/is'
 import * as Button from 'App/Component/UI/Button'
-import { type PopoverMenuButtonProps } from 'App/Component/UI/PopoverMenu'
-import * as PopoverMenu from 'App/Component/UI/PopoverMenu'
+import * as FloatingMenu from 'App/Component/UI/FloatingMenu'
 import { type Groups } from 'App/Lib/Conf/ConfZod'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { type GroupWithId } from 'App/Type/GroupWithId'
@@ -19,7 +18,7 @@ function GroupChooseButton({
   groups,
   children,
   ...props
-}: Omit<PopoverMenuButtonProps, 'onClick'> & {
+}: Omit<FloatingMenu.FloatingMenuButtonProps, 'onClick'> & {
   groups: Groups
   onGroupClick: (group: GroupWithId) => void
 }) {
@@ -30,29 +29,29 @@ function GroupChooseButton({
   }
 
   return (
-    <PopoverMenu.Root as="div" key="choose-group-popover">
-      <PopoverMenu.Button {...props}>
+    <FloatingMenu.Root as="div" key="choose-group-popover">
+      <FloatingMenu.Button {...props}>
         <Button.Icon edge={children != null ? 'start' : undefined}>
           <ChevronDownIcon />
         </Button.Icon>
         {children}
-      </PopoverMenu.Button>
+      </FloatingMenu.Button>
 
-      <PopoverMenu.Transition>
-        <PopoverMenu.Panel>
+      <FloatingMenu.Transition>
+        <FloatingMenu.Panel>
           {nonEmptyGroups.map((group) => (
-            <PopoverMenu.Item
+            <FloatingMenu.Item
               key={group.id}
               onClick={() => {
                 onGroupClick(group)
               }}
             >
               {group.name}
-            </PopoverMenu.Item>
+            </FloatingMenu.Item>
           ))}
-        </PopoverMenu.Panel>
-      </PopoverMenu.Transition>
-    </PopoverMenu.Root>
+        </FloatingMenu.Panel>
+      </FloatingMenu.Transition>
+    </FloatingMenu.Root>
   )
 }
 

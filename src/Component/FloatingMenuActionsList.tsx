@@ -6,11 +6,11 @@
  */
 
 import { type MenuProps } from '@headlessui/react'
-import * as PopoverMenu from 'App/Component/UI/PopoverMenu'
+import * as FloatingMenu from 'App/Component/UI/FloatingMenu'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-export const PopoverMenuActionsList = ({
+const FloatingMenuActionsList = ({
   onAll,
   onNone,
   onInvert,
@@ -33,29 +33,31 @@ export const PopoverMenuActionsList = ({
   const { t } = useTranslation()
 
   return (
-    <PopoverMenu.Root as="div" key="actions-popover" {...props}>
+    <FloatingMenu.Root as="div" key="actions-popover" {...props}>
       {(state) => (
         <>
-          <PopoverMenu.Button disabled={disabled.button}>{t('common.actions')}</PopoverMenu.Button>
+          <FloatingMenu.Button disabled={disabled.button}>{t('common.actions')}</FloatingMenu.Button>
 
-          <PopoverMenu.Transition>
-            <PopoverMenu.Panel className={cx(children != null && 'divide-y divide-gray-100')} position={position}>
+          <FloatingMenu.Transition>
+            <FloatingMenu.Panel className={cx(children != null && 'divide-y divide-gray-100')} position={position}>
               <div>
-                <PopoverMenu.Item onClick={onAll} disabled={disabled.all}>
+                <FloatingMenu.Item onClick={onAll} disabled={disabled.all}>
                   {t('common.select.all')}
-                </PopoverMenu.Item>
-                <PopoverMenu.Item onClick={onNone} disabled={disabled.none}>
+                </FloatingMenu.Item>
+                <FloatingMenu.Item onClick={onNone} disabled={disabled.none}>
                   {t('common.select.none')}
-                </PopoverMenu.Item>
-                <PopoverMenu.Item onClick={onInvert} disabled={disabled.invert}>
+                </FloatingMenu.Item>
+                <FloatingMenu.Item onClick={onInvert} disabled={disabled.invert}>
                   {t('common.select.invert')}
-                </PopoverMenu.Item>
+                </FloatingMenu.Item>
               </div>
               {typeof children === 'function' ? children(state) : children}
-            </PopoverMenu.Panel>
-          </PopoverMenu.Transition>
+            </FloatingMenu.Panel>
+          </FloatingMenu.Transition>
         </>
       )}
-    </PopoverMenu.Root>
+    </FloatingMenu.Root>
   )
 }
+
+export default FloatingMenuActionsList

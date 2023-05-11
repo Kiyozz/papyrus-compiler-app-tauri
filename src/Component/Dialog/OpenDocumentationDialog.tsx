@@ -13,7 +13,7 @@ import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
-import React, { Fragment, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function OpenDocumentationDialog(props: Omit<Dialog.DialogProps, 'onKeyDown' | 'onClose' | 'open'>) {
@@ -63,16 +63,13 @@ function OpenDocumentationDialog(props: Omit<Dialog.DialogProps, 'onKeyDown' | '
     >
       <Dialog.Title>{t('dialog.openDocumentation.title')}</Dialog.Title>
       <Dialog.Content className="px-6 py-4">
-        <p>
+        <div className="prose">
           {t('dialog.openDocumentation.text')
             .split('\n')
             .map((text) => (
-              <Fragment key={text}>
-                {text}
-                <br />
-              </Fragment>
+              <p key={text}>{text}</p>
             ))}
-        </p>
+        </div>
       </Dialog.Content>
       <Dialog.Actions className="flex justify-between">
         <Switch

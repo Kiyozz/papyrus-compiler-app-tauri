@@ -11,11 +11,11 @@ import * as Button from 'App/Component/UI/Button'
 import cx from 'classnames'
 import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, Fragment, type PropsWithChildren } from 'react'
 
-function PopoverMenu({ className, ...props }: ComponentPropsWithoutRef<typeof HeadlessMenu>) {
+function FloatingMenu({ className, ...props }: ComponentPropsWithoutRef<typeof HeadlessMenu>) {
   return <HeadlessMenu className={cx('relative', className)} {...props} />
 }
 
-const PopoverMenuItem = forwardRef<ElementRef<'button'>, ComponentPropsWithoutRef<typeof HeadlessMenu.Item>>(
+const FloatingMenuItem = forwardRef<ElementRef<'button'>, ComponentPropsWithoutRef<typeof HeadlessMenu.Item>>(
   ({ className, ...props }, ref) => (
     <HeadlessMenu.Item
       as="button"
@@ -29,20 +29,20 @@ const PopoverMenuItem = forwardRef<ElementRef<'button'>, ComponentPropsWithoutRe
   ),
 )
 
-PopoverMenuItem.displayName = 'PopoverMenu.Item'
+FloatingMenuItem.displayName = 'FloatingMenu.Item'
 
-export type PopoverMenuPanelElement = ElementRef<typeof Primitive.div>
-export type PopoverMenuPanelProps = MenuItemsProps<typeof Primitive.div> & {
+export type FloatingMenuPanelElement = ElementRef<typeof Primitive.div>
+export type FloatingMenuPanelProps = MenuItemsProps<typeof Primitive.div> & {
   position?: 'top-right' | 'bottom'
   className?: string
 }
 
-const PopoverMenuPanel = forwardRef<PopoverMenuPanelElement, PopoverMenuPanelProps>(
+const FloatingMenuPanel = forwardRef<FloatingMenuPanelElement, FloatingMenuPanelProps>(
   ({ className, children, position = 'bottom', ...props }, ref) => (
     <HeadlessMenu.Items
       className={cx(
         'absolute right-0 z-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
-        position === 'top-right' && '-top-1/2 origin-bottom-left -translate-y-full translate-x-1/2',
+        position === 'top-right' && '-top-1/2 left-0 origin-bottom-left -translate-y-full',
         className,
         (typeof className === 'string' || typeof className === 'undefined') &&
           (className?.includes('mt-') ?? false ? '' : 'mt-2'),
@@ -55,19 +55,19 @@ const PopoverMenuPanel = forwardRef<PopoverMenuPanelElement, PopoverMenuPanelPro
   ),
 )
 
-PopoverMenuPanel.displayName = 'PopoverMenu.Panel'
+FloatingMenuPanel.displayName = 'FloatingMenu.Panel'
 
-export type PopoverMenuButtonElement = ElementRef<typeof HeadlessMenu.Button>
-export type PopoverMenuButtonProps = PropsWithChildren<
+export type FloatingMenuButtonElement = ElementRef<typeof HeadlessMenu.Button>
+export type FloatingMenuButtonProps = PropsWithChildren<
   Omit<ComponentPropsWithoutRef<typeof HeadlessMenu.Button>, 'children'>
 > & {
   variant?: Button.ButtonProps['variant']
 }
 
-const PopoverMenuButton = forwardRef<PopoverMenuButtonElement, PopoverMenuButtonProps>(
+const FloatingMenuButton = forwardRef<FloatingMenuButtonElement, FloatingMenuButtonProps>(
   ({ children, variant, ...props }, ref) => {
     if (typeof children === 'function') {
-      throw new TypeError('PopoverMenu.Button children must be a node, not a function')
+      throw new TypeError('FloatingMenu.Button children must be a node, not a function')
     }
 
     return (
@@ -80,9 +80,9 @@ const PopoverMenuButton = forwardRef<PopoverMenuButtonElement, PopoverMenuButton
   },
 )
 
-PopoverMenuButton.displayName = 'PopoverMenu.Button'
+FloatingMenuButton.displayName = 'FloatingMenu.Button'
 
-function PopoverMenuTransition(props: ComponentPropsWithoutRef<typeof Transition>) {
+function FloatingMenuTransition(props: ComponentPropsWithoutRef<typeof Transition>) {
   return (
     <Transition
       as={Fragment}
@@ -98,9 +98,9 @@ function PopoverMenuTransition(props: ComponentPropsWithoutRef<typeof Transition
 }
 
 export {
-  PopoverMenu as Root,
-  PopoverMenuButton as Button,
-  PopoverMenuItem as Item,
-  PopoverMenuTransition as Transition,
-  PopoverMenuPanel as Panel,
+  FloatingMenu as Root,
+  FloatingMenuButton as Button,
+  FloatingMenuItem as Item,
+  FloatingMenuTransition as Transition,
+  FloatingMenuPanel as Panel,
 }

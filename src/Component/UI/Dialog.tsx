@@ -4,13 +4,11 @@
  * All rights reserved.
  *
  */
-import { Dialog as HeadlessDialog, type DialogProps as HeadlessDialogProps } from '@headlessui/react'
+import { Dialog as HeadlessDialog, type DialogProps as HeadlessDialogProps, Transition } from '@headlessui/react'
 import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
 import { Slot } from '@radix-ui/react-slot'
-import { fadeEaseAnimate, fadeScaleAnimate } from 'App/Lib/Framer'
 import cx from 'classnames'
-import { AnimatePresence, motion } from 'framer-motion'
-import { type ElementRef, forwardRef } from 'react'
+import { type ElementRef, forwardRef, Fragment } from 'react'
 
 export type DialogElement = ElementRef<typeof Primitive.div>
 export type DialogProps = {
@@ -25,21 +23,39 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
     const Comp = asChild ? Slot : Primitive.div
 
     return (
-      <AnimatePresence>
-        {open && (
-          <HeadlessDialog
-            static
-            as={motion.div}
-            open={open}
-            className="relative z-40"
-            onClose={props.onClose ?? (() => {})}
-            {...props}
-          >
-            {(state) => (
-              <>
-                <motion.div {...fadeEaseAnimate} className="fixed inset-0 bg-gray-500/75" aria-hidden="true" />
+      <Transition.Root show={open} as={Fragment}>
+        <HeadlessDialog
+          static
+          as={Primitive.div}
+          open={open}
+          className="relative z-40"
+          onClose={props.onClose ?? (() => {})}
+          {...props}
+        >
+          {(state) => (
+            <>
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-200"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="fixed inset-0 bg-gray-500/75" aria-hidden="true" />
+              </Transition.Child>
 
-                <motion.div {...fadeScaleAnimate} className="fixed inset-0 mx-auto max-w-6xl p-4">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-[0.98]"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 scale-[0.98]"
+              >
+                <div className="fixed inset-0 mx-auto max-w-6xl p-4">
                   <div
                     className={cx(
                       'fixed mx-auto max-w-6xl p-4',
@@ -53,12 +69,12 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
                       </Comp>
                     </HeadlessDialog.Panel>
                   </div>
-                </motion.div>
-              </>
-            )}
-          </HeadlessDialog>
-        )}
-      </AnimatePresence>
+                </div>
+              </Transition.Child>
+            </>
+          )}
+        </HeadlessDialog>
+      </Transition.Root>
     )
   },
 )

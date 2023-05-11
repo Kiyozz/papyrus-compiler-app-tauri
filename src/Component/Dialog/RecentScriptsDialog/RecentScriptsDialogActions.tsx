@@ -5,8 +5,8 @@
  *
  */
 
-import { PopoverMenuActionsList } from 'App/Component/PopoverMenuActionsList'
-import * as PopoverMenu from 'App/Component/UI/PopoverMenu'
+import FloatingMenuActionsList from 'App/Component/FloatingMenuActionsList'
+import * as PopoverMenu from 'App/Component/UI/FloatingMenu'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { type ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +18,7 @@ const RecentScriptsDialogActions = ({
   scriptsToLoad,
   disabled = {},
   ...props
-}: ComponentProps<typeof PopoverMenuActionsList> & {
+}: ComponentProps<typeof FloatingMenuActionsList> & {
   onClear: () => void
   onDetails: () => void
   detailsText: string
@@ -32,7 +32,7 @@ const RecentScriptsDialogActions = ({
   const { t } = useTranslation()
 
   return (
-    <PopoverMenuActionsList
+    <FloatingMenuActionsList
       {...props}
       disabled={{
         ...disabled,
@@ -47,7 +47,7 @@ const RecentScriptsDialogActions = ({
       <PopoverMenu.Item onClick={onClear} disabled={disabled.clear}>
         {t('common.clearList')}
       </PopoverMenu.Item>
-    </PopoverMenuActionsList>
+    </FloatingMenuActionsList>
   )
 }
 
