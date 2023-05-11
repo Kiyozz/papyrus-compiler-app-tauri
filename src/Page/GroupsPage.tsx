@@ -199,7 +199,7 @@ function GroupsPage() {
       </PageAppBar>
 
       <Page>
-        <div className="container mx-auto">
+        <div className="container mx-auto max-w-6xl">
           <AnimatePresence>
             {groups.isLoading && (
               <motion.div {...fadeAnimate}>

@@ -5,7 +5,7 @@
  *
  */
 
-import { PlayIcon } from '@heroicons/react/24/solid'
+import { PlayIcon } from '@heroicons/react/24/outline'
 import * as Button from 'App/Component/UI/Button'
 import { useTranslation } from 'react-i18next'
 

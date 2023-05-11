@@ -12,6 +12,7 @@ import {
   RectangleGroupIcon,
   ChevronLeftIcon,
   ExclamationTriangleIcon,
+  PlayIcon,
 } from '@heroicons/react/24/outline'
 import ActiveLink from 'App/Component/ActiveLink'
 import AnimateAppLogo from 'App/Component/AnimateAppLogo'
@@ -60,7 +61,7 @@ function Drawer() {
     {
       id: 'compilation',
       label: t('nav.compilation'),
-      icon: <QuestionMarkCircleIcon />,
+      icon: <PlayIcon />,
       path: '/',
     },
     {
