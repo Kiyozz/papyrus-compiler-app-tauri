@@ -59,6 +59,7 @@ export interface TranslationSchema {
     newVersionAvailable: string
     download: string
     changelogs: string
+    seeChangelogs: string
     openInBrowser: string
     settingsTutorial: {
       welcome: {

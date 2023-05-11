@@ -64,22 +64,24 @@ const ChangelogDialog = ({
         </Button.Root>
       </Dialog.Title>
       <Dialog.Content className="px-4" id="dialog-changelogs-content">
-        <Markdown
-          components={{
-            p: P,
-            h1: H1,
-            h2: H2,
-            h3: H3,
-            h5: H5,
-            code: Code,
-            a: A,
-            img: Img,
-            ul: Ul,
-            li: Li,
-          }}
-        >
-          {markdownNotes}
-        </Markdown>
+        <div className="prose mx-auto dark:prose-invert">
+          <Markdown
+            components={{
+              p: P,
+              h1: H1,
+              h2: H2,
+              h3: H3,
+              h5: H5,
+              code: Code,
+              a: A,
+              img: Img,
+              ul: Ul,
+              li: Li,
+            }}
+          >
+            {markdownNotes}
+          </Markdown>
+        </div>
       </Dialog.Content>
       <Dialog.Actions className="flex justify-end gap-x-4">
         <Button.Root onClick={onClose} color="inherit" variant="secondary">

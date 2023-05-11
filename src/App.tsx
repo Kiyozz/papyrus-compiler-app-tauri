@@ -9,7 +9,7 @@ import CompilationLogsDialog from 'App/Component/Dialog/CompilationLogsDialog'
 import OpenDocumentationDialog from 'App/Component/Dialog/OpenDocumentationDialog'
 import TelemetryDialog from 'App/Component/Dialog/TelemetryDialog'
 import Drawer from 'App/Component/Drawer'
-import LatestVersionSnackbar from 'App/Component/Snackbar/LatestVersionSnackbar'
+import LatestVersionManager from 'App/Component/Snackbar/LatestVersionManager'
 import SettingsTutorial from 'App/Component/SettingsTutorial'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useListenConfReset } from 'App/Hook/UseListenConfReset'
@@ -46,7 +46,7 @@ function App() {
               <Drawer />
               <CompilationLogsDialog />
               <OpenDocumentationDialog />
-              <LatestVersionSnackbar />
+              <LatestVersionManager />
               <SettingsTutorial />
               <TelemetryDialog />
 

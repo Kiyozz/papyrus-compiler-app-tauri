@@ -47,7 +47,7 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
                       className,
                     )}
                   >
-                    <HeadlessDialog.Panel className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-xl">
+                    <HeadlessDialog.Panel className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-xl dark:bg-gray-900">
                       <Comp className="flex h-full flex-col" ref={ref}>
                         {typeof children === 'function' ? children(state) : children}
                       </Comp>
@@ -76,7 +76,7 @@ const DialogTitle = forwardRef<DialogTitleElement, DialogTitleProps>(
       <HeadlessDialog.Title
         as={Comp}
         ref={ref}
-        className={cx('p-6 text-base font-semibold leading-6 text-gray-900', className)}
+        className={cx('p-6 text-base font-semibold leading-6 text-gray-900 dark:text-white', className)}
         {...props}
       >
         {children}
@@ -95,7 +95,7 @@ const DialogActions = forwardRef<DialogActionsElement, DialogActionsProps>(
     const Comp = asChild ? Slot : Primitive.div
 
     return (
-      <Comp className={cx('flex bg-gray-50 p-6', className)} ref={ref} {...props}>
+      <Comp className={cx('flex bg-gray-50 p-6 dark:bg-gray-800', className)} ref={ref} {...props}>
         {children}
       </Comp>
     )

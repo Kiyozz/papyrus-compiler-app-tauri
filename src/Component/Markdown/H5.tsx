@@ -5,13 +5,8 @@
  *
  */
 
-import Typography from '@mui/material/Typography'
 import { type PropsWithChildren } from 'react'
 
-const H5 = ({ children }: PropsWithChildren) => (
-  <Typography component="h5" gutterBottom variant="h6">
-    {children}
-  </Typography>
-)
+const H5 = ({ children }: PropsWithChildren) => <h5>{children}</h5>
 
 export default H5

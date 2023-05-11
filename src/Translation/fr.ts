@@ -66,6 +66,7 @@ const fr: TranslationSchema = {
     youAreUsingLatestVersion: 'Vous disposez de la dernière version de PCA',
     newVersionAvailable: 'Nouvelle version disponible ({{version}})',
     changelogs: 'Notes de version <0>{{version}}</0>',
+    seeChangelogs: 'Notes de version',
     download: 'Télécharger',
     openInBrowser: 'Ouvrir dans le navigateur',
     settingsTutorial: {

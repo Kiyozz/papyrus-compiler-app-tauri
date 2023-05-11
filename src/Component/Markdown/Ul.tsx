@@ -5,9 +5,8 @@
  *
  */
 
-import List from '@mui/material/List'
 import { type PropsWithChildren } from 'react'
 
-const Ul = ({ children }: PropsWithChildren) => <List disablePadding>{children}</List>
+const Ul = ({ children }: PropsWithChildren) => <ul>{children}</ul>
 
 export default Ul

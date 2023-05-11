@@ -5,13 +5,10 @@
  *
  */
 
-import Typography from '@mui/material/Typography'
 import { type PropsWithChildren } from 'react'
 
 const Code = ({ children }: PropsWithChildren) => (
-  <Typography className="m-0 rounded py-[0.2em] px-[0.4em] text-[85%] dark:bg-gray-800" component="code">
-    {children}
-  </Typography>
+  <code className="m-0 rounded px-[0.4em] py-[0.2em] text-[85%] dark:bg-gray-800">{children}</code>
 )
 
 export default Code

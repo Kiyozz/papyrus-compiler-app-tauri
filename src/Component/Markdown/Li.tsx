@@ -5,14 +5,8 @@
  *
  */
 
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
 import { type PropsWithChildren } from 'react'
 
-const Li = ({ children }: PropsWithChildren) => (
-  <ListItem>
-    <ListItemText primary={children} />
-  </ListItem>
-)
+const Li = ({ children }: PropsWithChildren) => <li>{children}</li>
 
 export default Li
