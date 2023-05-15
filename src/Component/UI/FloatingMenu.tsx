@@ -58,23 +58,13 @@ const FloatingMenuPanel = forwardRef<FloatingMenuPanelElement, FloatingMenuPanel
 FloatingMenuPanel.displayName = 'FloatingMenu.Panel'
 
 export type FloatingMenuButtonElement = ElementRef<typeof HeadlessMenu.Button>
-export type FloatingMenuButtonProps = PropsWithChildren<
-  Omit<ComponentPropsWithoutRef<typeof HeadlessMenu.Button>, 'children'>
-> & {
-  variant?: Button.ButtonProps['variant']
-}
+export type FloatingMenuButtonProps = Button.ButtonProps
 
 const FloatingMenuButton = forwardRef<FloatingMenuButtonElement, FloatingMenuButtonProps>(
-  ({ children, variant, ...props }, ref) => {
-    if (typeof children === 'function') {
-      throw new TypeError('FloatingMenu.Button children must be a node, not a function')
-    }
-
+  ({ children, ...props }, ref) => {
     return (
-      <Button.Root asChild variant={variant ?? 'secondary'} color="inherit" ref={ref}>
-        <HeadlessMenu.Button ref={ref} {...props}>
-          {children}
-        </HeadlessMenu.Button>
+      <Button.Root asChild {...props}>
+        <HeadlessMenu.Button ref={ref}>{children}</HeadlessMenu.Button>
       </Button.Root>
     )
   },

@@ -80,7 +80,6 @@ function CompilationPage() {
         <div className="flex gap-x-2">
           <Button.Root
             variant="secondary"
-            color="inherit"
             onClick={() => {
               setRecentFilesDialogOpen(true)
             }}
@@ -92,7 +91,7 @@ function CompilationPage() {
           </Button.Root>
           {isQueryNonNullable(groups) && R.size(groups.data) > 0 ? (
             <GroupChooseButton
-              className="px-3 py-2"
+              variant="secondary"
               groups={groups.data}
               onGroupClick={(group) => {
                 const paths = group.scripts.map((s) => s.path)

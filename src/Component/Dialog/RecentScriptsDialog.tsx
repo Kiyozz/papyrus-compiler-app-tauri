@@ -187,7 +187,7 @@ function RecentScriptsDialog({
                             <div className="pr-4">
                               <Button.Root
                                 color="error"
-                                variant="link"
+                                variant="ghost"
                                 onClick={async () => {
                                   await removeScriptFromRecentScripts(script)
                                   removeScriptToLoad([script])

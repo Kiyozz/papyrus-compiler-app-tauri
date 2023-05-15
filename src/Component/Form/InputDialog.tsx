@@ -57,7 +57,7 @@ const InputDialog = forwardRef<
     <MotionInput
       leadingAddon={
         <Button.Root
-          variant="link"
+          variant="ghost"
           disabled={props.disabled}
           className="group/button -mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50 group-aria-disabled:pointer-events-none [&_*]:delay-0"
           color={(typeof props.error === 'boolean' ? props.error : props.error != null) ? 'error' : 'default'}

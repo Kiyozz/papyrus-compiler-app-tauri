@@ -55,7 +55,7 @@ function FileScriptsList<T extends FileScript>({
                 >
                   {isFileScriptCompilation(script) ? (
                     <Button.Root
-                      variant="link"
+                      variant="ghost"
                       className="hover:text-indigo-500"
                       disabled={disabled || isRunning(script) || isBusy(script)}
                       onClick={async () => await onStart?.(script)}
@@ -68,7 +68,8 @@ function FileScriptsList<T extends FileScript>({
                   <p className="grow leading-6">{script.name}</p>
                   {isFileScriptCompilation(script) ? (
                     <Button.Root
-                      variant="link"
+                      color="error"
+                      variant="ghost"
                       size="xs"
                       disabled={isRunning(script) || isDone(script) || isBusy(script)}
                       onClick={() => onClickOnError?.(script)}
@@ -82,7 +83,7 @@ function FileScriptsList<T extends FileScript>({
                   ) : null}
                   <Button.Root
                     color="error"
-                    variant="link"
+                    variant="ghost"
                     disabled={isFileScriptCompilation(script) ? isRunning(script) || isBusy(script) : false}
                     onClick={() => {
                       onRemove(script)

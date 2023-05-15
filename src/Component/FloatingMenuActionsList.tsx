@@ -6,6 +6,7 @@
  */
 
 import { type MenuProps } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import * as FloatingMenu from 'App/Component/UI/FloatingMenu'
 import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
@@ -36,7 +37,10 @@ const FloatingMenuActionsList = ({
     <FloatingMenu.Root as="div" key="actions-popover" {...props}>
       {(state) => (
         <>
-          <FloatingMenu.Button disabled={disabled.button}>{t('common.actions')}</FloatingMenu.Button>
+          <FloatingMenu.Button disabled={disabled.button} variant="secondary">
+            <span>{t('common.actions')}</span>
+            <ChevronDownIcon className="h-[1em] w-[1em]" />
+          </FloatingMenu.Button>
 
           <FloatingMenu.Transition>
             <FloatingMenu.Panel className={cx(children != null && 'divide-y divide-gray-100')} position={position}>

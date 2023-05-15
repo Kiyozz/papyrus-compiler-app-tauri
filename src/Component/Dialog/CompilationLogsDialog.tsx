@@ -79,7 +79,7 @@ function CompilationLogsDialog() {
           <div className="ml-auto">
             <ButtonRoot
               ref={closeButtonRef}
-              color="inherit"
+              variant="secondary"
               onClick={() => {
                 setOpen(false)
               }}

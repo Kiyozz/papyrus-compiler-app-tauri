@@ -76,7 +76,7 @@ const TutorialWelcome = () => {
                 {t('common.settingsTutorial.welcome.needHelpText')}
               </MotionButton>
               <MotionButton
-                variant="link"
+                variant="ghost"
                 color="inherit"
                 onClick={() => {
                   skip('deny')

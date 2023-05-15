@@ -27,26 +27,6 @@ module.exports = {
       minHeight: {
         'app': 'calc(100vh - 64px)',
       },
-      colors: {
-        darker: '#16161a',
-        light: {
-          300: '#faf7f7',
-          400: '#f6f0f1',
-          600: '#eae5e6',
-          700: '#dddada',
-          800: '#cac4c4',
-        },
-        primary: {
-          400: '#3388ff',
-          500: '#418aea',
-          600: '#3279d7',
-        },
-        secondary: {
-          400: '#3fc68e',
-          500: '#35bc84',
-          600: '#27a571',
-        }
-      },
       transitionTimingFunction: {
         sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
       },

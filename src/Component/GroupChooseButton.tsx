@@ -31,10 +31,10 @@ function GroupChooseButton({
   return (
     <FloatingMenu.Root as="div" key="choose-group-popover">
       <FloatingMenu.Button {...props}>
-        <Button.Icon edge={children != null ? 'start' : undefined}>
+        {children}
+        <Button.Icon edge={children != null ? 'end' : undefined}>
           <ChevronDownIcon />
         </Button.Icon>
-        {children}
       </FloatingMenu.Button>
 
       <FloatingMenu.Transition>
