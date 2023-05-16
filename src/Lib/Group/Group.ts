@@ -33,7 +33,10 @@ const defaultOptions: GroupOptions = {
 export const readGroups = async () => await readGroupsOrUseDefaultGroups(defaultOptions)
 
 export const writeGroups = async (options: GroupOptions, groups: Groups): Promise<Result<Groups, Error>> => {
-  const finalGroups = (await readGroups()).map((currentGroups) => ({ ...currentGroups, ...groups }))
+  const trimmedGroups = Object.fromEntries(
+    Object.entries(groups).map(([id, group]) => [id, { ...group, name: group.name.trim() }]),
+  )
+  const finalGroups = (await readGroups()).map((currentGroups) => ({ ...currentGroups, ...trimmedGroups }))
 
   if (finalGroups.err) return finalGroups
 

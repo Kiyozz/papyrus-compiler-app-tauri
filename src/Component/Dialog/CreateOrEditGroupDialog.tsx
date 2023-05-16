@@ -4,103 +4,89 @@
  * All rights reserved.
  *
  */
-
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline'
 import { zodResolver } from '@hookform/resolvers/zod'
 import is from '@sindresorhus/is'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
-import Input from 'App/Component/UI/Input'
-import { useKey } from 'App/Hook/UseKey'
-import { useMatomo } from 'App/Hook/UseMatomo'
-import { useScriptsList } from 'App/Hook/UseScriptsList'
-import { GroupZod } from 'App/Lib/Form/GroupForm'
-import { type FileScript } from 'App/Lib/Conf/ConfZod'
-import { enterPageAnimate } from 'App/Lib/Framer'
-import { type GroupWithId } from 'App/Type/GroupWithId'
-import { AnimatePresence, motion } from 'framer-motion'
-import { useLayoutEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
-import { None, type Option } from 'ts-results'
+import Spinner from 'App/Component/Spinner'
 import * as Dialog from 'App/Component/UI/Dialog'
 import * as EmptyState from 'App/Component/UI/EmptyState'
 import * as Button from 'App/Component/UI/Button'
+import Input from 'App/Component/UI/Input'
+import { useMatomo } from 'App/Hook/UseMatomo'
+import { useScriptsList } from 'App/Hook/UseScriptsList'
+import { type FileScript } from 'App/Lib/Conf/ConfZod'
+import { GroupZod } from 'App/Lib/Form/GroupForm'
+import { enterPageAnimate, fadeAnimate } from 'App/Lib/Framer'
+import { type GroupWithId } from 'App/Type/GroupWithId'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { type Option } from 'ts-results'
 
-const EditGroupDialog = ({
-  group = None,
+function CreateOrEditGroupDialog({
+  group,
   onClose,
   onSubmit,
   actionsDisabled = false,
   actionsIsLoading = false,
+  defaultScripts,
   ...props
-}: Omit<Dialog.DialogProps, 'onSubmit' | 'onKeyDown'> & {
+}: Omit<Dialog.DialogProps, 'onSubmit' | 'onKeyDown' | 'children' | 'className' | 'onLeaveEnd'> & {
   group: Option<GroupWithId>
   onClose: () => void
   onSubmit: (scripts: FileScript[], name: string) => Promise<void>
-  actionsDisabled?: boolean
-  actionsIsLoading?: boolean
-}) => {
+  actionsDisabled: boolean
+  actionsIsLoading: boolean
+  defaultScripts: Option<FileScript[]>
+}) {
   const { trackEvent } = useMatomo()
   const {
     scripts,
     add: addScripts,
     remove: removeScripts,
     clear: clearScripts,
+    replaceAll: replaceScripts,
   } = useScriptsList({
     initialScripts: group.map((g) => g.scripts).unwrapOr([] as FileScript[]),
   })
   const closeButtonRef = useRef<HTMLButtonElement>(null)
-
-  const onDialogPressEnter = useKey('Enter', () => {
-    if (actionsDisabled || actionsIsLoading || !formState.isValid) {
-      return
-    }
-
-    const name = getValues('name')
-
-    if (is.emptyString(name)) return
-
-    onSubmit(scripts, name).finally(resetDialog)
-  })
-
   const { t } = useTranslation()
-  const { register, reset, handleSubmit, formState, getValues } = useForm({
+  const { register, handleSubmit, formState, reset } = useForm({
     defaultValues: group.map((g) => ({ name: g.name })).unwrapOr(undefined),
     resolver: zodResolver(GroupZod),
   })
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (group.some) {
-      const g = group.val
-
+      replaceScripts(group.val.scripts)
       reset({
-        name: g.name,
+        name: group.val.name,
       })
-      clearScripts()
-      addScripts(g.scripts)
     }
-  }, [addScripts, clearScripts, group, reset])
+  }, [clearScripts, group, replaceScripts, reset])
 
   const resetDialog = () => {
-    reset()
+    reset({
+      name: '',
+    })
     clearScripts()
   }
 
-  const handleDialogClose = () => {
-    onClose()
-  }
-
   return (
-    <Dialog.Root onClose={handleDialogClose} onKeyDown={onDialogPressEnter} fullScreen asChild {...props}>
+    <Dialog.Root onClose={onClose} fullScreen asChild onLeaveEnd={resetDialog} {...props}>
       <form
         className="flex h-full flex-col"
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit((data, evt) => {
+          evt?.stopPropagation()
+
           const name = data.name
 
           if (is.emptyString(name)) return
 
-          onSubmit(scripts, name).finally(resetDialog)
+          void onSubmit(scripts, name)
         })}
       >
         <Dialog.Title>
@@ -108,7 +94,7 @@ const EditGroupDialog = ({
         </Dialog.Title>
         <Dialog.Content>
           <AnimatePresence mode="wait" initial={false}>
-            {scripts.length > 0 ? (
+            {is.nonEmptyArray(scripts) ? (
               <FileScriptsList
                 className="w-full"
                 scripts={scripts}
@@ -145,23 +131,24 @@ const EditGroupDialog = ({
             {t('common.searchScripts')}
           </SearchScriptButton>
           <div className="flex gap-x-4">
-            <Button.Root
-              ref={closeButtonRef}
-              disabled={actionsDisabled}
-              onClick={() => {
-                handleDialogClose()
-              }}
-              variant="secondary"
-            >
+            <Button.Root ref={closeButtonRef} disabled={actionsDisabled} onClick={onClose} variant="secondary">
               {t('common.cancel')}
             </Button.Root>
             <Button.Root
               type="submit"
               disabled={actionsDisabled || actionsIsLoading || !formState.isValid}
               color="inherit"
-              // loading={actionsIsLoading}
             >
-              {t('common.edit')}
+              <AnimatePresence>
+                {actionsIsLoading && (
+                  <motion.span {...fadeAnimate}>
+                    <Button.Icon edge="start" className="animate-spin">
+                      <Spinner />
+                    </Button.Icon>
+                  </motion.span>
+                )}
+              </AnimatePresence>
+              {group.some ? t('common.edit') : t('common.create')}
             </Button.Root>
           </div>
         </Dialog.Actions>
@@ -170,4 +157,4 @@ const EditGroupDialog = ({
   )
 }
 
-export default EditGroupDialog
+export default CreateOrEditGroupDialog

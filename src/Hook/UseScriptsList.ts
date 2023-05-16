@@ -14,12 +14,14 @@ type Action<T extends FileScript> =
   | { type: 'add'; payload: T[] }
   | { type: 'remove'; payload: T[] }
   | { type: 'replace'; payload: T }
+  | { type: 'replaceAll'; payload: T[] }
   | { type: 'reset'; payload: T[] }
   | { type: 'clear' }
 
 function reducer<T extends FileScript>(state: T[], action: Action<T>): T[] {
   return match(action)
     .with({ type: 'add' }, (action) => uniqObjectArrayByKeys([...state, ...action.payload])(['name']))
+    .with({ type: 'replaceAll' }, (action) => uniqObjectArrayByKeys(action.payload)(['name']))
     .with({ type: 'remove' }, (action) => state.filter((fileInState) => !action.payload.includes(fileInState)))
     .with({ type: 'replace' }, (action) =>
       state.map((fileInState) =>
@@ -58,11 +60,16 @@ export const useScriptsList = <T extends FileScript>({ initialScripts = [] }: { 
     dispatch({ type: 'reset', payload: files })
   }, [])
 
+  const replaceAll = useCallback((files: T[]) => {
+    dispatch({ type: 'replaceAll', payload: files })
+  }, [])
+
   return {
     scripts,
     add,
     remove,
     replace,
+    replaceAll,
     clear,
     reset,
   }

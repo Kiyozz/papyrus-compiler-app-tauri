@@ -9,7 +9,7 @@ import { fromNullable } from 'App/Lib/TsResults'
 import { useState } from 'react'
 import { type Option } from 'ts-results'
 
-export const useDialogOpen = <S>({
+export const useDialog = <S>({
   defaultState,
 }: {
   defaultState: Option<S>

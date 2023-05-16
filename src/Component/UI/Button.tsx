@@ -5,8 +5,8 @@
  *
  */
 import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
-import { Slot, Slottable } from '@radix-ui/react-slot'
-import { cloneElement, type ComponentPropsWithoutRef, type ElementRef, type ElementType, forwardRef } from 'react'
+import { Slot } from '@radix-ui/react-slot'
+import { type ComponentPropsWithoutRef, type ElementRef, type ElementType, forwardRef } from 'react'
 import cx from 'classnames'
 import { twMerge } from 'tailwind-merge'
 
@@ -27,24 +27,25 @@ export type ButtonIconProps = ComponentPropsWithoutRef<typeof Slot> & {
   size?: Size
 }
 
-const ButtonIcon = forwardRef<HTMLElement, ButtonIconProps>(({ size = 'md', children, edge, ...props }, ref) => (
-  <Slot
-    className={cx(
-      {
-        xs: 'h-3 w-3',
-        sm: 'h-4 w-4',
-        md: 'h-5 w-5',
-        lg: 'h-6 w-6',
-        xl: 'h-7 w-7',
-      }[size],
-      edge === 'start' ? '-ml-0.5' : edge === 'end' ? '-mr-0.5' : '',
-    )}
-    ref={ref}
-    {...props}
-  >
-    {children}
-  </Slot>
-))
+const ButtonIcon = forwardRef<HTMLElement, ButtonIconProps>(
+  ({ size = 'md', children, edge, className, ...props }, ref) => (
+    <Slot
+      className={twMerge(
+        size === 'xs' && 'h-3 w-3',
+        size === 'sm' && 'h-4 w-4',
+        size === 'md' && 'h-5 w-5',
+        size === 'lg' && 'h-6 w-6',
+        size === 'xl' && 'h-7 w-7',
+        edge === 'start' ? '-ml-0.5' : edge === 'end' ? '-mr-0.5' : '',
+        className,
+      )}
+      ref={ref}
+      {...props}
+    >
+      {children}
+    </Slot>
+  ),
+)
 
 ButtonIcon.displayName = 'Button.Icon'
 

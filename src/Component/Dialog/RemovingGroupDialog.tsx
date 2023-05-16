@@ -45,7 +45,7 @@ const RemovingGroupDialog = ({
           {t('common.cancel')}
         </Button.Root>
         <Button.Root color="error" onClick={onConfirm}>
-          {t('common.confirm')}
+          {t('common.remove')}
         </Button.Root>
       </Dialog.Actions>
     </Dialog.Root>

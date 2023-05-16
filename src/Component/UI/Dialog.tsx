@@ -16,10 +16,11 @@ export type DialogProps = {
   className?: string
   fullScreen?: boolean
   onClose?: (open: boolean) => void
+  onLeaveEnd?: () => void
 } & Omit<HeadlessDialogProps<typeof Primitive.div>, 'unmount' | 'className' | 'open' | 'onClose'>
 
 const Dialog = forwardRef<DialogElement, DialogProps>(
-  ({ asChild = false, fullScreen = false, open, children, className, ...props }, ref) => {
+  ({ asChild = false, fullScreen = false, open, onLeaveEnd, children, className, ...props }, ref) => {
     const Comp = asChild ? Slot : Primitive.div
 
     return (
@@ -42,6 +43,7 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
                 leave="ease-in duration-200"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
+                afterLeave={onLeaveEnd}
               >
                 <div className="fixed inset-0 bg-gray-500/75" aria-hidden="true" />
               </Transition.Child>

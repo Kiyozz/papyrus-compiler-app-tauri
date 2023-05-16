@@ -6,21 +6,20 @@
  */
 
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
-import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import is from '@sindresorhus/is'
-import AddGroupDialog from 'App/Component/Dialog/AddGroupDialog'
-import EditGroupDialog from 'App/Component/Dialog/EditGroupDialog'
+import CreateOrEditGroupDialog from 'App/Component/Dialog/CreateOrEditGroupDialog'
 import RemovingGroupDialog from 'App/Component/Dialog/RemovingGroupDialog'
 import GroupMoreDetailsCheckbox from 'App/Component/Groups/GroupMoreDetailsCheckbox'
 import GroupsList from 'App/Component/Groups/GroupsList'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
+import Spinner from 'App/Component/Spinner'
 import * as Button from 'App/Component/UI/Button'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
 import { useUpdateGroups } from 'App/Hook/Group/UseUpdateGroups'
-import { useDialogOpen } from 'App/Hook/UseDialogOpen'
+import { useDialog } from 'App/Hook/UseDialog'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { createLogs } from 'App/Lib/CreateLog'
@@ -53,24 +52,19 @@ function GroupsPage() {
     open: openRemoveGroupDialog,
     state: groupToRemove,
     close: closeRemoveGroupDialog,
-  } = useDialogOpen({
+  } = useDialog({
     defaultState: None as Option<GroupWithId>,
   })
   const {
-    isOpen: isEditGroupDialogOpen,
-    open: openEditGroupDialog,
-    state: groupToEdit,
-    close: closeEditGroupDialog,
-  } = useDialogOpen({
-    defaultState: None as Option<GroupWithId>,
-  })
-  const {
-    isOpen: isAddGroupDialogOpen,
-    open: openAddGroupDialog,
-    state: addGroupDefaultScripts,
-    close: closeAddGroupDialog,
-  } = useDialogOpen({
-    defaultState: None as Option<FileScript[]>,
+    isOpen: isGroupDialogOpen,
+    open: openGroupDialog,
+    state: groupDialogState,
+    close: closeGroupDialog,
+  } = useDialog<{
+    group: Option<GroupWithId>
+    defaultScripts: FileScript[]
+  }>({
+    defaultState: None,
   })
 
   useEffectOnce(() => {
@@ -78,17 +72,20 @@ function GroupsPage() {
 
     if (scripts.some) {
       logs.debug('add group from compilation page scripts list')
-      openAddGroupDialog(scripts.val)
+      openGroupDialog({ group: None, defaultScripts: scripts.val })
     }
   })
 
   const closeDialogs = () => {
-    closeAddGroupDialog()
+    // closeAddGroupDialog()
     closeRemoveGroupDialog()
-    closeEditGroupDialog()
+    // closeEditGroupDialog()
+    closeGroupDialog()
     logs.trace('closeDialogs')
   }
 
+  const groupToEdit = groupDialogState.andThen((state) => state.group)
+  const groupDefaultScripts = groupDialogState.map((state) => state.defaultScripts)
   const groupsAsArray = groups.isSuccess ? Some(groupRecordToArray(groups.data)) : None
 
   return (
@@ -116,39 +113,11 @@ function GroupsPage() {
 
       {groups.isSuccess ? (
         <>
-          <AddGroupDialog
-            open={isAddGroupDialogOpen}
-            defaultScripts={addGroupDefaultScripts}
-            onClose={closeDialogs}
-            onSubmit={async (scripts, name) => {
-              logs.debug('add group', name)
-
-              await updateGroups.mutateAsync({
-                [v4()]: {
-                  name,
-                  scripts: scripts.map(({ id, name, path }) => ({
-                    id,
-                    name,
-                    path,
-                  })),
-                },
-              })
-
-              closeDialogs()
-              trackEvent({
-                category: 'Group',
-                action: 'Create',
-              })
-            }}
-            actionsDisabled={updateGroups.isLoading}
-            actionsIsLoading={updateGroups.isLoading}
-          />
-          <EditGroupDialog
-            open={isEditGroupDialogOpen}
+          <CreateOrEditGroupDialog
+            open={isGroupDialogOpen}
             group={groupToEdit}
-            onClose={closeDialogs}
             onSubmit={async (scripts, name) => {
-              logs.debug('edit group', name)
+              logs.debug(groupToEdit.some ? 'edit group' : 'add group', name)
 
               if (groupToEdit.some) {
                 const res = await Result.wrapAsync(async () => {
@@ -174,12 +143,38 @@ function GroupsPage() {
                   category: 'Group',
                   action: 'Edit',
                 })
+              } else {
+                const res = await Result.wrapAsync(async () => {
+                  await updateGroups.mutateAsync({
+                    [v4()]: {
+                      name,
+                      scripts: scripts.map(({ id, name, path }) => ({
+                        id,
+                        name,
+                        path,
+                      })),
+                    },
+                  })
+                })
+
+                if (res.err) {
+                  logs.error('cannot add group', res.val)
+
+                  console.error(res.val)
+                }
+
+                trackEvent({
+                  category: 'Group',
+                  action: 'Create',
+                })
               }
 
               closeDialogs()
             }}
             actionsDisabled={updateGroups.isLoading}
             actionsIsLoading={updateGroups.isLoading}
+            defaultScripts={groupDefaultScripts}
+            onClose={closeGroupDialog}
           />
         </>
       ) : null}
@@ -188,7 +183,10 @@ function GroupsPage() {
         <Button.Root
           disabled={updateGroups.isLoading}
           onClick={() => {
-            openAddGroupDialog()
+            openGroupDialog({
+              group: None,
+              defaultScripts: [],
+            })
           }}
         >
           <Button.Icon edge="start">
@@ -203,7 +201,7 @@ function GroupsPage() {
           <AnimatePresence>
             {groups.isLoading && (
               <motion.div {...fadeAnimate}>
-                <CircularProgress className="mt-6" variant="indeterminate" />
+                <Spinner />
               </motion.div>
             )}
           </AnimatePresence>
@@ -233,7 +231,12 @@ function GroupsPage() {
                           groups={groups}
                           isMoreDetails={isMoreDetails}
                           onTryRemove={openRemoveGroupDialog}
-                          onClickEdit={openEditGroupDialog}
+                          onClickEdit={(group) => {
+                            openGroupDialog({
+                              group: Some(group),
+                              defaultScripts: group.scripts,
+                            })
+                          }}
                         />
                       </div>
                     )

@@ -130,8 +130,8 @@ const fr: TranslationSchema = {
         label: 'Nom',
       },
       removing: {
-        title: 'Suppression du groupe',
-        content: 'Vous allez supprimer le groupe "{{name}}".',
+        title: "Suppression d'un groupe",
+        content: 'Le groupe "{{name}}" sera supprimé.',
       },
     },
     openDocumentation: {
