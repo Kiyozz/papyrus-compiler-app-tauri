@@ -6,7 +6,7 @@
  */
 
 import Switch from 'App/Component/UI/Switch'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { useTranslation } from 'react-i18next'
 
 const GroupMoreDetailsCheckbox = ({
@@ -22,7 +22,7 @@ const GroupMoreDetailsCheckbox = ({
 
   return (
     <Switch
-      className={cx('ml-auto', className)}
+      className={twMerge('ml-auto', className)}
       checked={checked}
       onChange={onChange}
       label={t('common.moreDetails')}

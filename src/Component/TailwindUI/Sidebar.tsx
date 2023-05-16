@@ -8,7 +8,7 @@
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Bars3Icon, BellIcon, Cog6ToothIcon, HomeIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { Fragment, useState } from 'react'
 
 const navigation = [
@@ -93,7 +93,7 @@ function Sidebar() {
                             <li key={item.name}>
                               <a
                                 href={item.href}
-                                className={cx(
+                                className={twMerge(
                                   item.current
                                     ? 'bg-indigo-700 text-white'
                                     : 'text-indigo-200 hover:bg-indigo-700 hover:text-white',
@@ -101,7 +101,7 @@ function Sidebar() {
                                 )}
                               >
                                 <item.icon
-                                  className={cx(
+                                  className={twMerge(
                                     item.current ? 'text-white' : 'text-indigo-200 group-hover:text-white',
                                     'h-6 w-6 shrink-0',
                                   )}
@@ -120,7 +120,7 @@ function Sidebar() {
                             <li key={team.name}>
                               <a
                                 href={team.href}
-                                className={cx(
+                                className={twMerge(
                                   team.current
                                     ? 'bg-indigo-700 text-white'
                                     : 'text-indigo-200 hover:bg-indigo-700 hover:text-white',
@@ -176,7 +176,7 @@ function Sidebar() {
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className={cx(
+                        className={twMerge(
                           item.current
                             ? 'bg-indigo-700 text-white'
                             : 'text-indigo-200 hover:bg-indigo-700 hover:text-white',
@@ -184,7 +184,7 @@ function Sidebar() {
                         )}
                       >
                         <item.icon
-                          className={cx(
+                          className={twMerge(
                             item.current ? 'text-white' : 'text-indigo-200 group-hover:text-white',
                             'h-6 w-6 shrink-0',
                           )}
@@ -203,7 +203,7 @@ function Sidebar() {
                     <li key={team.name}>
                       <a
                         href={team.href}
-                        className={cx(
+                        className={twMerge(
                           team.current
                             ? 'bg-indigo-700 text-white'
                             : 'text-indigo-200 hover:bg-indigo-700 hover:text-white',
@@ -309,7 +309,7 @@ function Sidebar() {
                         {({ active }) => (
                           <a
                             href={item.href}
-                            className={cx(
+                            className={twMerge(
                               active ? 'bg-gray-50' : '',
                               'block px-3 py-1 text-sm leading-6 text-gray-900',
                             )}

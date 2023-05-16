@@ -7,7 +7,7 @@
 
 import { type PrimitivePropsWithRef, Primitive } from '@radix-ui/react-primitive'
 import { Slot } from '@radix-ui/react-slot'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { type ElementRef, forwardRef } from 'react'
 
 export type EmptyStateElement = ElementRef<typeof Primitive.div>
@@ -44,7 +44,7 @@ const EmptyStateText = forwardRef<EmptyStateTextElement, EmptyStateTextProps>(
     const Comp = asChild ? Slot : Primitive.p
 
     return (
-      <Comp className={cx('text-sm font-semibold text-gray-900', className)} {...props} ref={ref}>
+      <Comp className={twMerge('text-sm font-semibold text-gray-900', className)} {...props} ref={ref}>
         {children}
       </Comp>
     )

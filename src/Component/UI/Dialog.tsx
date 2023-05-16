@@ -7,7 +7,7 @@
 import { Dialog as HeadlessDialog, type DialogProps as HeadlessDialogProps, Transition } from '@headlessui/react'
 import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
 import { Slot } from '@radix-ui/react-slot'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { type ElementRef, forwardRef, Fragment } from 'react'
 
 export type DialogElement = ElementRef<typeof Primitive.div>
@@ -59,7 +59,7 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
               >
                 <div className="fixed inset-0 mx-auto max-w-6xl p-4">
                   <div
-                    className={cx(
+                    className={twMerge(
                       'fixed mx-auto max-w-6xl p-4',
                       fullScreen ? 'inset-0' : 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
                       className,
@@ -94,7 +94,7 @@ const DialogTitle = forwardRef<DialogTitleElement, DialogTitleProps>(
       <HeadlessDialog.Title
         as={Comp}
         ref={ref}
-        className={cx('p-6 text-base font-semibold leading-6 text-gray-900 dark:text-white', className)}
+        className={twMerge('p-6 text-base font-semibold leading-6 text-gray-900 dark:text-white', className)}
         {...props}
       >
         {children}
@@ -113,7 +113,7 @@ const DialogActions = forwardRef<DialogActionsElement, DialogActionsProps>(
     const Comp = asChild ? Slot : Primitive.div
 
     return (
-      <Comp className={cx('flex bg-gray-50 p-6 dark:bg-gray-800', className)} ref={ref} {...props}>
+      <Comp className={twMerge('flex bg-gray-50 p-6 dark:bg-gray-800', className)} ref={ref} {...props}>
         {children}
       </Comp>
     )
@@ -130,7 +130,7 @@ const DialogContent = forwardRef<DialogContentElement, DialogContentProps>(
     const Comp = asChild ? Slot : Primitive.div
 
     return (
-      <Comp className={cx('flex grow flex-col overflow-y-auto', className)} ref={ref}>
+      <Comp className={twMerge('flex grow flex-col overflow-y-auto', className)} ref={ref}>
         {children}
       </Comp>
     )

@@ -5,7 +5,7 @@
  *
  */
 
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { forwardRef } from 'react'
 import { NavLink, type NavLinkProps } from 'react-router-dom'
 
@@ -25,7 +25,7 @@ const ActiveLink = forwardRef<HTMLAnchorElement, ActiveLinkProps>(function Activ
     <NavLink
       {...props}
       className={({ isActive }) => {
-        return cx(className, isActive ? activeClassName : nonActiveClassName)
+        return twMerge(className, isActive ? activeClassName : nonActiveClassName)
       }}
       ref={ref}
     >

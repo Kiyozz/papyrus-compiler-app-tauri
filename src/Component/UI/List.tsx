@@ -7,7 +7,7 @@
 
 import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
 import { Slot } from '@radix-ui/react-slot'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { type ElementRef, forwardRef } from 'react'
 
 export type ListElement = ElementRef<typeof Primitive.ul>
@@ -17,7 +17,7 @@ const List = forwardRef<ListElement, ListProps>(({ asChild = false, children, cl
   const Comp = asChild ? Slot : Primitive.ul
 
   return (
-    <Comp className={cx('divide-y divide-gray-100 py-1.5', className)} {...props} ref={ref}>
+    <Comp className={twMerge('divide-y divide-gray-100 py-1.5', className)} {...props} ref={ref}>
       {children}
     </Comp>
   )
@@ -33,7 +33,7 @@ const ListItem = forwardRef<ListItemElement, ListItemProps>(
     const Comp = asChild ? Slot : Primitive.li
 
     return (
-      <Comp className={cx('px-2 py-1.5', className)} {...props} ref={ref}>
+      <Comp className={twMerge('px-2 py-1.5', className)} {...props} ref={ref}>
         {children}
       </Comp>
     )

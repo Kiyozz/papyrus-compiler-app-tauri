@@ -6,7 +6,7 @@
  */
 
 import { useConf } from 'App/Hook/Conf/UseConf'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { type PropsWithChildren } from 'react'
 
 function PageAppBar({ title, className, children }: PropsWithChildren<{ title: string; className?: string }>) {
@@ -15,7 +15,7 @@ function PageAppBar({ title, className, children }: PropsWithChildren<{ title: s
 
   return (
     <div
-      className={cx(
+      className={twMerge(
         'sticky top-0 z-20 bg-white py-4 pr-6 transition-[padding-left] duration-[225ms] ease-sharp dark:bg-gray-800',
         isDrawerOpen ? 'pl-[13.5rem]' : 'pl-[calc(56px+1.5rem)]',
         className,

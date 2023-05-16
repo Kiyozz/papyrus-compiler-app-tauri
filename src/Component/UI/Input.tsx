@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { type DetailedHTMLProps, type InputHTMLAttributes, forwardRef, type ReactNode } from 'react'
 
 interface InputProps extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
@@ -58,10 +58,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="relative [&_*]:delay-75">
-        <div className={cx(cornerHint != null && 'flex justify-between')}>
+        <div className={twMerge(cornerHint != null && 'flex justify-between')}>
           <label
             htmlFor={id}
-            className={cx(
+            className={twMerge(
               overlapLabel
                 ? 'absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900 aria-disabled:bg-red-50/20'
                 : 'block text-sm font-medium leading-6 text-gray-900',
@@ -74,7 +74,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         </div>
         {hasNoAddon && (
           <div
-            className={cx(
+            className={twMerge(
               'group mt-2 flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300',
               'focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
               'aria-disabled:bg-gray-50 aria-disabled:ring-gray-200',
@@ -88,7 +88,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               type={type}
               name={name ?? id}
               id={id}
-              className={cx(
+              className={twMerge(
                 'block flex-1 rounded-md border-0 bg-transparent py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6',
                 'placeholder:text-gray-400',
                 'disabled:cursor-not-allowed disabled:text-gray-500',
@@ -104,7 +104,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             </span>
             <div
               key="trailing"
-              className={cx(
+              className={twMerge(
                 'hidden items-center rounded-r-md px-3 text-gray-500 group-aria-invalid:inline-flex sm:text-sm',
                 'group-aria-invalid:text-red-600',
               )}
@@ -129,7 +129,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               type={type}
               name={id}
               id={id}
-              className={cx(
+              className={twMerge(
                 'block w-full rounded-none rounded-r-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 group-aria-invalid:ring-red-300 group-aria-invalid:group-aria-disabled:ring-red-200',
                 'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
                 className,
@@ -142,7 +142,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         {hasInlineLeadingAndHasNoTrailingAddon && (
           <div
-            className={cx(
+            className={twMerge(
               'group mt-2 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300',
               'focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
               'aria-disabled:cursor-not-allowed aria-disabled:bg-gray-50 aria-disabled:ring-gray-200',
@@ -152,7 +152,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           >
             <span
               key="leading"
-              className={cx(
+              className={twMerge(
                 'flex select-none items-center pl-3 text-gray-500 sm:text-sm',
                 'group-aria-disabled:text-gray-400',
               )}
@@ -164,7 +164,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               type={type}
               name={id}
               id={id}
-              className={cx(
+              className={twMerge(
                 'block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 disabled:cursor-not-allowed sm:text-sm sm:leading-6',
                 className,
               )}
@@ -181,7 +181,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               type={type}
               name={id}
               id={id}
-              className={cx(
+              className={twMerge(
                 'block w-full rounded-none rounded-l-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
                 'group-aria-invalid:text-red-900 group-aria-invalid:ring-red-300 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:focus:ring-red-500 group-aria-invalid:disabled:text-red-300 group-aria-invalid:disabled:ring-red-200',
                 className,
@@ -192,7 +192,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             />
             <div
               key="trailing"
-              className={cx(
+              className={twMerge(
                 'inline-flex items-center rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm',
                 'group-aria-disabled:border-gray-200 group-aria-invalid:border-red-300 group-aria-invalid:text-red-600 group-aria-invalid:group-aria-disabled:border-red-200',
               )}
@@ -207,7 +207,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {hasNoLeadingAndHasInlineTrailingAddon && (
           <div className="mt-2">
             <div
-              className={cx(
+              className={twMerge(
                 'group flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
                 'aria-disabled:cursor-not-allowed aria-disabled:bg-gray-50 aria-disabled:ring-gray-200 aria-invalid:ring-red-300 aria-invalid:focus-within:ring-red-500 aria-disabled:aria-invalid:ring-red-200',
               )}
@@ -219,7 +219,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 type={type}
                 name={id}
                 id={id}
-                className={cx(
+                className={twMerge(
                   'block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6',
                   'disabled:cursor-not-allowed',
                   'group-aria-invalid:text-red-900 group-aria-invalid:placeholder:text-red-300',
@@ -231,7 +231,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               />
               <span
                 key="trailing"
-                className={cx(
+                className={twMerge(
                   'flex select-none items-center pr-3 text-gray-500 sm:text-sm',
                   'group-aria-disabled:text-gray-400 group-aria-invalid:text-red-600',
                 )}
@@ -248,7 +248,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <div className="group mt-2 flex rounded-md shadow-sm" aria-disabled={disabled} aria-invalid={hasError}>
             <div
               key="leading"
-              className={cx(
+              className={twMerge(
                 'inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm',
                 'group-aria-disabled:border-gray-200 group-aria-invalid:border-red-300 group-aria-invalid:text-red-600 group-aria-invalid:group-aria-disabled:border-red-200',
               )}
@@ -260,7 +260,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               type={type}
               name={id}
               id={id}
-              className={cx(
+              className={twMerge(
                 'block w-full rounded-none border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
                 'group-aria-invalid:text-red-900 group-aria-invalid:ring-red-300 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:focus:ring-red-500 group-aria-invalid:disabled:text-red-300 group-aria-invalid:disabled:ring-red-200',
                 className,
@@ -271,7 +271,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             />
             <div
               key="trailing"
-              className={cx(
+              className={twMerge(
                 'inline-flex items-center rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm',
                 'group-aria-disabled:border-gray-200 group-aria-invalid:border-red-300 group-aria-invalid:text-red-600 group-aria-invalid:group-aria-disabled:border-red-200',
               )}
@@ -286,7 +286,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {hasInlineLeadingAndHasNonInlineTrailingAddon && (
           <div className="group mt-2 flex items-center rounded-md" aria-disabled={disabled} aria-invalid={hasError}>
             <div
-              className={cx(
+              className={twMerge(
                 'flex w-full rounded-md rounded-r-none shadow-sm ring-1 ring-inset ring-gray-300',
                 'focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
                 'group-aria-invalid:ring-red-300 group-aria-invalid:focus-within:ring-red-500',
@@ -295,7 +295,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             >
               <span
                 key="leading"
-                className={cx(
+                className={twMerge(
                   'flex select-none items-center pl-3 text-gray-500 sm:text-sm',
                   'group-aria-disabled:cursor-not-allowed group-aria-disabled:text-gray-400 group-aria-invalid:text-red-600',
                 )}
@@ -307,7 +307,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 type={type}
                 name={id}
                 id={id}
-                className={cx(
+                className={twMerge(
                   'block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 disabled:cursor-not-allowed disabled:text-gray-500 sm:text-sm sm:leading-6',
                   'group-aria-invalid:text-red-900 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:disabled:text-red-300 group-aria-invalid:disabled:ring-red-200',
                   className,
@@ -319,7 +319,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             </div>
             <div
               key="trailing"
-              className={cx(
+              className={twMerge(
                 'flex select-none items-center rounded-r-md border border-l-0 border-gray-300 px-3 py-[0.4375rem] text-gray-500 sm:text-sm',
                 'group-aria-invalid:border-red-300 group-aria-invalid:text-red-600',
               )}
@@ -333,7 +333,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         {hasInlineLeadingAndHasInlineTrailingAddon && (
           <div
-            className={cx(
+            className={twMerge(
               'group mt-2 flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
               'aria-disabled:cursor-not-allowed aria-disabled:bg-gray-50 aria-disabled:aria-invalid:ring-red-200',
               'aria-invalid:ring-red-300 aria-invalid:focus-within:ring-red-500',
@@ -344,7 +344,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           >
             <span
               key="leading"
-              className={cx(
+              className={twMerge(
                 'flex select-none items-center pl-3 text-gray-500 sm:text-sm',
                 'group-aria-disabled:cursor-not-allowed group-aria-invalid:text-red-600',
               )}
@@ -356,7 +356,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               type={type}
               name={id}
               id={id}
-              className={cx(
+              className={twMerge(
                 'block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6',
                 'disabled:cursor-not-allowed group-aria-invalid:text-red-900 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:disabled:text-red-300',
                 className,
@@ -367,7 +367,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             />
             <div
               key="trailing"
-              className={cx(
+              className={twMerge(
                 'flex select-none items-center rounded-r-md px-3 py-1.5 text-gray-500 sm:text-sm',
                 'group-aria-invalid:text-red-600',
               )}
@@ -393,7 +393,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 type={type}
                 name={id}
                 id={id}
-                className={cx(
+                className={twMerge(
                   'block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6',
                   className,
                 )}

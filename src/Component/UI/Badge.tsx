@@ -7,7 +7,7 @@
 
 import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
 import { Slot } from '@radix-ui/react-slot'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { type ElementRef, forwardRef } from 'react'
 
 export type BadgeElement = ElementRef<typeof Primitive.span>
@@ -22,7 +22,7 @@ const Badge = forwardRef<BadgeElement, BadgeProps>(
 
     return (
       <Comp
-        className={cx(
+        className={twMerge(
           'inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-medium',
           variant === 'error' && 'bg-red-100 text-red-700',
           variant === 'default' && 'bg-gray-100 text-gray-600',

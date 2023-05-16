@@ -6,7 +6,7 @@
  */
 
 import { type GroupWithId } from 'App/Type/GroupWithId'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type Option } from 'ts-results'
@@ -30,7 +30,7 @@ const RemovingGroupDialog = ({
   return (
     <Dialog.Root
       onClose={onCancel}
-      className={cx('w-full max-w-xl', className)}
+      className={twMerge('w-full max-w-xl', className)}
       initialFocus={cancelButtonRef}
       {...props}
     >

@@ -9,7 +9,7 @@ import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive
 import { XCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
 import { Slot } from '@radix-ui/react-slot'
 import { type Severity } from 'App/Type/Severity'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { type ElementRef, forwardRef } from 'react'
 
 export type AlertIconElement = ElementRef<typeof Primitive.div>
@@ -24,7 +24,7 @@ export const AlertIcon = forwardRef<AlertIconElement, AlertIconProps>(
     const Comp = asChild ? Slot : 'div'
 
     return (
-      <Comp className={cx('shrink-0', className)} ref={ref}>
+      <Comp className={twMerge('shrink-0', className)} ref={ref}>
         {isError && <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />}
         {isWarning && <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />}
         {isInfo && <InformationCircleIcon className="h-5 w-5 text-blue-400" aria-hidden="true" />}
@@ -49,7 +49,7 @@ const AlertMessage = forwardRef<AlertMessageElement, AlertMessageProps>(
 
     return (
       <Comp
-        className={cx(
+        className={twMerge(
           'ml-3 grow text-sm font-medium',
           isInfo && 'text-blue-700',
           isError && 'text-red-700',
@@ -75,7 +75,7 @@ const AlertContent = forwardRef<AlertContentElement, AlertContentProps>(
     const Comp = asChild ? Slot : Primitive.div
 
     return (
-      <Comp className={cx('flex', className)} ref={ref}>
+      <Comp className={twMerge('flex', className)} ref={ref}>
         {children}
       </Comp>
     )
@@ -99,7 +99,7 @@ const Alert = forwardRef<AlertElement, AlertProps>(
 
     return (
       <Comp
-        className={cx(
+        className={twMerge(
           'rounded-md',
           isInfo && 'bg-blue-50',
           isWarning && 'bg-yellow-50',

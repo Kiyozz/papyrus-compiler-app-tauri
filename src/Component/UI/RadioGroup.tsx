@@ -7,7 +7,7 @@
 
 import { type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
 import { Slot } from '@radix-ui/react-slot'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { forwardRef, type ChangeEvent, type Ref, type ComponentPropsWithoutRef } from 'react'
 
 type ItemProps<T extends string> = Omit<ComponentPropsWithoutRef<'input'>, 'id' | 'name' | 'value'> & {
@@ -36,7 +36,7 @@ const RadioGroup = forwardRef(
     return (
       <Comp ref={ref} {...props}>
         {legend != null && <legend className="sr-only">{legend}</legend>}
-        <div className={cx('space-y-3', !col && 'sm:flex sm:items-center sm:space-x-10 sm:space-y-0')}>
+        <div className={twMerge('space-y-3', !col && 'sm:flex sm:items-center sm:space-x-10 sm:space-y-0')}>
           {items.map(({ className, id, label, value: itemValue, ...item }) => {
             return (
               <div key={id} className="flex items-center space-x-3">
@@ -44,7 +44,7 @@ const RadioGroup = forwardRef(
                   type="radio"
                   id={id}
                   name={name}
-                  className={cx('h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600', className)}
+                  className={twMerge('h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600', className)}
                   checked={value === itemValue}
                   onChange={(evt) => {
                     onChange?.(evt, itemValue)

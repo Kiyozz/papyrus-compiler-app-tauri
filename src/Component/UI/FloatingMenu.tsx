@@ -8,18 +8,18 @@
 import { Transition, Menu as HeadlessMenu, type MenuItemsProps } from '@headlessui/react'
 import { type Primitive } from '@radix-ui/react-primitive'
 import * as Button from 'App/Component/UI/Button'
-import cx from 'classnames'
-import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, Fragment, type PropsWithChildren } from 'react'
+import { twMerge } from 'tailwind-merge'
+import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, Fragment } from 'react'
 
 function FloatingMenu({ className, ...props }: ComponentPropsWithoutRef<typeof HeadlessMenu>) {
-  return <HeadlessMenu className={cx('relative', className)} {...props} />
+  return <HeadlessMenu className={twMerge('relative', className)} {...props} />
 }
 
 const FloatingMenuItem = forwardRef<ElementRef<'button'>, ComponentPropsWithoutRef<typeof HeadlessMenu.Item>>(
   ({ className, ...props }, ref) => (
     <HeadlessMenu.Item
       as="button"
-      className={cx(
+      className={twMerge(
         'block w-full px-4 py-2 text-left text-sm text-gray-700 ui-active:bg-gray-50 ui-disabled:opacity-50 ui-not-disabled:hover:bg-gray-100',
         className,
       )}
@@ -40,7 +40,7 @@ export type FloatingMenuPanelProps = MenuItemsProps<typeof Primitive.div> & {
 const FloatingMenuPanel = forwardRef<FloatingMenuPanelElement, FloatingMenuPanelProps>(
   ({ className, children, position = 'bottom', ...props }, ref) => (
     <HeadlessMenu.Items
-      className={cx(
+      className={twMerge(
         'absolute right-0 z-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
         position === 'top-right' && '-top-1/2 left-0 origin-bottom-left -translate-y-full',
         className,

@@ -5,7 +5,7 @@
  *
  */
 
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { type Variants, motion } from 'framer-motion'
 import appLogo from 'App/Asset/app-logo.png'
 
@@ -33,7 +33,7 @@ const AnimateAppLogo = ({ animate = false, className }: { animate?: boolean; cla
       initial="hidden"
       animate="visible"
       variants={animate ? svgVariants : undefined}
-      className={cx('inline-block', className)}
+      className={twMerge('inline-block', className)}
     />
   )
 }

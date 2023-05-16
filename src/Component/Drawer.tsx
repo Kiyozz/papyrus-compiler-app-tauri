@@ -24,7 +24,7 @@ import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { useTranslation } from 'react-i18next'
 
 type DrawerLink = {
@@ -85,7 +85,7 @@ function Drawer() {
       icon: hasAllSuccess ? (
         <CheckCircleIcon className="text-green-500 group-hover:text-green-400" />
       ) : (
-        <ExclamationTriangleIcon className={cx(hasAnyError && 'text-red-400 group-hover:text-red-600')} />
+        <ExclamationTriangleIcon className={twMerge(hasAnyError && 'text-red-400 group-hover:text-red-600')} />
       ),
       onClick: () => {
         // open logs dialog
@@ -116,7 +116,7 @@ function Drawer() {
       label: t('nav.drawerClose'),
       icon: (
         <ChevronLeftIcon
-          className={cx(
+          className={twMerge(
             'transition-transform duration-[225ms] ease-sharp',
             conf.data.misc.drawerOpen ? 'scale-100' : 'scale-[-1]',
           )}
@@ -134,7 +134,7 @@ function Drawer() {
 
   return (
     <div
-      className={cx(
+      className={twMerge(
         'fixed inset-y-0 flex flex-col',
         conf.data.misc.drawerOpen ? 'w-48' : 'w-14',
         'z-30 transition-[width] duration-[225ms] ease-sharp',

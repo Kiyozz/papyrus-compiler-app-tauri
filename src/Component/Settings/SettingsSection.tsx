@@ -6,7 +6,7 @@
  */
 
 import is from '@sindresorhus/is'
-import cx from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { LayoutGroup, motion } from 'framer-motion'
 import { type ComponentProps, forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 
@@ -20,7 +20,7 @@ const SettingsSection = forwardRef<
 >(({ title, className, description, 'aria-label': ariaLabel, children, ...props }, ref) => (
   <LayoutGroup>
     <motion.section
-      className={cx(
+      className={twMerge(
         'relative border-b border-gray-900/10 p-4 pb-12 transition-none last:border-b-0 last:pb-4',
         className,
       )}
