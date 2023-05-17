@@ -17,6 +17,38 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        primary: {
+          50: '#f2f6fc',
+          100: '#e2ebf7',
+          200: '#cbdcf2',
+          300: '#a7c6e9',
+          400: '#81aade',
+          500: '#5e89d3',
+          600: '#4a70c6',
+          700: '#405eb5',
+          800: '#394e94',
+          900: '#324476',
+          950: '#232b48',
+          bg: '#faf0f9',
+          content: '#ffffff',
+        },
+        secondary: { '0': '#f8f6f4',
+          100: '#efece5',
+          200: '#ddd6cb',
+          300: '#beaf9b',
+          400: '#b09b87',
+          500: '#a0866f',
+          600: '#937663',
+          700: '#7b6153',
+          800: '#655147',
+          900: '#53423b',
+          950: '#2c221e',
+          bg: '#f8f6f4',
+          content: '#7b6153',
+        },
+
+      },
       fontFamily: {
         sans: ['Inter var',...defaultTheme.fontFamily.sans],
         mono: ['IBM Plex Mono', ...defaultTheme.fontFamily.mono],

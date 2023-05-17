@@ -68,7 +68,7 @@ function GroupsPage() {
   })
 
   useEffectOnce(() => {
-    const scripts = fromNullable(location.state as { scripts: FileScript[] }).map(({ scripts }) => scripts)
+    const scripts = fromNullable(location.state as { scripts: FileScript[] } | undefined).map(({ scripts }) => scripts)
 
     if (scripts.some) {
       logs.debug('add group from compilation page scripts list')

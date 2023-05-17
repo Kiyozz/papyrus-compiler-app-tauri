@@ -56,7 +56,7 @@ function FileScriptsList<T extends FileScript>({
                   {isFileScriptCompilation(script) ? (
                     <Button.Root
                       variant="ghost"
-                      className="hover:text-indigo-500"
+                      className="hover:text-primary-500"
                       disabled={disabled || isRunning(script) || isBusy(script)}
                       onClick={async () => await onStart?.(script)}
                     >

@@ -44,7 +44,7 @@ function LogItem({
           </div>
           <div className="flex gap-4">
             <Button.Root
-              variant="soft"
+              variant="secondary"
               color="error"
               onClick={() => {
                 remove(log.script)

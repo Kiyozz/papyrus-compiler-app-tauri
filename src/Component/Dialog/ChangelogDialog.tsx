@@ -48,7 +48,7 @@ const ChangelogDialog = ({
         <Button.Root
           size="sm"
           color="inherit"
-          variant="soft"
+          variant="secondary"
           disabled={documentationUrl.data === undefined}
           aria-label={t('common.openInBrowser')}
           onClick={() => {

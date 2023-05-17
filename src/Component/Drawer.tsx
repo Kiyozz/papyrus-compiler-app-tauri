@@ -10,11 +10,11 @@ import {
   Cog8ToothIcon,
   QuestionMarkCircleIcon,
   RectangleGroupIcon,
-  ChevronLeftIcon,
   ExclamationTriangleIcon,
   PlayIcon,
+  ArrowRightCircleIcon,
+  ArrowLeftCircleIcon,
 } from '@heroicons/react/24/outline'
-import ActiveLink from 'App/Component/ActiveLink'
 import AnimateAppLogo from 'App/Component/AnimateAppLogo'
 import TutorialTooltip, { type TutorialTooltipProps } from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
@@ -24,6 +24,8 @@ import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
+import { AnimatePresence, motion } from 'framer-motion'
+import { NavLink } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import { useTranslation } from 'react-i18next'
 
@@ -42,6 +44,9 @@ type DrawerLink = {
       onClick: () => void
     }
 )
+
+const ArrowRightCircleIconMotion = motion(ArrowRightCircleIcon)
+const ArrowLeftCircleIconMotion = motion(ArrowLeftCircleIcon)
 
 function Drawer() {
   const { t } = useTranslation()
@@ -115,12 +120,51 @@ function Drawer() {
       id: 'drawer-expand',
       label: t('nav.drawerClose'),
       icon: (
-        <ChevronLeftIcon
-          className={twMerge(
-            'transition-transform duration-[225ms] ease-sharp',
-            conf.data.misc.drawerOpen ? 'scale-100' : 'scale-[-1]',
-          )}
-        />
+        <span className="relative w-full">
+          <AnimatePresence>
+            {conf.data.misc.drawerOpen ? (
+              <ArrowLeftCircleIconMotion
+                key="left"
+                animate={{
+                  rotate: 0,
+                  opacity: 1,
+                }}
+                initial={{
+                  rotate: 45,
+                  opacity: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  rotate: 45,
+                }}
+                transition={{
+                  duration: 0.2,
+                }}
+                className="absolute inset-0"
+              />
+            ) : (
+              <ArrowRightCircleIconMotion
+                key="right"
+                animate={{
+                  rotate: 0,
+                  opacity: 1,
+                }}
+                initial={{
+                  rotate: -45,
+                  opacity: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  rotate: -45,
+                }}
+                transition={{
+                  duration: 0.2,
+                }}
+                className="absolute inset-0"
+              />
+            )}
+          </AnimatePresence>
+        </span>
       ),
       onClick: () => {
         updateConf.mutate({
@@ -140,7 +184,7 @@ function Drawer() {
         'z-30 transition-[width] duration-[225ms] ease-sharp',
       )}
     >
-      <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-indigo-600">
+      <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-primary-700">
         <nav className="flex flex-1 flex-col">
           <div className="mt-4 flex justify-center">
             <AnimateAppLogo animate={false} className="h-12 w-12" />
@@ -150,17 +194,13 @@ function Drawer() {
               <ul role="list" className="-mx-2 space-y-1">
                 {links.map(({ id, label, path, icon }) => (
                   <li key={id}>
-                    <ActiveLink
+                    <NavLink
                       to={path}
-                      className="group flex gap-x-3 rounded-md p-2 px-6 text-sm font-semibold leading-6"
-                      activeClassName="bg-indigo-700 text-white"
-                      nonActiveClassName="text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                      className="group flex gap-x-3 rounded-md p-2 px-6 text-sm font-semibold leading-6 text-primary-100 hover:bg-primary-600 hover:text-white aria-[current=page]:bg-primary-600 aria-[current=page]:text-white"
                     >
-                      <>
-                        <span className="flex h-6 w-6 shrink-0 group-hover:text-white">{icon}</span>
-                        <span className="truncate">{label}</span>
-                      </>
-                    </ActiveLink>
+                      <span className="flex h-6 w-6 shrink-0 group-hover:text-white">{icon}</span>
+                      <span className="truncate">{label}</span>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -171,7 +211,7 @@ function Drawer() {
                   const item = (
                     <button
                       onClick={onClick}
-                      className="group flex w-full gap-x-3 rounded-md p-2 px-6 text-sm font-semibold leading-6 text-indigo-200 hover:bg-indigo-700 hover:text-white"
+                      className="group flex w-full gap-x-3 rounded-md p-2 px-6 text-sm font-semibold leading-6 text-primary-100 hover:bg-primary-600 hover:text-white"
                     >
                       <span className="flex h-6 w-6 shrink-0 group-hover:text-white">{icon}</span>
                       <span className="truncate">{label}</span>

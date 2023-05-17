@@ -76,7 +76,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <div
             className={twMerge(
               'group mt-2 flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300',
-              'focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
+              'focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600',
               'aria-disabled:bg-gray-50 aria-disabled:ring-gray-200',
               'aria-invalid:text-red-900 aria-invalid:ring-red-300 aria-invalid:focus:ring-red-600',
             )}
@@ -130,7 +130,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               name={id}
               id={id}
               className={twMerge(
-                'block w-full rounded-none rounded-r-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 group-aria-invalid:ring-red-300 group-aria-invalid:group-aria-disabled:ring-red-200',
+                'block w-full rounded-none rounded-r-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 group-aria-invalid:ring-red-300 group-aria-invalid:group-aria-disabled:ring-red-200',
                 'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
                 className,
               )}
@@ -144,7 +144,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <div
             className={twMerge(
               'group mt-2 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300',
-              'focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
+              'focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600',
               'aria-disabled:cursor-not-allowed aria-disabled:bg-gray-50 aria-disabled:ring-gray-200',
             )}
             aria-disabled={disabled}
@@ -182,7 +182,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               name={id}
               id={id}
               className={twMerge(
-                'block w-full rounded-none rounded-l-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
+                'block w-full rounded-none rounded-l-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
                 'group-aria-invalid:text-red-900 group-aria-invalid:ring-red-300 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:focus:ring-red-500 group-aria-invalid:disabled:text-red-300 group-aria-invalid:disabled:ring-red-200',
                 className,
               )}
@@ -208,7 +208,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <div className="mt-2">
             <div
               className={twMerge(
-                'group flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
+                'group flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600',
                 'aria-disabled:cursor-not-allowed aria-disabled:bg-gray-50 aria-disabled:ring-gray-200 aria-invalid:ring-red-300 aria-invalid:focus-within:ring-red-500 aria-disabled:aria-invalid:ring-red-200',
               )}
               aria-disabled={disabled}
@@ -261,7 +261,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               name={id}
               id={id}
               className={twMerge(
-                'block w-full rounded-none border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
+                'block w-full rounded-none border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
                 'group-aria-invalid:text-red-900 group-aria-invalid:ring-red-300 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:focus:ring-red-500 group-aria-invalid:disabled:text-red-300 group-aria-invalid:disabled:ring-red-200',
                 className,
               )}
@@ -288,7 +288,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             <div
               className={twMerge(
                 'flex w-full rounded-md rounded-r-none shadow-sm ring-1 ring-inset ring-gray-300',
-                'focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
+                'focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600',
                 'group-aria-invalid:ring-red-300 group-aria-invalid:focus-within:ring-red-500',
                 'group-aria-disabled:bg-gray-50 group-aria-disabled:group-aria-invalid:ring-red-200',
               )}
@@ -334,7 +334,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {hasInlineLeadingAndHasInlineTrailingAddon && (
           <div
             className={twMerge(
-              'group mt-2 flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
+              'group mt-2 flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600',
               'aria-disabled:cursor-not-allowed aria-disabled:bg-gray-50 aria-disabled:aria-invalid:ring-red-200',
               'aria-invalid:ring-red-300 aria-invalid:focus-within:ring-red-500',
               '',
@@ -387,7 +387,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             >
               {leadingAddon}
             </div>
-            <div className="flex w-full rounded-md rounded-l-none shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+            <div className="flex w-full rounded-md rounded-l-none shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600">
               <input
                 key="input"
                 type={type}
