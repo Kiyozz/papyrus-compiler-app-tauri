@@ -6,7 +6,6 @@
  */
 
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
-import Typography from '@mui/material/Typography'
 import is from '@sindresorhus/is'
 import CreateOrEditGroupDialog from 'App/Component/Dialog/CreateOrEditGroupDialog'
 import RemovingGroupDialog from 'App/Component/Dialog/RemovingGroupDialog'
@@ -208,16 +207,15 @@ function GroupsPage() {
           <AnimatePresence>
             {groups.isSuccess && (
               <motion.div className="h-full w-full justify-center gap-4 text-lg" {...enterPageAnimate}>
-                {Object.keys(groups.data).length === 0 && (
-                  <Typography gutterBottom variant="h6" className="pt-6">
-                    {t('page.groups.createGroupText')}
-                  </Typography>
-                )}
                 {groupsAsArray
                   .map((groups) => {
                     /* eslint-disable react/jsx-key */
                     if (is.emptyArray(groups)) {
-                      return <Typography variant="body2">{t('page.groups.whatIsAGroup')}</Typography>
+                      return (
+                        <div className="prose">
+                          <p>{t('page.groups.createGroupText')}</p>
+                        </div>
+                      )
                     }
 
                     return (

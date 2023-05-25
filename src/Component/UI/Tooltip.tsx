@@ -44,7 +44,7 @@ const TooltipContent = forwardRef<ElementRef<typeof TooltipContentMotion>, Compo
               ref={ref}
               side={side}
               align={align}
-              className={twMerge('rounded-md bg-gray-900 px-4 py-2 text-lg leading-5 text-white', className)}
+              className={twMerge('max-w-md rounded-md bg-gray-900 px-4 py-2 text-lg leading-6 text-white', className)}
               {...props}
             >
               {children}

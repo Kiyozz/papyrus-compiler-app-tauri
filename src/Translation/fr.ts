@@ -145,14 +145,15 @@ const fr: TranslationSchema = {
   page: {
     compilation: {
       dragAndDropText: 'Glisser-déposer des fichiers psc pour les charger',
-      dragAndDropAdmin: "Cette fonctionnalité n'est pas disponible si PCA est lancé en mode administrateur.",
+      dragAndDropAdmin:
+        'Veuillez noter que si PCA est exécuté en mode administrateur, cette fonctionnalité spécifique ne sera pas disponible.',
       appBar: {
         title: 'Compilation',
       },
     },
     groups: {
-      createGroupText: 'Vous pouvez créer un groupe avec le bouton $t(common.create).',
-      whatIsAGroup: 'Un groupe est un ensemble de scripts qui peut être ajoutés rapidement à la compilation.',
+      createGroupText:
+        'Vous avez la possibilité de créer un groupe. Un tel groupe correspond à un ensemble de scripts conçus pour être ajoutés rapidement à la compilation.',
       appBar: {
         title: 'Groupes',
       },

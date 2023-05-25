@@ -141,7 +141,6 @@ export interface TranslationSchema {
     }
     groups: {
       createGroupText: string
-      whatIsAGroup: string
       appBar: {
         title: string
       }
