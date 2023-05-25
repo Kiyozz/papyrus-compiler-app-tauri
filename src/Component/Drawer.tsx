@@ -23,11 +23,13 @@ import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useDialogs } from 'App/Hook/UseDialogs'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
+import { swapOffAnimate, swapOnAnimate } from 'App/Lib/Framer'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import { useTranslation } from 'react-i18next'
+import Swap from 'App/Component/UI/Swap'
 
 type DrawerLink = {
   id: string
@@ -111,7 +113,7 @@ function Drawer() {
       },
       tutorial: {
         ref: refs.documentation,
-        placement: 'right-end',
+        side: 'right',
         step: 'documentation',
         title: t('common.settingsTutorial.documentation'),
       },
@@ -120,51 +122,11 @@ function Drawer() {
       id: 'drawer-expand',
       label: t('nav.drawerClose'),
       icon: (
-        <span className="relative w-full">
-          <AnimatePresence>
-            {conf.data.misc.drawerOpen ? (
-              <ArrowLeftCircleIconMotion
-                key="left"
-                animate={{
-                  rotate: 0,
-                  opacity: 1,
-                }}
-                initial={{
-                  rotate: 45,
-                  opacity: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  rotate: 45,
-                }}
-                transition={{
-                  duration: 0.2,
-                }}
-                className="absolute inset-0"
-              />
-            ) : (
-              <ArrowRightCircleIconMotion
-                key="right"
-                animate={{
-                  rotate: 0,
-                  opacity: 1,
-                }}
-                initial={{
-                  rotate: -45,
-                  opacity: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  rotate: -45,
-                }}
-                transition={{
-                  duration: 0.2,
-                }}
-                className="absolute inset-0"
-              />
-            )}
-          </AnimatePresence>
-        </span>
+        <Swap
+          isOn={conf.data.misc.drawerOpen}
+          on={<ArrowLeftCircleIconMotion key="left" className="absolute inset-0" {...swapOnAnimate} />}
+          off={<ArrowRightCircleIconMotion key="right" className="absolute inset-0" {...swapOffAnimate} />}
+        />
       ),
       onClick: () => {
         updateConf.mutate({

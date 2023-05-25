@@ -193,7 +193,7 @@ function CompilationPage() {
                   <TutorialTooltip
                     title={t('common.settingsTutorial.compilation.createGroupFromScriptsList')}
                     step="compilation-create-group-from-scripts-list"
-                    placement="left-start"
+                    side="left"
                     ref={refs['compilation-create-group-from-scripts-list']}
                   >
                     <CreateGroupFromScriptsButton className="ml-auto" scripts={scripts} />

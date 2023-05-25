@@ -56,7 +56,7 @@ function SettingsMo2Section() {
           </Trans>
         }
         step="settings-mo2"
-        placement="top-start"
+        side="top"
       >
         <motion.div layout>
           <Switch

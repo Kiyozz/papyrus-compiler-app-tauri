@@ -63,6 +63,42 @@ export const fadeScaleAnimate: AnimationProps = {
   },
 }
 
+export const swapOnAnimate: AnimationProps = {
+  animate: {
+    rotate: 0,
+    opacity: 1,
+  },
+  initial: {
+    rotate: 45,
+    opacity: 0,
+  },
+  exit: {
+    rotate: 45,
+    opacity: 0,
+  },
+  transition: {
+    duration: 0.2,
+  },
+}
+
+export const swapOffAnimate: AnimationProps = {
+  animate: {
+    rotate: 0,
+    opacity: 1,
+  },
+  initial: {
+    rotate: -45,
+    opacity: 0,
+  },
+  exit: {
+    rotate: -45,
+    opacity: 0,
+  },
+  transition: {
+    duration: 0.2,
+  },
+}
+
 export function withDelay(delay: number, props: AnimationProps): AnimationProps {
   return {
     ...props,

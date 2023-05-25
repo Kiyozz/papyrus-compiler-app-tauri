@@ -6,7 +6,7 @@
  */
 
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid'
-import Tooltip from '@mui/material/Tooltip'
+import * as Tooltip from 'App/Component/UI/Tooltip'
 import InputDialog from 'App/Component/Form/InputDialog'
 import SettingsSection from 'App/Component/Settings/SettingsSection'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
@@ -70,7 +70,7 @@ function SettingsGameSection() {
       description="Ajoutez les informations de votre environnement."
     >
       <TutorialTooltip
-        placement="top-start"
+        side="top"
         title={t('common.settingsTutorial.settings.game')}
         step="settings-game"
         ref={refs['settings-game']}
@@ -111,13 +111,14 @@ function SettingsGameSection() {
             <div className="flex items-center">
               <span>{t('page.settings.sections.game.gameFolder.label')}</span>
 
-              <Tooltip
-                title={t('page.settings.sections.game.gameFolder.tooltip', { executable: toExecutable(gameType) })}
-              >
-                <span className="ml-1">
-                  <QuestionMarkCircleIcon className="h-5 w-5" />
-                </span>
-              </Tooltip>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <QuestionMarkCircleIcon className="ml-2 h-5 w-5" />
+                </Tooltip.Trigger>
+                <Tooltip.Content>
+                  {t('page.settings.sections.game.gameFolder.tooltip', { executable: toExecutable(gameType) })}
+                </Tooltip.Content>
+              </Tooltip.Root>
             </div>
           }
           id="settings-game-game-folder-text-field"
@@ -150,11 +151,12 @@ function SettingsGameSection() {
                 <div className="flex items-center">
                   <span>{t('page.settings.sections.game.compiler.label')}</span>
 
-                  <Tooltip title={t('page.settings.sections.game.compiler.tooltip')}>
-                    <span className="ml-1">
-                      <QuestionMarkCircleIcon className="ml-1 h-5 w-5" />
-                    </span>
-                  </Tooltip>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <QuestionMarkCircleIcon className="ml-2 h-5 w-5" />
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>{t('page.settings.sections.game.compiler.tooltip')}</Tooltip.Content>
+                  </Tooltip.Root>
                 </div>
               }
               defaultValue={gameCompilerPath}

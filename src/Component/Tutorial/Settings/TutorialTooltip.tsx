@@ -5,36 +5,36 @@
  *
  */
 
-import Tooltip, { type TooltipProps } from '@mui/material/Tooltip'
 import { type TutorialStep, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { type ComponentProps, forwardRef } from 'react'
+import { type ComponentProps, forwardRef, type ReactNode, type Ref } from 'react'
+import * as Tooltip from 'App/Component/UI/Tooltip'
+import { twMerge } from 'tailwind-merge'
 
 export type TutorialTooltipProps = ComponentProps<typeof TutorialTooltip>
 
-const TutorialTooltip = forwardRef<HTMLDivElement, Omit<TooltipProps, 'open' | 'ref'> & { step: TutorialStep }>(
-  ({ classes, children, step, ...props }, ref) => {
-    const { step: currentStep } = useSettingsTutorial()
+const TutorialTooltip = forwardRef<
+  HTMLElement,
+  Omit<Tooltip.TooltipProps, 'open' | 'defaultOpen'> & {
+    step: TutorialStep
+    title: ReactNode
+    side?: Tooltip.TooltipContentProps['side']
+    className?: string
+  }
+>(({ children, title, className, step, side = 'bottom', ...props }, ref) => {
+  const { step: currentStep } = useSettingsTutorial()
 
-    return (
-      <Tooltip
-        arrow
-        open={currentStep.some && currentStep.val === step}
-        classes={{ tooltip: 'text-lg leading-5 px-4 py-2' }}
-        componentsProps={{
-          tooltip: {
-            sx: {
-              fontSize: '1rem',
-            },
-          },
-        }}
-        ref={ref}
-        {...props}
-      >
+  return (
+    <Tooltip.Root open={currentStep.some && currentStep.val === step}>
+      <Tooltip.Trigger asChild ref={ref as Ref<HTMLButtonElement>}>
         {children}
-      </Tooltip>
-    )
-  },
-)
+      </Tooltip.Trigger>
+      <Tooltip.Content side={side} sideOffset={5} className={twMerge('max-w-lg', className)}>
+        {title}
+      </Tooltip.Content>
+    </Tooltip.Root>
+  )
+})
 
 TutorialTooltip.displayName = 'TutorialTooltip'
+
 export default TutorialTooltip

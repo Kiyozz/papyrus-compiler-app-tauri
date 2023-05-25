@@ -16,14 +16,19 @@ import { type Ref, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 import { useUpdateEffect } from 'usehooks-ts'
-import { z } from 'zod'
+import { z, type ZodIssue } from 'zod'
 
 const hardMinConcurrentCompilationScripts = 1
+const hardMaxConcurrentCompilationScripts = 100
 
 const ConcurrentScriptsZod = z.preprocess(
   (a) => parseInt(z.string().parse(a), 10),
-  z.number().min(hardMinConcurrentCompilationScripts),
+  z.number().min(hardMinConcurrentCompilationScripts).max(hardMaxConcurrentCompilationScripts),
 )
+
+function hasTooBigError(errors: ZodIssue[]) {
+  return errors.some((err) => err.code === 'too_big')
+}
 
 function SettingsCompilationSection() {
   const { t } = useTranslation()
@@ -57,11 +62,7 @@ function SettingsCompilationSection() {
       title={t('page.settings.sections.compilation.title')}
       description="Informations optionnelles sur le fonctionnement de la compilation."
     >
-      <TutorialTooltip
-        title={t('common.settingsTutorial.settings.concurrent')}
-        step="settings-concurrent"
-        placement="top-start"
-      >
+      <TutorialTooltip title={t('common.settingsTutorial.settings.concurrent')} step="settings-concurrent" side="top">
         <span ref={refs['settings-concurrent'] as Ref<HTMLSpanElement>} className="mt-5 block">
           <Input
             helpText={t('page.settings.sections.compilation.concurrentScripts.helperText')}
@@ -73,6 +74,8 @@ function SettingsCompilationSection() {
 
               if (safeValue.success) {
                 setConcurrentScripts(safeValue.data)
+              } else if (hasTooBigError(safeValue.error.errors)) {
+                setConcurrentScripts(hardMaxConcurrentCompilationScripts)
               } else {
                 setConcurrentScripts(0)
               }

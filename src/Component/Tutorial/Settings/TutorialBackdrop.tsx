@@ -7,7 +7,7 @@
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import TutorialArrows from 'App/Component/Tutorial/Settings/TutorialArrows'
-import ButtonRoot from 'App/Component/UI/Button'
+import * as Button from 'App/Component/UI/Button'
 import { type TutorialRefs, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -56,20 +56,25 @@ const TutorialBackdrop = ({
     }
   }, [onBack, onNext, skip])
 
+  const isNotTheEnd = step.some && step.val !== 'documentation'
+
   return (
     <div className="fixed inset-0 z-30 bg-black/30">
       <TutorialArrows onBack={onBack} onNext={onNext} />
-      {step.some && step.val !== 'documentation' && (
-        <ButtonRoot
+
+      {isNotTheEnd && (
+        <Button.Root
           className="fixed left-4 top-4 z-50"
           color="inherit"
           onClick={() => {
             skip('skip')
           }}
-          endIcon={<XMarkIcon className="h-5 w-5" />}
         >
           {t('common.skip')}
-        </ButtonRoot>
+          <Button.Icon edge="end">
+            <XMarkIcon className="h-5 w-5" />
+          </Button.Icon>
+        </Button.Root>
       )}
     </div>
   )

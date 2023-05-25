@@ -15,3 +15,7 @@
   user-select: none;
   cursor: default;
 }
+
+[data-radix-popper-content-wrapper] {
+  z-index: 50 !important;
+}
