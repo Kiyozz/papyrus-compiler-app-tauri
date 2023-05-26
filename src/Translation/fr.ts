@@ -79,25 +79,25 @@ const fr: TranslationSchema = {
         needHelpText: "C'est la première fois que j'utilise PCA",
       },
       settings: {
-        game: 'Commencez par enregistrer les informations de votre jeu',
-        compiler: "Ensuite, le chemin vers le compilateur Papyrus. Disponible après l'installation de Creation Kit",
-        concurrent: 'Optionnel, vous pouvez paramétrer le nombre de scripts compilés en simultané.',
-        mo2: "Optionnel, ajoutez les informations de votre instance MO2. <0>Ce n'est pas nécessaire si vous utilisez PCA à travers MO2</0>",
+        game: 'Commencez par enregistrer les détails de votre jeu',
+        compiler:
+          "Ensuite, spécifiez le chemin vers le compilateur Papyrus, qui sera disponible après l'installation de Creation Kit",
+        concurrent:
+          "De manière optionnelle, vous pouvez paramétrer le nombre de scripts compilés simultanément. Augmenter ce nombre peut accélérer la compilation, mais cela augmentera aussi l'utilisation de votre processeur",
+        mo2: "Si vous le souhaitez, vous pouvez ajouter les informations de votre instance MO2. Notez que cette étape n'est pas nécessaire si vous utilisez PCA via MO2",
       },
       compilation: {
-        addScripts: 'Ajouter des scripts',
+        addScripts: 'Continuez en ajoutant des scripts',
         compile:
-          "Liste des scripts à compiler. Vous pourrez créer des groupes afin d'y ajouter un ensemble de scripts rapidement.",
-        createGroupFromScriptsList: 'Créer un groupe depuis la liste des scripts actuelle.',
+          'Vous trouverez ensuite la liste des scripts à compiler. À ce stade, vous pouvez créer des groupes pour ajouter rapidement un ensemble de scripts.',
+        createGroupFromScriptsList: 'Vous pouvez créer un groupe à partir de la liste actuelle des scripts.',
       },
-      groups: {
-        whatAreGroups: "Qu'est-ce qu'un groupe ?",
-      },
-      documentation: "Toutefois, vous pouvez consulter la documentation pour plus d'informations.",
+      documentation:
+        "N'oubliez pas que vous pouvez toujours consulter la documentation pour obtenir des informations supplémentaires.",
     },
     telemetry: {
       title: "Partager l'analyse",
-      text: "Aidez PCA a améliorer l'application en envoyant automatiquement les données anonymes de diagnostic et d'utilisation.",
+      text: "Contribuez à l'amélioration de PCA en autorisant l'envoi automatique de données de diagnostic et d'utilisation anonymisées.",
     },
     refuse: 'Refuser',
     accept: 'Accepter',
@@ -136,7 +136,7 @@ const fr: TranslationSchema = {
     },
     openDocumentation: {
       title: 'Documentation de PCA',
-      text: 'Vous allez ouvrir le site web de la documentation de PCA.\nVous pourrez trouver toutes les informations nécessaires à l\'utilisation de PCA et à son paramétrage.\n\nSi vous avez un soucis, vous pouvez soumettre un message sur NexusMods après avoir lu la section "Troubleshooting" de la documentation.',
+      text: "Vous êtes sur le point d'accéder au site web de la documentation PCA. Ce site contient toutes les informations requises pour l'utilisation et la configuration de PCA.\n\nEn cas de problème, après avoir consulté la section 'Troubleshooting' de la documentation, n'hésitez pas à soumettre un message sur NexusMods.",
       actions: {
         doNotShowAgain: 'Ne plus afficher',
       },
@@ -185,14 +185,15 @@ const fr: TranslationSchema = {
           title: 'Compilation',
           concurrentScripts: {
             label: 'Nombre de scripts compilés simultanément',
-            helperText: 'Réduisez si vous rencontrez des blocages quand vous lancez la compilation',
+            helperText:
+              'Si des blocages se produisent lors du lancement de la compilation, nous vous recommandons de diminuer ce nombre.',
           },
         },
         mo2: {
           title: 'Mod Organizer 2',
           use: {
             helperText:
-              "Activer l'intégration MO2 uniquement si PCA n'est pas lancé à partir de MO2. Plus d'informations sur la documentation de PCA.",
+              "Si PCA n'est pas démarré via MO2, vous pouvez activer l'intégration MO2. Pour plus d'informations, consultez la documentation de PCA.",
           },
           instance: {
             label: "Dossier de l'instance",

@@ -79,9 +79,6 @@ export interface TranslationSchema {
         compile: string
         createGroupFromScriptsList: string
       }
-      groups: {
-        whatAreGroups: string
-      }
       documentation: string
     }
     telemetry: {
