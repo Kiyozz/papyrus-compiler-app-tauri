@@ -141,7 +141,7 @@ function RecentScriptsDialog({
                     {...enterPageAnimate}
                     className="grow"
                   >
-                    <ul className="group divide-y overflow-x-hidden border-y">
+                    <ul className="divide-y overflow-x-hidden border-y dark:divide-gray-600 dark:border-gray-600">
                       {allScripts.map((script) => {
                         const isAlreadyAddedInCurrentScripts = isFileScriptInArray(script, currentScripts)
                         const isAlreadyAddedInScriptsToLoad = scriptsToLoad.includes(script)
@@ -149,7 +149,7 @@ function RecentScriptsDialog({
                         return (
                           <li
                             key={script.path}
-                            className="group relative flex items-center aria-not-disabled:hover:bg-gray-50"
+                            className="group relative flex items-center aria-not-disabled:hover:bg-gray-50 dark:aria-not-disabled:hover:bg-gray-800"
                             aria-disabled={isAlreadyAddedInCurrentScripts ? 'true' : undefined}
                           >
                             <label htmlFor={script.id} className="flex grow p-3 group-aria-disabled:opacity-50">
@@ -159,7 +159,7 @@ function RecentScriptsDialog({
                                   aria-describedby={isMoreDetails ? `${script.id}-text` : undefined}
                                   name={script.id}
                                   type="checkbox"
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 disabled:opacity-70"
+                                  className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-600 disabled:opacity-70"
                                   checked={isAlreadyAddedInScriptsToLoad}
                                   disabled={isAlreadyAddedInCurrentScripts}
                                   onChange={() => {
@@ -173,15 +173,15 @@ function RecentScriptsDialog({
                                 />
                               </div>
                               <div className="flex min-w-0 flex-1 flex-col justify-center text-sm leading-6">
-                                <span className="font-medium text-gray-900">{script.name}</span>
+                                <span className="font-medium text-gray-900 dark:text-gray-200">{script.name}</span>
                                 {isMoreDetails ? (
                                   <p
                                     id={`${script.id}-text`}
-                                    className="text-xs font-light leading-tight text-gray-500"
+                                    className="text-xs font-light leading-tight text-gray-500 dark:text-gray-400"
                                   >
                                     {script.path}
                                   </p>
-                                ) : undefined}
+                                ) : null}
                               </div>
                             </label>
                             <div className="pr-4">

@@ -17,7 +17,7 @@ export type ButtonProps = PrimitivePropsWithRef<typeof Primitive.button> & {
   size?: Size
   startIcon?: JSX.Element
   endIcon?: JSX.Element
-  variant?: 'brand' | 'secondary' | 'soft' | 'ghost'
+  variant?: 'brand' | 'secondary' | 'ghost'
   color?: 'default' | 'error' | 'success' | 'warning' | 'inherit'
 }
 
@@ -70,11 +70,9 @@ const Button = forwardRef<ButtonElement, ButtonProps>(
         className={twMerge(
           'inline-flex items-center rounded font-semibold outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:opacity-60',
           variant === 'brand' &&
-            'border border-primary-500 bg-primary-500 text-white hover:border-primary-400 hover:bg-primary-400 focus-visible:ring-primary-400 focus-visible:ring-offset-2 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:ring-indigo-500',
+            'border border-primary-700 bg-primary-700 text-white hover:border-primary-600 hover:bg-primary-600 focus-visible:ring-primary-600 focus-visible:ring-offset-2',
           variant === 'secondary' &&
-            'border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 focus-visible:ring-gray-500 focus-visible:ring-offset-2 dark:bg-white/10 dark:text-white dark:ring-gray-700 dark:hover:bg-gray-700',
-          variant === 'soft' &&
-            'border border-indigo-50 bg-indigo-50 text-indigo-600 shadow-sm hover:border-indigo-100 hover:bg-indigo-100 focus-visible:ring-offset-2',
+            'border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 focus-visible:ring-gray-500 focus-visible:ring-offset-2 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:border-white/20 dark:hover:bg-white/20',
           variant === 'ghost' && 'text-primary-600 focus-visible:ring focus-visible:ring-primary-600',
           size === 'xs' && 'gap-x-1 rounded px-2 py-1 text-xs',
           size === 'sm' && 'gap-x-1 rounded px-2 py-1 text-sm',

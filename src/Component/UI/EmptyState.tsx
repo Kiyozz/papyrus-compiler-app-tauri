@@ -44,7 +44,7 @@ const EmptyStateText = forwardRef<EmptyStateTextElement, EmptyStateTextProps>(
     const Comp = asChild ? Slot : Primitive.p
 
     return (
-      <Comp className={twMerge('text-sm font-semibold text-gray-900', className)} {...props} ref={ref}>
+      <Comp className={twMerge('text-sm font-semibold text-gray-900 dark:text-white', className)} {...props} ref={ref}>
         {children}
       </Comp>
     )
