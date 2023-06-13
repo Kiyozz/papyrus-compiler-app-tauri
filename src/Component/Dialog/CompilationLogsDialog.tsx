@@ -47,7 +47,7 @@ function CompilationLogsDialog() {
           <AnimatePresence mode="wait" initial={false}>
             {hasNoLogs ? (
               <motion.div key="no-logs" className="flex grow items-center justify-center" {...enterPageAnimate}>
-                <h5 className="text-xl leading-6 text-gray-900" key="no-logs">
+                <h5 className="text-xl leading-6 text-gray-900 dark:text-gray-100" key="no-logs">
                   {t('dialog.logs.noLogs')}
                 </h5>
               </motion.div>

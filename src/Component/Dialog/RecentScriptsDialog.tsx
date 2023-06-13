@@ -129,7 +129,10 @@ function RecentScriptsDialog({
               .map((allScripts) => {
                 if (is.emptyArray(allScripts)) {
                   return (
-                    <motion.p className="flex grow items-center justify-center text-xl leading-6" {...enterPageAnimate}>
+                    <motion.p
+                      className="flex grow items-center justify-center text-xl leading-6 dark:text-gray-100"
+                      {...enterPageAnimate}
+                    >
                       {t('dialog.recentFiles.noRecentFiles')}
                     </motion.p>
                   )

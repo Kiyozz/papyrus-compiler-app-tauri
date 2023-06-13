@@ -59,7 +59,7 @@ const TutorialBackdrop = ({
   const isNotTheEnd = step.some && step.val !== 'documentation'
 
   return (
-    <div className="fixed inset-0 z-30 bg-black/30">
+    <div className="fixed inset-0 z-30 bg-black/30 dark:bg-black/50">
       <TutorialArrows onBack={onBack} onNext={onNext} />
 
       {isNotTheEnd && (

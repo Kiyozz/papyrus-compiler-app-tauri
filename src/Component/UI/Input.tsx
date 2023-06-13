@@ -64,7 +64,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             className={twMerge(
               'text-gray-900 dark:text-gray-100',
               overlapLabel
-                ? 'absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium aria-disabled:bg-red-50/20'
+                ? 'absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium aria-disabled:bg-red-50/20 dark:bg-gray-700'
                 : 'block text-sm font-medium leading-6',
             )}
             aria-disabled={disabled}
@@ -76,8 +76,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {hasNoAddon && (
           <div
             className={twMerge(
-              'group mt-2 flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300',
-              'focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600',
+              'group mt-2 flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600',
+              'focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600 dark:focus-within:ring-primary-700',
               'aria-disabled:bg-gray-50 aria-disabled:ring-gray-200 dark:aria-disabled:bg-gray-500/30 dark:aria-disabled:ring-gray-700',
               'aria-invalid:text-red-900 aria-invalid:ring-red-300 aria-invalid:focus:ring-red-600',
             )}
@@ -121,7 +121,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <div className="group mt-2 flex rounded-md shadow-sm" aria-disabled={disabled} aria-invalid={hasError}>
             <div
               key="leading"
-              className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 group-aria-disabled:border-gray-200 group-aria-invalid:border-red-300 group-aria-invalid:text-red-900 sm:text-sm"
+              className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 group-aria-disabled:border-gray-200 group-aria-invalid:border-red-300 group-aria-invalid:text-red-900 dark:border-gray-600 dark:group-aria-disabled:border-gray-600 dark:group-aria-disabled:bg-gray-700/30 sm:text-sm"
             >
               {leadingAddon}
             </div>
@@ -131,8 +131,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               name={id}
               id={id}
               className={twMerge(
-                'block w-full rounded-none rounded-r-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 group-aria-invalid:ring-red-300 group-aria-invalid:group-aria-disabled:ring-red-200',
-                'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6',
+                'block w-full rounded-none rounded-r-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 group-aria-invalid:ring-red-300 group-aria-invalid:group-aria-disabled:ring-red-200 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-primary-700',
+                'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 dark:disabled:bg-gray-500/30 dark:aria-disabled:ring-gray-700 sm:text-sm sm:leading-6',
                 className,
               )}
               ref={ref}
@@ -146,7 +146,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             className={twMerge(
               'group mt-2 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300',
               'focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600',
-              'aria-disabled:cursor-not-allowed aria-disabled:bg-gray-50 aria-disabled:ring-gray-200',
+              'aria-disabled:cursor-not-allowed aria-disabled:bg-gray-50 aria-disabled:ring-gray-200 dark:aria-disabled:bg-gray-500/30 dark:aria-disabled:ring-gray-700',
             )}
             aria-disabled={disabled}
             aria-invalid={hasError}

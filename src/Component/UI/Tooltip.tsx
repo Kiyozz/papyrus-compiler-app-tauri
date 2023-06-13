@@ -48,7 +48,7 @@ const TooltipContent = forwardRef<ElementRef<typeof TooltipContentMotion>, Compo
               {...props}
             >
               {children}
-              <TooltipRadix.Arrow className="fill-gray-900" width={11} height={5} />
+              <TooltipRadix.Arrow className="fill-gray-900 dark:fill-gray-800" width={11} height={5} />
             </TooltipContentMotion>
           </AnimatePresence>
         </div>

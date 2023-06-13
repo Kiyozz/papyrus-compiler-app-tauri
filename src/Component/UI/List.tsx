@@ -17,7 +17,7 @@ const List = forwardRef<ListElement, ListProps>(({ asChild = false, children, cl
   const Comp = asChild ? Slot : Primitive.ul
 
   return (
-    <Comp className={twMerge('divide-y divide-gray-100 py-1.5', className)} {...props} ref={ref}>
+    <Comp className={twMerge('divide-y divide-gray-100 py-1.5 dark:divide-gray-600', className)} {...props} ref={ref}>
       {children}
     </Comp>
   )

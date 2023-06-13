@@ -63,7 +63,7 @@ function OpenDocumentationDialog(props: Omit<Dialog.DialogProps, 'onKeyDown' | '
     >
       <Dialog.Title>{t('dialog.openDocumentation.title')}</Dialog.Title>
       <Dialog.Content className="px-6 py-4">
-        <div className="prose">
+        <div className="prose dark:prose-invert">
           {t('dialog.openDocumentation.text')
             .split('\n')
             .map((text) => (

@@ -59,7 +59,7 @@ const InputDialog = forwardRef<
         <Button.Root
           variant="ghost"
           disabled={props.disabled}
-          className="group/button -mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50 group-aria-disabled:pointer-events-none [&_*]:delay-0"
+          className="group/button -mx-3 flex-1 rounded-r-none px-3 hover:bg-gray-50 group-aria-disabled:pointer-events-none dark:hover:bg-gray-800 [&_*]:delay-0"
           color={(typeof props.error === 'boolean' ? props.error : props.error != null) ? 'error' : 'default'}
           onClick={onClickInput}
         >

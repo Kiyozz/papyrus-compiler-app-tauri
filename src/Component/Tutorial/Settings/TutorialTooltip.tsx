@@ -28,7 +28,7 @@ const TutorialTooltip = forwardRef<
       <Tooltip.Trigger asChild ref={ref as Ref<HTMLButtonElement>}>
         {children}
       </Tooltip.Trigger>
-      <Tooltip.Content side={side} sideOffset={5} className={twMerge('max-w-lg', className)}>
+      <Tooltip.Content side={side} sideOffset={5} className={twMerge('max-w-lg dark:bg-gray-800', className)}>
         {title}
       </Tooltip.Content>
     </Tooltip.Root>

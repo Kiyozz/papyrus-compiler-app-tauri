@@ -41,7 +41,7 @@ const TutorialWelcome = () => {
       <AnimatePresence>
         {!documentationUrl.isLoading && (
           <motion.div
-            className="container prose mx-auto h-full w-full items-center justify-center px-4 text-center"
+            className="container prose mx-auto h-full w-full items-center justify-center px-4 text-center dark:prose-invert"
             {...enterPageAnimate}
           >
             <AnimateAppLogo animate className="h-72" />
