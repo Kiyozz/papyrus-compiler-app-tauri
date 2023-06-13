@@ -51,7 +51,7 @@ const Switch = forwardRef<SwitchElement, SwitchProps>(
         />
       </HeadlessSwitch>
       <HeadlessSwitch.Label as="span" className="ml-3 cursor-default text-sm" tabIndex={-1}>
-        <span className="font-medium text-gray-900">{label}</span>
+        <span className="font-medium text-gray-900 dark:text-gray-100">{label}</span>
       </HeadlessSwitch.Label>
     </HeadlessSwitch.Group>
   ),

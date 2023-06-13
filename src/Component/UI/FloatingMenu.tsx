@@ -20,7 +20,7 @@ const FloatingMenuItem = forwardRef<ElementRef<'button'>, ComponentPropsWithoutR
     <HeadlessMenu.Item
       as="button"
       className={twMerge(
-        'block w-full px-4 py-2 text-left text-sm text-gray-700 ui-active:bg-gray-50 ui-disabled:opacity-50 ui-not-disabled:hover:bg-gray-100',
+        'block w-full px-4 py-2 text-left text-sm text-gray-700 ui-active:bg-gray-50 ui-disabled:opacity-50 ui-not-disabled:hover:bg-gray-100 dark:text-gray-100 dark:ui-active:bg-gray-800 dark:ui-active:text-gray-100 dark:ui-not-disabled:hover:bg-gray-600',
         className,
       )}
       ref={ref}
@@ -41,7 +41,7 @@ const FloatingMenuPanel = forwardRef<FloatingMenuPanelElement, FloatingMenuPanel
   ({ className, children, position = 'bottom', ...props }, ref) => (
     <HeadlessMenu.Items
       className={twMerge(
-        'absolute right-0 z-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
+        'absolute right-0 z-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-gray-700',
         position === 'top-right' && '-top-1/2 left-0 origin-bottom-left -translate-y-full',
         className,
         (typeof className === 'string' || typeof className === 'undefined') &&
