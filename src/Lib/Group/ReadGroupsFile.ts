@@ -11,7 +11,7 @@ import { Result } from 'ts-results'
 
 export const readGroupsFile = async (path: string): Promise<Result<string, Error>> => {
   return await Result.wrapAsync(async () => await readTextFile(path, { dir: BaseDirectory.App })).then((res) =>
-    res.mapErr((reason) => new Error(`cannot read groups file, error given: ${reason}`)),
+    res.mapErr((reason) => new Error('cannot read groups file', { cause: reason })),
   )
 }
 

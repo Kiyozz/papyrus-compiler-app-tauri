@@ -19,7 +19,7 @@ export const useCurrentEnvironment = ({
     queryFn: async () => {
       const res = (
         await Result.wrapAsync(async () => await invoke<Environment>('current_environment', { from }))
-      ).mapErr((reason) => new Error(`Cannot get current environment, error given: ${reason}`))
+      ).mapErr((reason) => new Error('cannot get current environment', { cause: reason }))
 
       if (res.err) {
         throw res.val

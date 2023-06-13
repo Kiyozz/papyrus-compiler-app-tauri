@@ -25,6 +25,6 @@ export const invokeCompileScript = async (compilerPath: string, args: string[], 
 
   return res.mapErr((reason) => {
     // should return fatal error only because compiler path does not exist or is not executable or something like that
-    return new Error(`fatal error compile script, error given: ${reason}`)
+    return new Error('fatal error compile script', { cause: reason })
   })
 }

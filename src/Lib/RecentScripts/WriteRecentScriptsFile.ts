@@ -17,5 +17,5 @@ export const writeRecentScriptsFile = async (path: string, contents: RecentScrip
     await writeTextFile({ path, contents: asStringJson }, { dir: BaseDirectory.App })
   })
 
-  return res.mapErr((reason) => new Error(`Cannot write recent scripts file, error given: ${reason}`))
+  return res.mapErr((reason) => new Error('cannot write recent scripts file', { cause: reason }))
 }

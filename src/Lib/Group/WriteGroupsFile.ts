@@ -17,5 +17,5 @@ export const writeGroupsFile = async (path: string, contents: Groups) => {
     await writeTextFile({ path, contents: asStringJson }, { dir: BaseDirectory.App })
   })
 
-  return res.mapErr((reason) => new Error(`Cannot write groups file, error given: ${reason}`))
+  return res.mapErr((reason) => new Error('cannot write groups file', { cause: reason }))
 }

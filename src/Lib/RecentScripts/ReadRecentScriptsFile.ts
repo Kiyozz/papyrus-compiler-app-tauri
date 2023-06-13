@@ -12,12 +12,12 @@ import { Result } from 'ts-results'
 export const readRecentScriptsFile = async (path: string): Promise<Result<string, Error>> => {
   const res = await Result.wrapAsync(async () => await readTextFile(path, { dir: BaseDirectory.App }))
 
-  return res.mapErr((reason) => new Error(`Cannot read recent scripts file, error given: ${reason}`))
+  return res.mapErr((reason) => new Error('Cannot read recent scripts file', { cause: reason }))
 }
 
 export const isRecentScriptsFileExists = async (path: string): Promise<Result<boolean, Error>> => {
   return await Result.wrapAsync(async () => await exists(path, { dir: BaseDirectory.App })).then((res) =>
-    res.mapErr((reason) => new Error(`Cannot check if ${path} exists, error given: ${reason}`)),
+    res.mapErr((reason) => new Error(`Cannot check if ${path} exists`, { cause: reason })),
   )
 }
 
