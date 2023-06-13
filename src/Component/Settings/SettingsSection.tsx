@@ -32,10 +32,10 @@ const SettingsSection = forwardRef<
       key={props.id}
       {...props}
     >
-      <motion.h3 className="font-semibold leading-7 text-gray-900 dark:text-white" layout>
+      <motion.h3 className="font-semibold leading-7 text-gray-900 dark:text-gray-100" layout>
         {title}
       </motion.h3>
-      <motion.p className="mt-1 text-sm leading-6 text-gray-600" layout>
+      <motion.p className="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400" layout>
         {description}
       </motion.p>
 

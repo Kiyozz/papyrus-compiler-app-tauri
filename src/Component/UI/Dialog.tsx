@@ -65,7 +65,7 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
                       className,
                     )}
                   >
-                    <HeadlessDialog.Panel className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-xl dark:bg-gray-900">
+                    <HeadlessDialog.Panel className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-xl dark:bg-gray-800">
                       <Comp className="flex h-full flex-col" ref={ref}>
                         {typeof children === 'function' ? children(state) : children}
                       </Comp>
@@ -113,7 +113,7 @@ const DialogActions = forwardRef<DialogActionsElement, DialogActionsProps>(
     const Comp = asChild ? Slot : Primitive.div
 
     return (
-      <Comp className={twMerge('flex bg-gray-50 p-6 dark:bg-gray-800', className)} ref={ref} {...props}>
+      <Comp className={twMerge('flex bg-gray-50 p-6 dark:bg-gray-700', className)} ref={ref} {...props}>
         {children}
       </Comp>
     )

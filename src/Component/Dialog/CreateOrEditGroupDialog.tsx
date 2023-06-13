@@ -90,7 +90,7 @@ function CreateOrEditGroupDialog({
         })}
       >
         <Dialog.Title>
-          <Input autoComplete="off" placeholder={t('dialog.group.name.label')} {...register('name')} />
+          <Input autoComplete="off" disabled placeholder={t('dialog.group.name.label')} {...register('name')} />
         </Dialog.Title>
         <Dialog.Content>
           <AnimatePresence mode="wait" initial={false}>

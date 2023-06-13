@@ -62,22 +62,23 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={id}
             className={twMerge(
+              'text-gray-900 dark:text-gray-100',
               overlapLabel
-                ? 'absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900 aria-disabled:bg-red-50/20'
-                : 'block text-sm font-medium leading-6 text-gray-900',
+                ? 'absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium aria-disabled:bg-red-50/20'
+                : 'block text-sm font-medium leading-6',
             )}
             aria-disabled={disabled}
           >
             {label}
           </label>
-          {hasCornerHint && <span className="text-sm leading-6 text-gray-500">{cornerHint}</span>}
+          {hasCornerHint && <span className="text-sm leading-6 text-gray-500 dark:text-gray-300">{cornerHint}</span>}
         </div>
         {hasNoAddon && (
           <div
             className={twMerge(
               'group mt-2 flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300',
               'focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-600',
-              'aria-disabled:bg-gray-50 aria-disabled:ring-gray-200',
+              'aria-disabled:bg-gray-50 aria-disabled:ring-gray-200 dark:aria-disabled:bg-gray-500/30 dark:aria-disabled:ring-gray-700',
               'aria-invalid:text-red-900 aria-invalid:ring-red-300 aria-invalid:focus:ring-red-600',
             )}
             aria-disabled={disabled}
@@ -89,9 +90,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               name={name ?? id}
               id={id}
               className={twMerge(
-                'block flex-1 rounded-md border-0 bg-transparent py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6',
+                'block flex-1 rounded-md border-0 bg-transparent py-1.5 text-gray-900 focus:ring-0 dark:text-gray-100 sm:text-sm sm:leading-6',
                 'placeholder:text-gray-400',
-                'disabled:cursor-not-allowed disabled:text-gray-500',
+                'disabled:cursor-not-allowed disabled:text-gray-500 dark:disabled:text-gray-400',
                 'group-aria-invalid:text-red-900 group-aria-invalid:placeholder:text-red-300 group-aria-invalid:group-aria-disabled:text-red-300',
                 className,
               )}
