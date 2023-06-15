@@ -152,7 +152,7 @@ function Drawer() {
           <div className="mt-4 flex justify-center">
             <AnimateAppLogo animate={false} className="h-12 w-12" />
           </div>
-          <ul role="list" className="flex flex-1 flex-col gap-y-7">
+          <ul role="list" className="flex flex-1 flex-col gap-y-7 overflow-hidden">
             <li className="mt-4">
               <ul role="list" className="-mx-2 space-y-1">
                 {links.map(({ id, label, path, icon }) => (

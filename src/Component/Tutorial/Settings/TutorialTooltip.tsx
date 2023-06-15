@@ -23,6 +23,10 @@ const TutorialTooltip = forwardRef<
 >(({ children, title, className, step, side = 'bottom', ...props }, ref) => {
   const { step: currentStep } = useSettingsTutorial()
 
+  // Disable the Tooltip if the tutorial is not active,
+  // this prevents the tooltip to be rendered and take the control of the Trigger
+  if (currentStep.none || currentStep.unwrap() === 'end') return children
+
   return (
     <Tooltip.Root open={currentStep.some && currentStep.val === step}>
       <Tooltip.Trigger asChild ref={ref as Ref<HTMLButtonElement>}>
