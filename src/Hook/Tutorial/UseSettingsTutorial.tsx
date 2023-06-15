@@ -95,7 +95,7 @@ const SettingsTutorialProvider = ({ children }: PropsWithChildren) => {
 
   const scrollInto = useCallback(
     (ref: keyof TutorialRefs) => {
-      // scroll to the top of the element minus 100px with getBoundingClientRect
+      // scroll to the top of the element minus 140px with getBoundingClientRect
 
       const element = refs[ref].current
 

@@ -6,30 +6,26 @@
  */
 
 import TutorialBackdrop from 'App/Component/Tutorial/Settings/TutorialBackdrop'
+import { useScrollFromStep } from 'App/Hook/Tutorial/UseScrollFromStep'
 import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
-import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { type TutorialStep, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { useNavigate } from 'react-router-dom'
 
 const TutorialCompilationAddScripts = () => {
   const navigate = useNavigate()
-  const location = useLocation()
   const { changeStep, scrollInto } = useSettingsTutorial()
   const { add } = useCompilationScripts()
 
-  // When go back, change to mo2 and focus it
-  useEffect(() => {
-    if (location.pathname === '/settings') {
-      changeStep('settings-mo2')
-      scrollInto('settings-mo2')
-    }
-  }, [changeStep, location, scrollInto])
+  useScrollFromStep('compilation-add-scripts', 'settings-mo2')
 
   return (
     <TutorialBackdrop
       tutorialRef="compilation-add-scripts"
       onBack={() => {
-        navigate('/settings')
+        const state: { fromStep: TutorialStep } = { fromStep: 'compilation-add-scripts' }
+
+        navigate('/settings', { state })
+        changeStep('settings-mo2')
       }}
       onNext={() => {
         changeStep('compilation-compile')

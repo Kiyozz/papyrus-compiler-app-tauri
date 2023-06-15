@@ -15,14 +15,17 @@ export type SwapProps = Omit<
     isOn: boolean
     on: ReactNode
     off: ReactNode
+    initial?: boolean
   },
   'children'
 >
 
-const Swap = forwardRef<SwapElement, SwapProps>(({ isOn, on, off, className, ...props }, ref) => {
+const Swap = forwardRef<SwapElement, SwapProps>(({ initial = true, isOn, on, off, className, ...props }, ref) => {
   return (
     <span {...props} className={twMerge('relative w-full', className)} ref={ref}>
-      <AnimatePresence mode="popLayout">{isOn ? on : off}</AnimatePresence>
+      <AnimatePresence mode="popLayout" initial={initial}>
+        {isOn ? on : off}
+      </AnimatePresence>
     </span>
   )
 })

@@ -47,7 +47,7 @@ const TutorialArrows = ({ onBack, onNext }: { onBack: () => void; onNext: () => 
         />
       </Button.Root>
       <div className="mt-4 flex justify-center">
-        <span className="rounded-md bg-primary-500 px-2 py-0.5 leading-6 text-white">
+        <span className="rounded-md bg-primary-700 px-2 py-0.5 leading-6 tracking-wider text-white">
           {total.current}/{total.end}
         </span>
       </div>

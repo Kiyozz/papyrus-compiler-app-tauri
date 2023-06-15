@@ -126,6 +126,7 @@ function Drawer() {
           isOn={conf.data.misc.drawerOpen}
           on={<ArrowLeftCircleIconMotion key="left" className="absolute inset-0" {...swapOnAnimate} />}
           off={<ArrowRightCircleIconMotion key="right" className="absolute inset-0" {...swapOffAnimate} />}
+          initial={false}
         />
       ),
       onClick: () => {
