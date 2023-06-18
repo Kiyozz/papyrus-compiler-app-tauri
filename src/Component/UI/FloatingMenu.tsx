@@ -8,6 +8,7 @@
 import { Transition, Menu as HeadlessMenu, type MenuItemsProps } from '@headlessui/react'
 import { type Primitive } from '@radix-ui/react-primitive'
 import * as Button from 'App/Component/UI/Button'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { twMerge } from 'tailwind-merge'
 import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, Fragment } from 'react'
 
@@ -31,25 +32,26 @@ const FloatingMenuItem = forwardRef<ElementRef<'button'>, ComponentPropsWithoutR
 
 FloatingMenuItem.displayName = 'FloatingMenu.Item'
 
+const floatingMenuPanel = cva(
+  [
+    'absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-gray-700',
+  ],
+  {
+    variants: {
+      position: {
+        'top-right': ['-top-1/2 left-0 origin-bottom-left -translate-y-full'],
+      },
+    },
+  },
+)
+
+export type FloatingMenuPanelVariants = VariantProps<typeof floatingMenuPanel>
 export type FloatingMenuPanelElement = ElementRef<typeof Primitive.div>
-export type FloatingMenuPanelProps = MenuItemsProps<typeof Primitive.div> & {
-  position?: 'top-right' | 'bottom'
-  className?: string
-}
+export type FloatingMenuPanelProps = MenuItemsProps<typeof Primitive.div> & FloatingMenuPanelVariants
 
 const FloatingMenuPanel = forwardRef<FloatingMenuPanelElement, FloatingMenuPanelProps>(
-  ({ className, children, position = 'bottom', ...props }, ref) => (
-    <HeadlessMenu.Items
-      className={twMerge(
-        'absolute right-0 z-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-gray-700',
-        position === 'top-right' && '-top-1/2 left-0 origin-bottom-left -translate-y-full',
-        className,
-        (typeof className === 'string' || typeof className === 'undefined') &&
-          (className?.includes('mt-') ?? false ? '' : 'mt-2'),
-      )}
-      ref={ref}
-      {...props}
-    >
+  ({ className, children, position, ...props }, ref) => (
+    <HeadlessMenu.Items className={twMerge(floatingMenuPanel({ position, className }))} ref={ref} {...props}>
       {(state) => <>{typeof children === 'function' ? children(state) : children}</>}
     </HeadlessMenu.Items>
   ),

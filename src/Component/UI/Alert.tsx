@@ -9,6 +9,7 @@ import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive
 import { XCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
 import { Slot } from '@radix-ui/react-slot'
 import { type Severity } from 'App/Type/Severity'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { twMerge } from 'tailwind-merge'
 import { type ElementRef, forwardRef } from 'react'
 
@@ -36,29 +37,30 @@ export const AlertIcon = forwardRef<AlertIconElement, AlertIconProps>(
 
 AlertIcon.displayName = 'Alert.Icon'
 
+const alertMessage = cva(['ml-3 grow text-sm font-medium'], {
+  variants: {
+    severity: {
+      info: 'text-blue-700',
+      error: 'text-red-700',
+      warning: 'text-yellow-700',
+      success: 'text-green-700',
+    },
+  },
+  defaultVariants: {
+    severity: 'info',
+  },
+})
+
+export type AlertMessageVariants = VariantProps<typeof alertMessage>
 export type AlertMessageElement = ElementRef<typeof Primitive.div>
-export type AlertMessageProps = PrimitivePropsWithRef<'div'> & { severity: Severity }
+export type AlertMessageProps = PrimitivePropsWithRef<typeof Primitive.div> & AlertMessageVariants
 
 const AlertMessage = forwardRef<AlertMessageElement, AlertMessageProps>(
-  ({ children, severity, asChild = false, className }: PrimitivePropsWithRef<'div'> & { severity: Severity }, ref) => {
+  ({ children, severity, asChild = false, className }, ref) => {
     const Comp = asChild ? Slot : Primitive.div
-    const isError = severity === 'error'
-    const isWarning = severity === 'warning'
-    const isInfo = severity === 'info'
-    const isSuccess = severity === 'success'
 
     return (
-      <Comp
-        className={twMerge(
-          'ml-3 grow text-sm font-medium',
-          isInfo && 'text-blue-700',
-          isError && 'text-red-700',
-          isWarning && 'text-yellow-700',
-          isSuccess && 'text-green-700',
-          className,
-        )}
-        ref={ref}
-      >
+      <Comp className={twMerge(alertMessage({ severity, className }))} ref={ref}>
         {children}
       </Comp>
     )
@@ -84,28 +86,35 @@ const AlertContent = forwardRef<AlertContentElement, AlertContentProps>(
 
 AlertContent.displayName = 'Alert.Content'
 
+const alert = cva(['rounded-md'], {
+  variants: {
+    severity: {
+      info: 'bg-blue-50',
+      error: 'bg-red-50',
+      warning: 'bg-yellow-50',
+      success: 'bg-green-50',
+    },
+  },
+  defaultVariants: {
+    severity: 'info',
+  },
+})
+
+export type AlertVariants = VariantProps<typeof alert>
 export type AlertElement = ElementRef<typeof Primitive.div>
-export type AlertProps = PrimitivePropsWithRef<typeof Primitive.div> & {
-  severity?: Severity
-}
+export type AlertProps = PrimitivePropsWithRef<typeof Primitive.div> & AlertVariants
 
 const Alert = forwardRef<AlertElement, AlertProps>(
-  ({ severity = 'info', asChild = false, className, children, ...props }, ref) => {
+  ({ severity, asChild = false, className, children, ...props }, ref) => {
     const Comp = asChild ? Slot : Primitive.div
-    const isError = severity === 'error'
-    const isWarning = severity === 'warning'
-    const isInfo = severity === 'info'
-    const isSuccess = severity === 'success'
 
     return (
       <Comp
         className={twMerge(
-          'rounded-md',
-          isInfo && 'bg-blue-50',
-          isWarning && 'bg-yellow-50',
-          isError && 'bg-red-50',
-          isSuccess && 'bg-green-50',
-          className,
+          alert({
+            severity,
+            className,
+          }),
         )}
         ref={ref}
         {...props}

@@ -7,6 +7,7 @@
 
 import { type MenuProps } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
+import { type FloatingMenuPanelVariants } from 'App/Component/UI/FloatingMenu'
 import * as FloatingMenu from 'App/Component/UI/FloatingMenu'
 import { twMerge } from 'tailwind-merge'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +30,7 @@ const FloatingMenuActionsList = ({
     invert?: boolean
     button?: boolean
   }
-  position?: 'top-right' | 'bottom'
+  position?: FloatingMenuPanelVariants['position']
 }) => {
   const { t } = useTranslation()
 
@@ -43,7 +44,10 @@ const FloatingMenuActionsList = ({
           </FloatingMenu.Button>
 
           <FloatingMenu.Transition>
-            <FloatingMenu.Panel className={twMerge(children != null && 'divide-y divide-gray-100')} position={position}>
+            <FloatingMenu.Panel
+              className={twMerge(children != null && 'divide-y divide-gray-100 dark:divide-gray-500')}
+              position={position}
+            >
               <div>
                 <FloatingMenu.Item onClick={onAll} disabled={disabled.all}>
                   {t('common.select.all')}

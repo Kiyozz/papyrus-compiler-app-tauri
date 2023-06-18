@@ -10,6 +10,38 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { type ComponentPropsWithoutRef, type ElementRef, type ElementType, forwardRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 
+const buttonIcon = cva([], {
+  variants: {
+    size: {
+      xs: ['h-3 w-3'],
+      sm: ['h-4 w-4'],
+      md: ['h-5 w-5'],
+      lg: ['h-6 w-6'],
+      xl: ['h-7 w-7'],
+    },
+    edge: {
+      start: ['-ml-0.5'],
+      end: ['-mr-0.5'],
+      default: [''],
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+    edge: 'default',
+  },
+})
+
+export type ButtonIconVariants = VariantProps<typeof buttonIcon>
+export type ButtonIconProps = ComponentPropsWithoutRef<typeof Slot> & ButtonIconVariants
+
+const ButtonIcon = forwardRef<HTMLElement, ButtonIconProps>(({ size, children, edge, className, ...props }, ref) => (
+  <Slot className={twMerge(buttonIcon({ size, edge, className }))} ref={ref} {...props}>
+    {children}
+  </Slot>
+))
+
+ButtonIcon.displayName = 'Button.Icon'
+
 const button = cva(
   'inline-flex items-center rounded font-semibold outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:opacity-60',
   {
@@ -55,38 +87,6 @@ export type ButtonProps = PrimitivePropsWithRef<typeof Primitive.button> &
     startIcon?: JSX.Element
     endIcon?: JSX.Element
   }
-
-const buttonIcon = cva([], {
-  variants: {
-    size: {
-      xs: ['h-3 w-3'],
-      sm: ['h-4 w-4'],
-      md: ['h-5 w-5'],
-      lg: ['h-6 w-6'],
-      xl: ['h-7 w-7'],
-    },
-    edge: {
-      start: ['-ml-0.5'],
-      end: ['-mr-0.5'],
-      default: [''],
-    },
-  },
-  defaultVariants: {
-    size: 'md',
-    edge: 'default',
-  },
-})
-
-export type ButtonIconVariants = VariantProps<typeof buttonIcon>
-export type ButtonIconProps = ComponentPropsWithoutRef<typeof Slot> & ButtonIconVariants
-
-const ButtonIcon = forwardRef<HTMLElement, ButtonIconProps>(({ size, children, edge, className, ...props }, ref) => (
-  <Slot className={twMerge(buttonIcon({ size, edge, className }))} ref={ref} {...props}>
-    {children}
-  </Slot>
-))
-
-ButtonIcon.displayName = 'Button.Icon'
 
 const Button = forwardRef<ButtonElement, ButtonProps>(
   ({ asChild = false, children, className, color, size, startIcon, endIcon, variant, ...props }, ref) => {
