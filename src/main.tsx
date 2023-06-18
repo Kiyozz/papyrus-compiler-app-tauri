@@ -19,7 +19,7 @@ import CompilationPage from 'App/Page/CompilationPage'
 import GroupsPage from 'App/Page/GroupsPage'
 import SettingsPage from 'App/Page/SettingsPage'
 import { configureTranslations } from 'App/Translation/ConfigureTranslations'
-import React, { type PropsWithChildren, useRef, useState } from 'react'
+import React, { type PropsWithChildren, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { useUpdateEffect } from 'usehooks-ts'
@@ -56,22 +56,26 @@ const Matomo = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation()
   const version = useVersion()
 
-  useConf({
-    onSuccess: (conf) => {
+  const conf = useConf({
+    enabled: version.isSuccess,
+  })
+
+  useEffect(() => {
+    if (conf.isSuccess) {
       const instance = createInstance({
         urlBase: 'http://localhost:4000',
         siteId: 1,
-        disabled: !conf.telemetry.use,
+        disabled: !conf.data.telemetry.use,
         heartBeat: {
-          active: conf.telemetry.use,
+          active: conf.data.telemetry.use,
         },
       })
 
       setMatomo(instance)
 
-      const isInTutorial = conf.tutorial.telemetry || conf.tutorial.settings
+      const isInTutorial = conf.data.tutorial.telemetry || conf.data.tutorial.settings
 
-      if (!initialized.current && conf.telemetry.use && !isInTutorial) {
+      if (!initialized.current && conf.data.telemetry.use && !isInTutorial) {
         instance.trackPageView({
           href: pathname,
         })
@@ -83,9 +87,15 @@ const Matomo = ({ children }: PropsWithChildren) => {
 
         initialized.current = true
       }
-    },
-    enabled: version.isSuccess,
-  })
+    }
+  }, [
+    conf.isSuccess,
+    conf.data?.telemetry.use,
+    conf.data?.tutorial.telemetry,
+    conf.data?.tutorial.settings,
+    pathname,
+    version.data,
+  ])
 
   const [matomo, setMatomo] = useState<MatomoInstance>()
 

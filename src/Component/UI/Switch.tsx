@@ -37,7 +37,7 @@ const Switch = forwardRef<SwitchElement, SwitchProps>(
         checked={checked}
         onChange={onChange}
         className={twMerge(
-          'group relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 aria-checked:bg-primary-500',
+          'group relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 aria-checked:bg-primary-500 dark:bg-gray-500 ui-checked:dark:bg-primary-700',
         )}
         id={id}
         name={name}

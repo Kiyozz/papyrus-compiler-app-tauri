@@ -10,27 +10,28 @@ import SettingsSection from 'App/Component/Settings/SettingsSection'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useMatomo } from 'App/Hook/UseMatomo'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 function SettingsTelemetrySection() {
   const { t } = useTranslation()
   const { trackEvent } = useMatomo()
-  const conf = useConf({
-    onSuccess: (conf) => {
-      if (conf.telemetry.use) {
-        trackEvent(
-          {
-            category: 'Conf',
-            action: 'Change telemetry',
-            name: 'Enable',
-          },
-          { force: true },
-        )
-      }
-    },
-  })
+  const conf = useConf()
   const updateConf = useUpdateConf()
+
+  useEffect(() => {
+    if (conf.isSuccess && conf.data.telemetry.use) {
+      trackEvent(
+        {
+          category: 'Conf',
+          action: 'Change telemetry',
+          name: 'Enable',
+        },
+        { force: true },
+      )
+    }
+  }, [conf.data?.telemetry.use, conf.isSuccess, trackEvent])
 
   if (conf.isLoading) return <>Loading...</>
   if (!conf.isSuccess) return <Navigate to="/" />
