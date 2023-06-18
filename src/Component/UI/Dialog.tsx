@@ -45,7 +45,7 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
                 leaveTo="opacity-0"
                 afterLeave={onLeaveEnd}
               >
-                <div className="fixed inset-0 bg-gray-500/75" aria-hidden="true" />
+                <div className="fixed inset-0 bg-gray-500/75 dark:bg-gray-700/75" aria-hidden="true" />
               </Transition.Child>
 
               <Transition.Child

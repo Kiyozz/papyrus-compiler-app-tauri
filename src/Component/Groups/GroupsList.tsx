@@ -42,7 +42,9 @@ function GroupsList({
           <List.Item key={group.id} className="flex items-center justify-between">
             <div>
               <p className="grow leading-6">{group.name}</p>
-              {secondaryText.some && <p className="text-xs leading-4 text-gray-600">{secondaryText.val}</p>}
+              {secondaryText.some && (
+                <p className="text-xs leading-4 text-gray-600 dark:text-gray-400">{secondaryText.val}</p>
+              )}
             </div>
             <GroupsListItemSecondaryAction
               onTryRemove={() => {
