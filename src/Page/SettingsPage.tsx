@@ -30,7 +30,7 @@ function SettingsPage() {
       <PageAppBar title={t('page.settings.appBar.title')}>
         <Button.Root
           onClick={() => {
-            void refreshConf()
+            refreshConf.mutate()
             trackEvent({
               category: 'Conf',
               action: 'Refresh',

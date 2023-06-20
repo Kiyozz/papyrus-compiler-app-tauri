@@ -5,21 +5,25 @@
  *
  */
 
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useConf } from 'App/Hook/Conf/UseConf'
 import { createLogs } from 'App/Lib/CreateLog'
-import { useCallback } from 'react'
 
 const logs = createLogs('useRefreshConf')
 
 export const useRefreshConf = () => {
+  const conf = useConf()
   const queryClient = useQueryClient()
 
-  return useCallback(async () => {
-    logs.debug('refreshing conf')
+  return useMutation({
+    mutationFn: async () => {
+      logs.debug('refreshing conf')
 
-    await queryClient.invalidateQueries({
-      queryKey: ['conf'],
-      type: 'all',
-    })
-  }, [queryClient])
+      await queryClient.invalidateQueries({
+        queryKey: ['conf'],
+        type: 'all',
+      })
+      void queryClient.invalidateQueries(['conf-check', conf.data])
+    },
+  })
 }

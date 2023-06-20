@@ -23,6 +23,12 @@ pub struct Logs {
     pub handle: log4rs::Handle,
 }
 
+pub struct LogsState {
+    pub logs: Result<Logs, crate::pca::Error>,
+}
+
+unsafe impl Send for LogsState {}
+
 /// Create a LogConf depending of the application conf.
 fn build_config(conf: &Conf, path: &PathBuf) -> LogConfig {
     let level = conf.log_level_filter();
@@ -46,10 +52,10 @@ fn build_config(conf: &Conf, path: &PathBuf) -> LogConfig {
 }
 
 impl Logs {
-    pub fn new(resolver: &PathResolver) -> Self {
+    pub fn new(resolver: &PathResolver) -> Result<Self, crate::pca::Error> {
         let app_logs = resolver.app_logs();
         let previous_app_logs = resolver.app_previous_logs();
-        let conf = Conf::from(resolver);
+        let conf = Conf::get(resolver)?;
 
         if app_logs.exists() {
             match fs::copy(&app_logs, &previous_app_logs) {
@@ -63,13 +69,38 @@ impl Logs {
         }
 
         let handle =
-            log4rs::init_config(build_config(&conf, &app_logs)).expect("Failed to init logs");
+            log4rs::init_config(build_config(&conf, &app_logs)).map_err(crate::pca::Error::from)?;
 
-        Self {
+        Ok(Self {
             file_path: app_logs,
             previous_file_path: previous_app_logs,
             handle,
+        })
+    }
+
+    pub fn set_config(&self, resolver: &PathResolver) -> Result<(), crate::pca::Error> {
+        let app_logs = resolver.app_logs();
+        let previous_app_logs = resolver.app_previous_logs();
+        let conf = Conf::get(resolver)?;
+
+        if app_logs.exists() {
+            match fs::copy(&app_logs, previous_app_logs) {
+                Ok(_) => {
+                    fs::remove_file(&app_logs).expect("Failed to remove log file");
+                }
+                Err(err) => {
+                    warn!("Failed to copy log file as previous log file: {}", err);
+                }
+            }
         }
+
+        self.handle.set_config(build_config(&conf, &app_logs));
+
+        Ok(())
+    }
+
+    pub fn on_conf_reset(&self, resolver: &PathResolver) -> Result<(), crate::pca::Error> {
+        self.set_config(resolver)
     }
 }
 

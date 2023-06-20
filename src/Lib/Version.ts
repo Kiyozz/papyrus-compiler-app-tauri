@@ -16,7 +16,17 @@ export const getVersion = async () => await getVersionFromTauri()
 export const githubRepository = 'https://api.github.com/repos/Kiyozz/papyrus-compiler-app'
 
 export const getLatestVersion = async (): Promise<Result<Response<GitHubRelease>, Error>> => {
-  return (await Result.wrapAsync(async () => await http.fetch<GitHubRelease>(`${githubRepository}/releases/latest`)))
+  return (
+    await Result.wrapAsync(
+      async () =>
+        await http.fetch<GitHubRelease>(`${githubRepository}/releases/latest`, {
+          method: 'GET',
+          headers: {
+            'User-Agent': 'Pca-App',
+          },
+        }),
+    )
+  )
     .mapErr((reason) => new Error('failed to fetch latest version', { cause: reason }))
     .andThen((res) => {
       if (!res.ok) {

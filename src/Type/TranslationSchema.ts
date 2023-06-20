@@ -49,6 +49,7 @@ export interface TranslationSchema {
     confCheckError_fatalError: string
     confCheckError_unknown: string
     refresh: string
+    reset: string
     documentation: string
     copy: string
     copySuccess: string
@@ -87,6 +88,10 @@ export interface TranslationSchema {
     }
     refuse: string
     accept: string
+    appConfLoadError: {
+      title: string
+      content: string
+    }
   }
   nav: {
     compilation: string

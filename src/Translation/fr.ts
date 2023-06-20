@@ -57,6 +57,7 @@ const fr: TranslationSchema = {
       "Une erreur inconnue lors de la vérification de la configuration est survenue. Si vous pensez que cela est un bug provenant de PCA, vérifiez les fichiers de logs et obtenez un support sur le forum PCA sur NexusMods. Vous pouvez avoir de l'aide sur la documentation.",
     confCheckError_unknown: '$t(common.confCheckError_fatalError)',
     refresh: 'Rafraîchir',
+    reset: 'Réinitialiser',
     documentation: 'Documentation',
     copy: 'Copier',
     copySuccess: 'Copié avec succès',
@@ -101,6 +102,11 @@ const fr: TranslationSchema = {
     },
     refuse: 'Refuser',
     accept: 'Accepter',
+    appConfLoadError: {
+      title: 'Erreur lors du chargement. Votre configuration semble invalide.',
+      content:
+        "Essayez de réinitialiser la configuration de PCA. Vous pouvez avoir plus de détails dans les logs. Les logs sont requis pour obtenir de l'aide sur les erreurs.",
+    },
   },
   nav: {
     compilation: 'Compilation',

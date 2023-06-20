@@ -76,7 +76,8 @@
         "resizable": true,
         "title": "PCA 2023.1-NEXT",
         "minWidth": 850,
-        "minHeight": 900
+        "minHeight": 900,
+        "userAgent": "Pca-App"
       }
     ]
   }

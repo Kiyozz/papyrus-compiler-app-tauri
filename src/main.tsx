@@ -99,7 +99,7 @@ const Matomo = ({ children }: PropsWithChildren) => {
 
   const [matomo, setMatomo] = useState<MatomoInstance>()
 
-  if (matomo == null) return null
+  if (matomo == null) return children
 
   // @ts-expect-error - d.ts is invalid
   return <MatomoProvider value={matomo}>{children}</MatomoProvider>

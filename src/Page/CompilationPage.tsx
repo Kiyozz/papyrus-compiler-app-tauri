@@ -130,7 +130,7 @@ function CompilationPage() {
                   <Alert.Content>
                     <Alert.Icon severity="error" className="py-4 pl-4" />
                     <Alert.Message severity="error" className="flex items-center divide-x">
-                      <p className="py-4">
+                      <p className="grow py-4">
                         {t<string>('common.confCheckError', {
                           context: checkConf.data?.some ? checkConf.data.val.type : undefined,
                           gameExe: toExecutable(conf.data.game.type),

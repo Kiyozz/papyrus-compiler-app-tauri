@@ -5,13 +5,13 @@
  *
  */
 
-use crate::pca::data::ConfPath;
-use log::LevelFilter;
+use crate::pca::{data::ConfPath, logs::LogsState};
+use log::{trace, LevelFilter};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
 use tauri::api::file;
-use tauri::PathResolver;
+use tauri::{Manager, PathResolver, Window, Wry};
 
 /// This is the application conf.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -77,6 +77,14 @@ impl Default for Conf {
 }
 
 impl Conf {
+    pub fn reset(resolver: &PathResolver) -> Result<Conf, crate::pca::Error> {
+        let conf = Conf::default();
+
+        conf.save(resolver).map_err(crate::pca::Error::from)?;
+
+        Ok(conf)
+    }
+
     pub fn log_level_filter(&self) -> LevelFilter {
         match self.log_level.as_str() {
             "trace" => LevelFilter::Trace,
@@ -87,26 +95,48 @@ impl Conf {
             _ => LevelFilter::Off,
         }
     }
-}
 
-impl From<&PathResolver> for Conf {
-    fn from(resolver: &PathResolver) -> Self {
-        let settings_file = file::read_string(resolver.app_conf())
-            .expect("Failed to read settings file. Try resetting the settings.");
-        let json: Conf = serde_json::from_str(settings_file.as_str())
-            .expect("Failed to parse settings file. Try resetting the settings.");
+    pub fn get(resolver: &PathResolver) -> Result<Self, crate::pca::Error> {
+        let settings_file =
+            file::read_string(resolver.app_conf()).map_err(crate::pca::Error::from)?;
+        let json: Result<Conf, _> = serde_json::from_str(settings_file.as_str());
 
-        json
+        json.map_err(crate::pca::Error::from)
+    }
+
+    pub fn save(&self, resolver: &PathResolver) -> Result<(), crate::pca::Error> {
+        let json = serde_json::to_string_pretty(self).expect("Failed to serialize settings");
+
+        fs::write(resolver.app_conf(), json).map_err(crate::pca::Error::from)
+    }
+
+    pub fn emit_reset(&self, window: &Window<Wry>) {
+        window
+            .emit("pca://conf_reset", self)
+            .expect("Failed to emit reset_conf event");
     }
 }
 
-pub fn reset(resolver: &PathResolver) -> Result<Conf, std::io::Error> {
-    let conf = Conf::default();
-    let json = serde_json::to_string_pretty(&conf).expect("Failed to serialize settings");
-    fs::write(resolver.app_conf(), json)
-        .expect("conf::reset — failed to write settings file. Try resetting the settings.");
+#[tauri::command]
+pub fn on_conf_reset(window: Window<Wry>, logs_state: tauri::State<&LogsState>) {
+    trace!("reset conf file");
 
-    Ok(conf)
+    match &logs_state.logs {
+        Ok(logs) => {
+            let path_resolver = &window.app_handle().path_resolver();
+            let new_conf = Conf::reset(path_resolver).expect("Failed to reset settings");
+
+            logs.on_conf_reset(path_resolver)
+                .expect("Cannot logs.on_conf_reset after Conf::reset from on_conf_reset command");
+
+            trace!("conf reset");
+
+            new_conf.emit_reset(&window);
+        }
+        Err(err) => {
+            trace!("failed to reset conf file: {:#?}", err);
+        }
+    }
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
