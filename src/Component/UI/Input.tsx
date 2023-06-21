@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
+ *
+ * All rights reserved.
+ *
+ */
+
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 import { twMerge } from 'tailwind-merge'
 import { type DetailedHTMLProps, type InputHTMLAttributes, forwardRef, type ReactNode } from 'react'

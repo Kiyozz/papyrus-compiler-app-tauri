@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
+ *
+ * All rights reserved.
+ *
+ */
+
 import { PlusIcon } from '@heroicons/react/24/solid'
 import { Slottable } from '@radix-ui/react-slot'
 import is from '@sindresorhus/is'

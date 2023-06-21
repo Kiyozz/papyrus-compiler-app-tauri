@@ -31,7 +31,7 @@
     },
     "tailwindcss": {
       "config": "tailwind.config.cjs",
-      "callees": ["cx", "classnames"]
+      "callees": ["cx", "classnames", "cva"]
     }
   }
 }

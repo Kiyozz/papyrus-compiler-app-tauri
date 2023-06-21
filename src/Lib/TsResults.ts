@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2023 Kiyozz~WK~WushuLate.
+ *
+ * All rights reserved.
+ *
+ */
+
 import { None, type Option, Result, Some, OkImpl, ErrImpl } from 'ts-results'
 
 declare module 'ts-results' {
