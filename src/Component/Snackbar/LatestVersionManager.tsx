@@ -11,13 +11,13 @@ import { useListenCheckForUpdates } from 'App/Hook/UseListenCheckForUpdates'
 import { useVersion } from 'App/Hook/UseVersion'
 import { toast, toastManager } from 'App/Lib/Toaster'
 import { isNewerVersion } from 'App/Util/IsNewerVersion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as Button from 'App/Component/UI/Button'
 
 const LatestVersionManager = () => {
   const { t } = useTranslation()
-  const [manualUpdateCheck, setManualUpdateCheck] = useState(false)
+  const manualCheck = useRef(false)
   const latestVersion = useLatestVersion({
     retry: 1,
   })
@@ -30,17 +30,10 @@ const LatestVersionManager = () => {
 
   useEffect(() => {
     let toastId: string | undefined
-
     if (version.isSuccess && latestVersion.isSuccess) {
-      const onDismiss = () => {
-        setManualUpdateCheck(false)
-      }
-
       if (isLatestVersion) {
-        if (manualUpdateCheck) {
-          toastId = toast.success(t('common.youAreUsingLatestVersion'), {
-            onDismiss,
-          })
+        if (manualCheck.current) {
+          toastId = toast.success(t('common.youAreUsingLatestVersion'))
         }
       } else {
         toastId = toast.info(
@@ -48,7 +41,10 @@ const LatestVersionManager = () => {
             <p>{t('common.newVersionAvailable', { version: latestVersion.data?.data.tag_name ?? 'unknown' })}</p>
             <Button.Root
               onClick={() => {
-                toastManager.remove(toastId)
+                if (toastId != null) {
+                  toastManager.remove(toastId)
+                }
+
                 setDialogOpen(true)
               }}
             >
@@ -57,7 +53,6 @@ const LatestVersionManager = () => {
           </div>,
           {
             duration: Infinity,
-            onDismiss,
           },
         )
       }
@@ -68,14 +63,11 @@ const LatestVersionManager = () => {
         toastManager.remove(toastId)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [version.isSuccess, latestVersion.isSuccess, manualUpdateCheck, isLatestVersion])
+  }, [version.data, version.isSuccess, latestVersion.data, latestVersion.isSuccess, isLatestVersion, t])
 
-  useListenCheckForUpdates({
-    onCheckForUpdates: () => {
-      setManualUpdateCheck(true)
-      void latestVersion.refetch()
-    },
+  useListenCheckForUpdates(() => {
+    manualCheck.current = true
+    void latestVersion.refetch()
   })
 
   return (

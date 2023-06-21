@@ -8,11 +8,7 @@
 import { listen, type Event } from '@tauri-apps/api/event'
 import { useEffect } from 'react'
 
-export const useListenCheckForUpdates = ({
-  onCheckForUpdates,
-}: {
-  onCheckForUpdates: (event: Event<void>) => void
-}) => {
+export const useListenCheckForUpdates = (onCheckForUpdates: (event: Event<void>) => void) => {
   useEffect(() => {
     const unsubscribe = listen('pca://check_for_updates', onCheckForUpdates)
 

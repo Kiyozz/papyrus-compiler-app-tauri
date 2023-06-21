@@ -15,6 +15,7 @@ import H2 from 'App/Component/Markdown/H2'
 import H3 from 'App/Component/Markdown/H3'
 import H5 from 'App/Component/Markdown/H5'
 import useDocumentationUrl from 'App/Hook/UseDocumentationUrl'
+import { useRef } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import Markdown from 'react-markdown'
 import A from '../Markdown/A'
@@ -36,9 +37,10 @@ const ChangelogDialog = ({
 }) => {
   const documentationUrl = useDocumentationUrl()
   const { t } = useTranslation()
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   return (
-    <Dialog.Root open={open} onClose={onClose} fullScreen>
+    <Dialog.Root open={open} onClose={onClose} fullScreen initialFocus={closeButtonRef}>
       <Dialog.Title id="dialog-changelogs-title" className="flex items-center">
         <span className="grow">
           <Trans i18nKey="common.changelogs" values={{ version }}>
@@ -84,7 +86,7 @@ const ChangelogDialog = ({
         </div>
       </Dialog.Content>
       <Dialog.Actions className="flex justify-end gap-x-4">
-        <Button.Root onClick={onClose} color="inherit" variant="secondary">
+        <Button.Root onClick={onClose} color="inherit" variant="secondary" ref={closeButtonRef}>
           {t('common.close')}
         </Button.Root>
         <Button.Root

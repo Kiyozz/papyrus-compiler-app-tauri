@@ -6,8 +6,14 @@
  */
 
 import { Primitive, type PrimitivePropsWithRef } from '@radix-ui/react-primitive'
-import { XCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
-import { Slot } from '@radix-ui/react-slot'
+import {
+  XCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  CheckCircleIcon,
+  XMarkIcon,
+} from '@heroicons/react/20/solid'
+import { Slot, Slottable } from '@radix-ui/react-slot'
 import { type Severity } from 'App/Type/Severity'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { twMerge } from 'tailwind-merge'
@@ -86,6 +92,48 @@ const AlertContent = forwardRef<AlertContentElement, AlertContentProps>(
 
 AlertContent.displayName = 'Alert.Content'
 
+const alertClose = cva(['p-4'], {
+  variants: {
+    severity: {
+      info: 'text-blue-700',
+      error: 'text-red-700',
+      warning: 'text-yellow-700',
+      success: 'text-green-700',
+    },
+  },
+  defaultVariants: {
+    severity: 'info',
+  },
+})
+
+export type AlertCloseVariants = VariantProps<typeof alertClose>
+export type AlertCloseElement = ElementRef<typeof Primitive.button>
+export type AlertCloseProps = PrimitivePropsWithRef<typeof Primitive.button> & AlertCloseVariants
+
+const AlertClose = forwardRef<AlertCloseElement, AlertCloseProps>(
+  ({ asChild = false, className, children, severity, ...props }, ref) => {
+    const Comp = asChild ? Slot : Primitive.button
+
+    return (
+      <Comp
+        className={twMerge(
+          alertClose({
+            severity,
+            className,
+          }),
+        )}
+        ref={ref}
+        {...props}
+      >
+        <XMarkIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
+        <Slottable>{children}</Slottable>
+      </Comp>
+    )
+  },
+)
+
+AlertClose.displayName = 'Alert.Close'
+
 const alert = cva(['rounded-md'], {
   variants: {
     severity: {
@@ -127,4 +175,11 @@ const Alert = forwardRef<AlertElement, AlertProps>(
 
 Alert.displayName = 'Alert.Root'
 
-export { AlertContent as Content, AlertIcon as Icon, AlertMessage as Message, Alert, Alert as Root }
+export {
+  AlertContent as Content,
+  AlertIcon as Icon,
+  AlertMessage as Message,
+  Alert,
+  Alert as Root,
+  AlertClose as Close,
+}

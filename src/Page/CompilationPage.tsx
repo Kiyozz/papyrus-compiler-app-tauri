@@ -230,19 +230,17 @@ function CompilationPage() {
                 />
               </motion.div>
             ) : (
-              <>
-                <EmptyState.Root asChild>
-                  <motion.div {...enterPageAnimate}>
-                    <EmptyState.Icon>
-                      <DocumentArrowDownIcon />
-                    </EmptyState.Icon>
-                    <EmptyState.Text className="flex flex-col space-y-4">
-                      <span>{t('page.compilation.dragAndDropText')}</span>
-                      <span className="font-normal">{t('page.compilation.dragAndDropAdmin')}</span>
-                    </EmptyState.Text>
-                  </motion.div>
-                </EmptyState.Root>
-              </>
+              <EmptyState.Root asChild>
+                <motion.div {...enterPageAnimate}>
+                  <EmptyState.Icon>
+                    <DocumentArrowDownIcon />
+                  </EmptyState.Icon>
+                  <EmptyState.Text className="flex flex-col space-y-4">
+                    <span>{t('page.compilation.dragAndDropText')}</span>
+                    <span className="font-normal">{t('page.compilation.dragAndDropAdmin')}</span>
+                  </EmptyState.Text>
+                </motion.div>
+              </EmptyState.Root>
             )}
           </AnimatePresence>
         </div>
