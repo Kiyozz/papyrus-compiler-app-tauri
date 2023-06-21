@@ -20,10 +20,7 @@ const SettingsSection = forwardRef<
 >(({ title, className, description, 'aria-label': ariaLabel, children, ...props }, ref) => (
   <LayoutGroup>
     <motion.section
-      className={twMerge(
-        'relative border-b border-gray-900/10 p-4 pb-12 transition-none last:border-b-0 last:pb-4',
-        className,
-      )}
+      className={twMerge('relative p-4 pb-12 transition-none last:border-b-0 last:pb-4', className)}
       aria-label={is.string(title) ? title : ariaLabel}
       ref={ref}
       layout

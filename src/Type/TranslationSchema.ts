@@ -92,6 +92,8 @@ export interface TranslationSchema {
       title: string
       content: string
     }
+    restartLater: string
+    restartNow: string
   }
   nav: {
     compilation: string
@@ -131,6 +133,10 @@ export interface TranslationSchema {
       actions: {
         doNotShowAgain: string
       }
+    }
+    logLevelChanged: {
+      title: string
+      content: string
     }
   }
   page: {
@@ -188,12 +194,24 @@ export interface TranslationSchema {
         }
         theme: {
           title: string
+          description: string
           options: {
             system: string
             light: string
             dark: string
           }
           activateTelemetry: string
+        }
+        logLevel: {
+          title: string
+          description: string
+          options: {
+            error: string
+            warn: string
+            info: string
+            debug: string
+            trace: string
+          }
         }
       }
     }

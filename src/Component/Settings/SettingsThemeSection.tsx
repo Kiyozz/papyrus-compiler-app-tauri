@@ -30,7 +30,7 @@ function SettingsThemeSection() {
     <SettingsSection
       id="theme-section"
       title={t('page.settings.sections.theme.title')}
-      description="Paramétrer l'apparence de PCA"
+      description={t('page.settings.sections.theme.description')}
     >
       <RadioGroup
         className="mt-5"
@@ -44,7 +44,6 @@ function SettingsThemeSection() {
             name: value,
           })
         }}
-        col
         value={theme}
         name="theme"
         items={themes.map((theme) => ({

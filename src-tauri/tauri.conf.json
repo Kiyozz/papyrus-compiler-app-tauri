@@ -33,6 +33,9 @@
       },
       "clipboard": {
         "writeText": true
+      },
+      "process": {
+        "relaunch": true
       }
     },
     "bundle": {

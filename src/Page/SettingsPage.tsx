@@ -10,6 +10,7 @@ import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
 import SettingsCompilationSection from 'App/Component/Settings/SettingsCompilationSection'
 import SettingsGameSection from 'App/Component/Settings/SettingsGameSection'
+import SettingsLogLevelSection from 'App/Component/Settings/SettingsLogLevelSection'
 import SettingsMo2Section from 'App/Component/Settings/SettingsMo2Section'
 import SettingsTelemetrySection from 'App/Component/Settings/SettingsTelemetrySection'
 import SettingsThemeSection from 'App/Component/Settings/SettingsThemeSection'
@@ -46,11 +47,15 @@ function SettingsPage() {
       </PageAppBar>
 
       <Page>
-        <motion.section className="container mx-auto max-w-6xl space-y-4" {...enterPageAnimate}>
+        <motion.section
+          className="container mx-auto max-w-6xl space-y-4 divide-y divide-gray-900/10 dark:divide-gray-600"
+          {...enterPageAnimate}
+        >
           <SettingsGameSection />
           <SettingsCompilationSection />
           <SettingsMo2Section />
           <SettingsThemeSection />
+          <SettingsLogLevelSection />
           <SettingsTelemetrySection />
         </motion.section>
       </Page>

@@ -107,6 +107,8 @@ const fr: TranslationSchema = {
       content:
         "Essayez de réinitialiser la configuration de PCA. Vous pouvez avoir plus de détails dans les logs. Les logs sont requis pour obtenir de l'aide sur les erreurs.",
     },
+    restartLater: 'Redémarrer plus tard',
+    restartNow: 'Redémarrer maintenant',
   },
   nav: {
     compilation: 'Compilation',
@@ -146,6 +148,10 @@ const fr: TranslationSchema = {
       actions: {
         doNotShowAgain: 'Ne plus afficher',
       },
+    },
+    logLevelChanged: {
+      title: 'Niveau de log',
+      content: 'Le niveau de log a été modifié. Veuillez redémarrer PCA pour appliquer les changements.',
     },
   },
   page: {
@@ -208,12 +214,24 @@ const fr: TranslationSchema = {
         },
         theme: {
           title: 'Thème',
+          description: "Paramétrer l'apparence de PCA",
           options: {
             system: 'Système',
             light: 'Clair',
             dark: 'Sombre',
           },
           activateTelemetry: 'Activer l’analyse',
+        },
+        logLevel: {
+          title: 'Niveau de log',
+          description: "Paramétrer le niveau de log. Les logs sont requis pour obtenir de l'aide sur les erreurs.",
+          options: {
+            error: 'Erreurs',
+            warn: 'Avertissements',
+            info: 'Informations',
+            debug: 'Debug',
+            trace: 'Trace',
+          },
         },
       },
     },
