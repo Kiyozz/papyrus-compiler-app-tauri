@@ -34,7 +34,7 @@ pub fn is_file(path: &str, from: Option<&str>) -> bool {
 /// Used by Webview.
 #[tauri::command]
 pub fn paths_exists(paths: Vec<&str>, from: Option<&str>) -> bool {
-    debug!("{} {:?}", super::brand!(from, "paths_exists"), paths);
+    debug!("{} {:#?}", super::brand!(from, "paths_exists"), paths);
 
     paths.iter().map(|path| Path::new(path).exists()).all(|x| x)
 }
@@ -49,7 +49,7 @@ pub fn get_scripts_in_paths(
     from: Option<&str>,
 ) -> Vec<String> {
     debug!(
-        "{} {:?}",
+        "{} {:#?}",
         super::brand!(from, "get_scripts_in_path"),
         patterns
     );
@@ -76,14 +76,14 @@ pub fn get_scripts_in_paths(
             .collect::<Vec<_>>()
         })
         .filter(|path| {
-            trace!("retrieved -> {:?}", path);
+            trace!("retrieved -> {:#?}", path);
 
             !path.is_empty()
         })
         .collect::<Vec<_>>();
 
     debug!(
-        "{} — result — {:?}",
+        "{} — result — {:#?}",
         super::brand!(from, "get_scripts_in_path"),
         glob_res
     );

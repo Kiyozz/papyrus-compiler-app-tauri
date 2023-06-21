@@ -27,8 +27,6 @@ pub struct LogsState {
     pub logs: Result<Logs, crate::pca::Error>,
 }
 
-unsafe impl Send for LogsState {}
-
 /// Create a LogConf depending of the application conf.
 fn build_config(conf: &Conf, path: &PathBuf) -> LogConfig {
     let level = conf.log_level_filter();
@@ -112,11 +110,11 @@ pub fn log(ns: String, message: String, level: String, args: &str) {
     let args = serde_json::from_str::<Value>(args).unwrap();
 
     match level.as_str() {
-        "trace" => trace!(target: "pca", "{} — {} {}", ns, message, args),
-        "debug" => debug!(target: "pca", "{} — {} {}", ns, message, args),
-        "info" => info!(target: "pca", "{} — {} {}", ns, message, args),
-        "warn" => warn!(target: "pca", "{} — {} {}", ns, message, args),
-        "error" => error!(target: "pca", "{} — {} {}", ns, message, args),
-        _ => trace!(target: "pca", "{} — {} {}", ns, message, args),
+        "trace" => trace!(target: "pca", "{} — {} {:#?}", ns, message, args),
+        "debug" => debug!(target: "pca", "{} — {} {:#?}", ns, message, args),
+        "info" => info!(target: "pca", "{} — {} {:#?}", ns, message, args),
+        "warn" => warn!(target: "pca", "{} — {} {:#?}", ns, message, args),
+        "error" => error!(target: "pca", "{} — {} {:#?}", ns, message, args),
+        _ => trace!(target: "pca", "{} — {} {:#?}", ns, message, args),
     }
 }
