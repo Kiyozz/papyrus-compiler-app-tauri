@@ -67,7 +67,7 @@ function SettingsGameSection() {
     <SettingsSection
       id="game-section"
       title={t('page.settings.sections.game.title')}
-      description="Ajoutez les informations de votre environnement."
+      description={t('page.settings.sections.game.description')}
     >
       <TutorialTooltip
         side="top"
@@ -193,7 +193,8 @@ function SettingsGameSection() {
               <Alert.Content>
                 <Alert.Icon severity="error" />
                 <Alert.Message severity="error">
-                  {t<string>('common.confCheckError', {
+                  {/* @see https://github.com/i18next/react-i18next/issues/1541 */}
+                  {t<any, any, any>('common.confCheckError', {
                     context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
                     gameExe: toExecutable(conf.data.game.type),
                   })}

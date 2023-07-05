@@ -20,6 +20,7 @@ import { useMatomo } from 'App/Hook/UseMatomo'
 import { enterPageAnimate } from 'App/Lib/Framer'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
+import { twMerge } from 'tailwind-merge'
 
 function SettingsPage() {
   const { t } = useTranslation()
@@ -38,8 +39,10 @@ function SettingsPage() {
               name: 'Settings',
             })
           }}
+          disabled={refreshConf.isLoading}
+          color={refreshConf.isError ? 'error' : 'default'}
         >
-          <Button.Icon edge="start">
+          <Button.Icon edge="start" className={twMerge(refreshConf.isLoading && 'animate-spin')}>
             <ArrowPathIcon />
           </Button.Icon>
           {t('common.refresh')}

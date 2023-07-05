@@ -42,7 +42,7 @@ function SettingsTelemetrySection() {
     <SettingsSection
       id="telemetry-section"
       title={t('common.telemetry.title')}
-      description={t('common.telemetry.text')}
+      description={t('common.telemetry.description')}
     >
       <Switch
         className="mt-5"

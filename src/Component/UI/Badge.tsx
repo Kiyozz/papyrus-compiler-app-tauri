@@ -11,12 +11,18 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { twMerge } from 'tailwind-merge'
 import { type ElementRef, forwardRef } from 'react'
 
-const badge = cva(['inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-medium'], {
+const badge = cva(['inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset'], {
   variants: {
     variant: {
-      error: ['bg-red-100 text-red-700'],
-      default: ['bg-gray-100 text-gray-600'],
-      success: ['bg-green-100 text-green-700'],
+      error: ['bg-red-50 text-red-700 ring-red-600/10', 'dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20'],
+      default: [
+        'bg-gray-50 text-gray-600 ring-gray-500/10',
+        'dark:bg-gray-400/10 dark:text-gray-400 dark:ring-gray-400/20',
+      ],
+      success: [
+        'bg-green-50 text-green-700 ring-green-600/20',
+        'dark:bg-green-500/10 dark:text-green-400 dark:ring-green-500/20',
+      ],
     },
   },
   defaultVariants: {

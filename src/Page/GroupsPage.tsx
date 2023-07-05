@@ -6,6 +6,7 @@
  */
 
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon } from '@heroicons/react/24/solid'
 import is from '@sindresorhus/is'
 import CreateOrEditGroupDialog from 'App/Component/Dialog/CreateOrEditGroupDialog'
 import RemovingGroupDialog from 'App/Component/Dialog/RemovingGroupDialog'
@@ -13,7 +14,6 @@ import GroupMoreDetailsCheckbox from 'App/Component/Groups/GroupMoreDetailsCheck
 import GroupsList from 'App/Component/Groups/GroupsList'
 import Page from 'App/Component/Page/Page'
 import PageAppBar from 'App/Component/Page/PageAppBar'
-import Spinner from 'App/Component/Spinner'
 import * as Button from 'App/Component/UI/Button'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useRemoveGroup } from 'App/Hook/Group/UseRemoveGroup'
@@ -22,7 +22,7 @@ import { useDialog } from 'App/Hook/UseDialog'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { type FileScript } from 'App/Lib/Conf/ConfZod'
 import { createLogs } from 'App/Lib/CreateLog'
-import { enterPageAnimate, fadeAnimate } from 'App/Lib/Framer'
+import { enterPageAnimate } from 'App/Lib/Framer'
 import { groupRecordToArray } from 'App/Lib/Group/GroupRecordToArray'
 import { fromNullable } from 'App/Lib/TsResults'
 import { type GroupWithId } from 'App/Type/GroupWithId'
@@ -197,14 +197,7 @@ function GroupsPage() {
 
       <Page>
         <div className="container mx-auto max-w-6xl">
-          <AnimatePresence>
-            {groups.isLoading && (
-              <motion.div {...fadeAnimate}>
-                <Spinner />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {groups.isSuccess && (
               <motion.div className="h-full w-full justify-center gap-4 text-lg" {...enterPageAnimate}>
                 {groupsAsArray
@@ -241,6 +234,11 @@ function GroupsPage() {
                     /* eslint-enable react/jsx-key */
                   })
                   .unwrapOr(null)}
+              </motion.div>
+            )}
+            {groups.isLoading && (
+              <motion.div {...enterPageAnimate} className="h-6 w-6 animate-spin">
+                <ArrowPathIcon />
               </motion.div>
             )}
           </AnimatePresence>

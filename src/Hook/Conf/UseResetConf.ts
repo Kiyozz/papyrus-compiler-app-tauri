@@ -17,8 +17,6 @@ export const useResetConf = () => {
     mutationFn: async () => {
       logs.debug('resetting conf')
 
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
       const res: Result<never, Error> = await Result.wrapAsync(async () => await invoke('on_conf_reset'))
 
       if (res.err) {

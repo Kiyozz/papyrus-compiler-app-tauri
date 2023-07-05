@@ -52,7 +52,12 @@ function CompilationLogsDialog() {
                 </h5>
               </motion.div>
             ) : (
-              <motion.ul key="logs-list" role="list" className="divide-y divide-gray-200" {...enterPageAnimate}>
+              <motion.ul
+                key="logs-list"
+                role="list"
+                className="divide-y divide-gray-200 dark:divide-gray-700"
+                {...enterPageAnimate}
+              >
                 {logs.map((log) => (
                   <LogItem
                     key={log.script.id}

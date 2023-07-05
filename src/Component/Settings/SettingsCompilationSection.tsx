@@ -60,7 +60,7 @@ function SettingsCompilationSection() {
     <SettingsSection
       id="compilation-section"
       title={t('page.settings.sections.compilation.title')}
-      description="Informations optionnelles sur le fonctionnement de la compilation."
+      description={t('page.settings.sections.compilation.description')}
     >
       <TutorialTooltip title={t('common.settingsTutorial.settings.concurrent')} step="settings-concurrent" side="top">
         <span ref={refs['settings-concurrent'] as Ref<HTMLSpanElement>} className="mt-5 block">

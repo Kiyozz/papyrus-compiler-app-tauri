@@ -31,7 +31,7 @@ const writeDefaultConfIfFileNotExists = async (options: ConfOptions<Conf>): Prom
   return await writeConfigFile(options.defaults)
 }
 
-const readConfigOrUseDefaultConfig = async (): Promise<Result<Conf, Error>> => {
+const readConfigOrUseDefaultConfig = async () => {
   return await catchErr(async () => await readConfigFileJson())
 }
 

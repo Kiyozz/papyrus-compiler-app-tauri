@@ -7,6 +7,7 @@
 
 export interface TranslationSchema {
   common: {
+    loadingConf: string
     back: string
     next: string
     skip: string
@@ -54,6 +55,7 @@ export interface TranslationSchema {
     copy: string
     copySuccess: string
     copyError: string
+    error: string
     createGroup: string
     removeRecentScriptsError: string
     youAreUsingLatestVersion: string
@@ -84,13 +86,16 @@ export interface TranslationSchema {
     }
     telemetry: {
       title: string
-      text: string
+      description: string
     }
     refuse: string
     accept: string
     appConfLoadError: {
       title: string
       content: string
+      openLogFile: string
+      openConfFile: string
+      resetError: string
     }
     restartLater: string
     restartNow: string
@@ -160,6 +165,7 @@ export interface TranslationSchema {
       sections: {
         game: {
           title: string
+          description: string
           games: {
             le: string
             se: string
@@ -177,6 +183,7 @@ export interface TranslationSchema {
         }
         compilation: {
           title: string
+          description: string
           concurrentScripts: {
             label: string
             helperText: string
@@ -184,6 +191,7 @@ export interface TranslationSchema {
         }
         mo2: {
           title: string
+          description: string
           use: {
             helperText: string
           }

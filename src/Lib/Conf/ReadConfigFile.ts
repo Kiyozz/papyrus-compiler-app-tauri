@@ -17,6 +17,7 @@ import { parseJson } from 'App/Lib/Json'
 import { catchErr } from 'App/Lib/TsResults'
 import { isNewerVersion } from 'App/Util/IsNewerVersion'
 import { Ok, Result } from 'ts-results'
+import { type ZodError } from 'zod'
 
 const logs = createLogs('ReadConfigFile')
 
@@ -72,7 +73,7 @@ export const isConfFileExists = async (): Promise<Result<boolean, Error>> =>
     res.mapErr((reason) => new Error(`cannot check if ${confFileName} exists`, { cause: reason })),
   )
 
-export const readConfigFileJson = async (): Promise<Result<Conf, Error>> => {
+export const readConfigFileJson = async (): Promise<Result<Conf, Error | ZodError>> => {
   const unsafeConfFile = (
     await readConfigFile().then((file) =>
       file.andThen(parseJson).mapErr((reason) => new Error('cannot parse conf file', { cause: reason })),
@@ -81,5 +82,5 @@ export const readConfigFileJson = async (): Promise<Result<Conf, Error>> => {
 
   const confRes = await applyMigrations(unsafeConfFile as Conf) // unsafeConfFile as Conf, because we know it's maybe a Conf for migrations
 
-  return confRes.andThen(safeDecodeConf) // then be sure it's a Conf)
+  return confRes.andThen(safeDecodeConf) // then be sure it's a Conf
 }

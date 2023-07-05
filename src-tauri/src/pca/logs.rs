@@ -17,6 +17,7 @@ use std::fs;
 use std::path::PathBuf;
 use tauri::PathResolver;
 
+#[derive(Debug)]
 pub struct Logs {
     pub file_path: PathBuf,
     pub previous_file_path: PathBuf,
@@ -28,8 +29,11 @@ pub struct LogsState {
 }
 
 /// Create a LogConf depending of the application conf.
-fn build_config(conf: &Conf, path: &PathBuf) -> LogConfig {
-    let level = conf.log_level_filter();
+fn build_config(conf: Result<Conf, crate::pca::Error>, path: &PathBuf) -> LogConfig {
+    let level = match conf {
+        Ok(conf) => conf.log_level_filter(),
+        Err(_) => log::LevelFilter::Debug,
+    };
     let stdout = ConsoleAppender::builder().build();
     let requests = FileAppender::builder()
         .encoder(Box::new(PatternEncoder::new("{d} - {m}{n}")))
@@ -53,7 +57,6 @@ impl Logs {
     pub fn new(resolver: &PathResolver) -> Result<Self, crate::pca::Error> {
         let app_logs = resolver.app_logs();
         let previous_app_logs = resolver.app_previous_logs();
-        let conf = Conf::get(resolver)?;
 
         if app_logs.exists() {
             match fs::copy(&app_logs, &previous_app_logs) {
@@ -66,8 +69,10 @@ impl Logs {
             }
         }
 
+        let conf = Conf::get(resolver);
+
         let handle =
-            log4rs::init_config(build_config(&conf, &app_logs)).map_err(crate::pca::Error::from)?;
+            log4rs::init_config(build_config(conf, &app_logs)).map_err(crate::pca::Error::from)?;
 
         Ok(Self {
             file_path: app_logs,
@@ -79,7 +84,6 @@ impl Logs {
     pub fn set_config(&self, resolver: &PathResolver) -> Result<(), crate::pca::Error> {
         let app_logs = resolver.app_logs();
         let previous_app_logs = resolver.app_previous_logs();
-        let conf = Conf::get(resolver)?;
 
         if app_logs.exists() {
             match fs::copy(&app_logs, previous_app_logs) {
@@ -92,7 +96,9 @@ impl Logs {
             }
         }
 
-        self.handle.set_config(build_config(&conf, &app_logs));
+        let conf = Conf::get(resolver);
+
+        self.handle.set_config(build_config(conf, &app_logs));
 
         Ok(())
     }
@@ -111,10 +117,10 @@ pub fn log(ns: String, message: String, level: String, args: &str) {
 
     match level.as_str() {
         "trace" => trace!(target: "pca", "{} — {} {:#?}", ns, message, args),
-        "debug" => debug!(target: "pca", "{} — {} {:#?}", ns, message, args),
-        "info" => info!(target: "pca", "{} — {} {:#?}", ns, message, args),
-        "warn" => warn!(target: "pca", "{} — {} {:#?}", ns, message, args),
-        "error" => error!(target: "pca", "{} — {} {:#?}", ns, message, args),
-        _ => trace!(target: "pca", "{} — {} {:#?}", ns, message, args),
+        "debug" => debug!(target: "pca", "{} — {} {:?}", ns, message, args),
+        "info" => info!(target: "pca", "{} — {} {}", ns, message, args),
+        "warn" => warn!(target: "pca", "{} — {} {}", ns, message, args),
+        "error" => error!(target: "pca", "{} — {} {}", ns, message, args),
+        _ => trace!(target: "pca", "{} — {} {}", ns, message, args),
     }
 }

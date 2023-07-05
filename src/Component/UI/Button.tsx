@@ -71,6 +71,19 @@ const button = cva(
         ],
       },
     },
+    compoundVariants: [
+      {
+        variant: 'brand',
+        color: 'error',
+        className:
+          'border-red-600 bg-red-600 hover:border-red-400 hover:bg-red-400 focus-visible:ring-red-400 focus-visible:ring-offset-2',
+      },
+      {
+        variant: ['ghost', 'brand', 'secondary'],
+        color: 'inherit',
+        className: 'text-inherit',
+      },
+    ],
     defaultVariants: {
       color: 'default',
       size: 'md',
@@ -81,7 +94,7 @@ const button = cva(
 
 export type ButtonVariants = VariantProps<typeof button>
 export type ButtonElement = ElementRef<typeof Primitive.button>
-export type ButtonProps = PrimitivePropsWithRef<typeof Primitive.button> &
+export type ButtonProps = Omit<PrimitivePropsWithRef<typeof Primitive.button>, 'color'> &
   ButtonVariants & {
     asChild?: boolean
     startIcon?: JSX.Element

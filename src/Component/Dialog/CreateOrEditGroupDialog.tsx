@@ -5,11 +5,11 @@
  *
  */
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon } from '@heroicons/react/24/solid'
 import { zodResolver } from '@hookform/resolvers/zod'
 import is from '@sindresorhus/is'
 import FileScriptsList from 'App/Component/Compilation/FileScriptsList'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
-import Spinner from 'App/Component/Spinner'
 import * as Dialog from 'App/Component/UI/Dialog'
 import * as EmptyState from 'App/Component/UI/EmptyState'
 import * as Button from 'App/Component/UI/Button'
@@ -143,7 +143,7 @@ function CreateOrEditGroupDialog({
                 {actionsIsLoading && (
                   <motion.span {...fadeAnimate}>
                     <Button.Icon edge="start" className="animate-spin">
-                      <Spinner />
+                      <ArrowPathIcon />
                     </Button.Icon>
                   </motion.span>
                 )}

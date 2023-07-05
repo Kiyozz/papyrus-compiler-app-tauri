@@ -35,7 +35,7 @@ function LogItem({
       className="py-4"
       hidden={hidden}
     >
-      <div className="sticky -top-1 rounded-b-none bg-white px-6 pb-2">
+      <div className="sticky -top-1 rounded-b-none bg-white px-6 py-2 dark:bg-gray-800">
         <div id={`${log.script.id}-title`} aria-label={log.script.name} className="flex items-center justify-between">
           <div className="flex items-center gap-2 overflow-x-hidden">
             <span>{log.script.name}</span>

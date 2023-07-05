@@ -16,14 +16,14 @@ export const useConf = (options: UseQueryOptions<Conf> = {}) => {
   return useQuery({
     queryKey: ['conf'],
     queryFn: async () => {
-      logs.debug('read config')
+      logs.debug('read conf')
 
       const config = await readConfig()
 
-      logs.trace('config read')
+      logs.trace('conf read')
 
       if (config.err) {
-        logs.error('config read failed', config.val)
+        logs.error('conf read failed', config.val)
 
         throw config.val
       }

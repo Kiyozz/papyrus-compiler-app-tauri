@@ -47,7 +47,7 @@ function SettingsMo2Section() {
       title={t('page.settings.sections.mo2.title')}
       id="mo2-section"
       ref={refs['settings-mo2']}
-      description="Si vous utilisez PCA en dehors de MO2, ajoutez les informations de l'instance MO2 que vous utilisez."
+      description={t('page.settings.sections.mo2.description')}
     >
       <TutorialTooltip
         title={
@@ -111,7 +111,8 @@ function SettingsMo2Section() {
               <Alert.Content>
                 <Alert.Icon severity="error" />
                 <Alert.Message severity="error">
-                  {t<string>('common.confCheckError', {
+                  {/* @see https://github.com/i18next/react-i18next/issues/1541 */}
+                  {t<any, any, any>('common.confCheckError', {
                     context: !isCheckConfQueryError(checkConf) ? 'unknown' : checkConf.data.val.type,
                     gameExe: toExecutable(conf.data.game.type),
                   })}

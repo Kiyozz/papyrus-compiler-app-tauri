@@ -9,6 +9,7 @@ import { type TranslationSchema } from 'App/Type/TranslationSchema'
 
 const fr: TranslationSchema = {
   common: {
+    loadingConf: 'Chargement de la configuration...',
     back: 'Retour',
     next: 'Suivant',
     skip: 'Passer',
@@ -62,6 +63,7 @@ const fr: TranslationSchema = {
     copy: 'Copier',
     copySuccess: 'Copié avec succès',
     copyError: 'Erreur lors de la copie: {{error}}',
+    error: 'Erreur',
     createGroup: 'Créer un groupe',
     removeRecentScriptsError: 'Erreur lors de la suppression: {{error}}',
     youAreUsingLatestVersion: 'Vous disposez de la dernière version de PCA',
@@ -98,7 +100,8 @@ const fr: TranslationSchema = {
     },
     telemetry: {
       title: "Partager l'analyse",
-      text: "Contribuez à l'amélioration de PCA en autorisant l'envoi automatique de données de diagnostic et d'utilisation anonymisées.",
+      description:
+        "Contribuez à l'amélioration de PCA en autorisant l'envoi automatique de données de diagnostic et d'utilisation anonymisées.",
     },
     refuse: 'Refuser',
     accept: 'Accepter',
@@ -106,6 +109,9 @@ const fr: TranslationSchema = {
       title: 'Erreur lors du chargement. Votre configuration semble invalide.',
       content:
         "Essayez de réinitialiser la configuration de PCA. Vous pouvez avoir plus de détails dans les logs. Les logs sont requis pour obtenir de l'aide sur les erreurs.",
+      openLogFile: 'Ouvrir le fichier de logs',
+      openConfFile: 'Ouvrir le fichier de configuration',
+      resetError: 'Erreur lors de la réinitialisation de la configuration',
     },
     restartLater: 'Redémarrer plus tard',
     restartNow: 'Redémarrer maintenant',
@@ -177,6 +183,7 @@ const fr: TranslationSchema = {
       sections: {
         game: {
           title: 'Jeu',
+          description: 'Ajoutez les informations de votre environnement.',
           games: {
             le: 'Skyrim LE',
             se: 'Skyrim SE/AE',
@@ -195,6 +202,7 @@ const fr: TranslationSchema = {
         },
         compilation: {
           title: 'Compilation',
+          description: 'Informations optionnelles sur le fonctionnement de la compilation.',
           concurrentScripts: {
             label: 'Nombre de scripts compilés simultanément',
             helperText:
@@ -203,6 +211,8 @@ const fr: TranslationSchema = {
         },
         mo2: {
           title: 'Mod Organizer 2',
+          description:
+            "Si vous utilisez PCA en dehors de MO2, ajoutez les informations de l'instance MO2 que vous utilisez.",
           use: {
             helperText:
               "Si PCA n'est pas démarré via MO2, vous pouvez activer l'intégration MO2. Pour plus d'informations, consultez la documentation de PCA.",
@@ -217,6 +227,7 @@ const fr: TranslationSchema = {
           description: "Paramétrer l'apparence de PCA",
           options: {
             system: 'Système',
+
             light: 'Clair',
             dark: 'Sombre',
           },

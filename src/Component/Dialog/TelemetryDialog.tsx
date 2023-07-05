@@ -35,7 +35,7 @@ const TelemetryDialog = () => {
       open={step.some && step.val === 'end' && conf.isSuccess && conf.data.tutorial.telemetry}
     >
       <Dialog.Title>{t('common.telemetry.title')}</Dialog.Title>
-      <Dialog.Content className="px-6 py-4">{t('common.telemetry.text')}</Dialog.Content>
+      <Dialog.Content className="px-6 py-4">{t('common.telemetry.description')}</Dialog.Content>
       <Dialog.Actions className="flex justify-end space-x-4">
         <Button.Root
           color="inherit"

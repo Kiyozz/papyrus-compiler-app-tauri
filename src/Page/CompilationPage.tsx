@@ -131,7 +131,8 @@ function CompilationPage() {
                     <Alert.Icon severity="error" className="py-4 pl-4" />
                     <Alert.Message severity="error" className="flex items-center divide-x">
                       <p className="grow py-4">
-                        {t<string>('common.confCheckError', {
+                        {/* @see https://github.com/i18next/react-i18next/issues/1541 */}
+                        {t<any, any, any>('common.confCheckError', {
                           context: checkConf.data?.some ? checkConf.data.val.type : undefined,
                           gameExe: toExecutable(conf.data.game.type),
                         })}

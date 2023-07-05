@@ -118,7 +118,7 @@ impl Conf {
 }
 
 #[tauri::command]
-pub fn on_conf_reset(window: Window<Wry>, logs_state: tauri::State<&LogsState>) {
+pub fn on_conf_reset(window: Window<Wry>, logs_state: tauri::State<LogsState>) {
     trace!("reset conf file");
 
     match &logs_state.logs {
