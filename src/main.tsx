@@ -9,10 +9,7 @@ import { createInstance, MatomoProvider } from '@datapunt/matomo-tracker-react'
 import { type MatomoInstance } from '@datapunt/matomo-tracker-react/es/types'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import CompilationLogsProvider from 'App/Hook/CompilationLogs/UseCompilationLogs'
 import { useConf } from 'App/Hook/Conf/UseConf'
-import CompilationScriptsProvider from 'App/Hook/UseCompilationScripts'
-import DialogsProvider from 'App/Hook/UseDialogs'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { useVersion } from 'App/Hook/UseVersion'
 import CompilationPage from 'App/Page/CompilationPage'
@@ -123,25 +120,19 @@ rootRef.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools position="bottom-right" />
-      <DialogsProvider>
-        <CompilationLogsProvider>
-          <CompilationScriptsProvider>
-            <MemoryRouter>
-              <Matomo>
-                <RouterListen>
-                  <Routes>
-                    <Route path="/" element={<App />}>
-                      <Route index element={<CompilationPage />} />
-                      <Route path="/groups" element={<GroupsPage />} />
-                      <Route path="/settings" element={<SettingsPage />} />
-                    </Route>
-                  </Routes>
-                </RouterListen>
-              </Matomo>
-            </MemoryRouter>
-          </CompilationScriptsProvider>
-        </CompilationLogsProvider>
-      </DialogsProvider>
+      <MemoryRouter>
+        <Matomo>
+          <RouterListen>
+            <Routes>
+              <Route path="/" element={<App />}>
+                <Route index element={<CompilationPage />} />
+                <Route path="/groups" element={<GroupsPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+              </Route>
+            </Routes>
+          </RouterListen>
+        </Matomo>
+      </MemoryRouter>
     </QueryClientProvider>
   </React.StrictMode>,
 )

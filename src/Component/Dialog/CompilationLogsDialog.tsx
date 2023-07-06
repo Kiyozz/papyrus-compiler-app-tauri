@@ -10,8 +10,8 @@ import LogItem from 'App/Component/Dialog/CompilationLogs/LogItem'
 import * as Dialog from 'App/Component/UI/Dialog'
 import ButtonRoot from 'App/Component/UI/Button'
 import Switch from 'App/Component/UI/Switch'
-import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
-import { useDialogs } from 'App/Hook/UseDialogs'
+import { useCompilationLogsStore } from 'App/Hook/CompilationLogs/UseCompilationLogsStore'
+import { useDialogsStore } from 'App/Hook/UseDialogsStore'
 import { enterPageAnimate } from 'App/Lib/Framer'
 import { toast } from 'App/Lib/Toaster'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -21,10 +21,8 @@ import { useTranslation } from 'react-i18next'
 function CompilationLogsDialog() {
   const { t } = useTranslation()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
-  const {
-    compilationLogs: [isOpen, setOpen],
-  } = useDialogs()
-  const { logs, clear } = useCompilationLogs()
+  const { compilationLogs: isOpen, setCompilationLogs: setOpen } = useDialogsStore()
+  const { logs, clear } = useCompilationLogsStore()
   const [isDisplayErrorOnly, setDisplayErrorOnly] = useState(false)
 
   const hasNoLogs = is.emptyArray(logs)

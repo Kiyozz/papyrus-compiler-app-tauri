@@ -8,7 +8,7 @@
 import { useIsSystemDarkTheme } from 'App/Hook/UseIsSystemDarkTheme'
 import { useEffect } from 'react'
 
-export const useRootTheme = (): void => {
+export const useSyncRootTheme = (): void => {
   const isDark = useIsSystemDarkTheme()
 
   useEffect(() => {

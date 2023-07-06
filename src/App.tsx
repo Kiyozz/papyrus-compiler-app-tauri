@@ -6,11 +6,7 @@
  */
 
 import { Cog6ToothIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
-import {
-  ArrowPathIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-} from '@heroicons/react/24/solid'
+import { ArrowPathIcon, ExclamationCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid'
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import CompilationLogsDialog from 'App/Component/Dialog/CompilationLogsDialog'
 import OpenDocumentationDialog from 'App/Component/Dialog/OpenDocumentationDialog'
@@ -24,7 +20,7 @@ import { useConf } from 'App/Hook/Conf/UseConf'
 import { useResetConf } from 'App/Hook/Conf/UseResetConf'
 import { useListenConfReset } from 'App/Hook/UseListenConfReset'
 import { useMatomo } from 'App/Hook/UseMatomo'
-import { useRootTheme } from 'App/Hook/UseRootTheme'
+import { useSyncRootTheme } from 'App/Hook/UseSyncRootTheme'
 import SettingsTutorialProvider from 'App/Hook/Tutorial/UseSettingsTutorial'
 import { confFileName } from 'App/Lib/Conf/Conf'
 import { openFile } from 'App/Lib/File/Open'
@@ -39,7 +35,7 @@ import { twMerge } from 'tailwind-merge'
 import { type ZodError } from 'zod'
 
 function App() {
-  useRootTheme()
+  useSyncRootTheme()
   useListenConfReset()
 
   const { trackEvent } = useMatomo()

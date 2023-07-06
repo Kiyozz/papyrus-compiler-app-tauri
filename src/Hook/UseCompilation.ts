@@ -5,10 +5,10 @@
  *
  */
 
-import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
+import { useCompilationLogsStore } from 'App/Hook/CompilationLogs/UseCompilationLogsStore'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateRecentScripts } from 'App/Hook/RecentScripts/UseUpdateRecentScripts'
-import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
+import { useCompilationScriptsStore } from 'App/Hook/UseCompilationScriptsStore'
 import { useCompile } from 'App/Hook/useCompile'
 import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
@@ -24,8 +24,8 @@ const logs = createLogs('useCompilation')
 export function useCompilation() {
   const { data } = useConf()
   const updateRecentScripts = useUpdateRecentScripts()
-  const { add, scripts, remove, replace } = useCompilationScripts()
-  const { add: addCompilationLog } = useCompilationLogs()
+  const { add, scripts, remove, replace } = useCompilationScriptsStore()
+  const { add: addCompilationLog } = useCompilationLogsStore()
   const compileMutation = useCompile()
 
   const compile = useCallback(
@@ -113,14 +113,16 @@ export function useCompilation() {
     [addCompilationLog, compileMutation, data?.compilation?.concurrentScripts, replace, updateRecentScripts],
   )
 
+  const clear = useCallback(() => {
+    const scriptsToRemove = scripts.filter((script) => !isRunning(script) && !isBusy(script))
+    remove(scriptsToRemove)
+  }, [remove, scripts])
+
   return {
     scripts,
     add,
     remove,
-    clear: () => {
-      const scriptsToRemove = scripts.filter((script) => !isRunning(script) && !isBusy(script))
-      remove(scriptsToRemove)
-    },
+    clear,
     compile,
   }
 }

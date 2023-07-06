@@ -65,7 +65,6 @@ const TutorialBackdrop = ({
       {isNotTheEnd && (
         <Button.Root
           className="fixed left-4 top-4 z-50"
-          color="inherit"
           onClick={() => {
             skip('skip')
           }}
