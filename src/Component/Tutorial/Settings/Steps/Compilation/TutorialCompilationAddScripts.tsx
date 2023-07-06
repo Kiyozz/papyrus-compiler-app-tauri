@@ -7,14 +7,14 @@
 
 import TutorialBackdrop from 'App/Component/Tutorial/Settings/TutorialBackdrop'
 import { useScrollFromStep } from 'App/Hook/Tutorial/UseScrollFromStep'
-import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
 import { type TutorialStep, useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { useCompilationScriptsStore } from 'App/Hook/UseCompilationScriptsStore'
 import { useNavigate } from 'react-router-dom'
 
 const TutorialCompilationAddScripts = () => {
   const navigate = useNavigate()
   const { changeStep, scrollInto } = useSettingsTutorial()
-  const { add } = useCompilationScripts()
+  const { add } = useCompilationScriptsStore()
 
   useScrollFromStep('compilation-add-scripts', 'settings-mo2')
 

@@ -6,12 +6,12 @@
  */
 
 import TutorialBackdrop from 'App/Component/Tutorial/Settings/TutorialBackdrop'
-import { useCompilationScripts } from 'App/Hook/UseCompilationScripts'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { useCompilationScriptsStore } from 'App/Hook/UseCompilationScriptsStore'
 
 const TutorialCompilationCompile = () => {
   const { changeStep, scrollInto } = useSettingsTutorial()
-  const { clear } = useCompilationScripts()
+  const { clear } = useCompilationScriptsStore()
 
   return (
     <TutorialBackdrop

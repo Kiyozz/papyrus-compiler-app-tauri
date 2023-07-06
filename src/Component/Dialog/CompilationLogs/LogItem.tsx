@@ -9,7 +9,7 @@ import { ClipboardIcon } from '@heroicons/react/24/outline'
 import { writeText as copyToClipboard } from '@tauri-apps/api/clipboard'
 import Badge from 'App/Component/UI/Badge'
 import * as Button from 'App/Component/UI/Button'
-import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
+import { useCompilationLogsStore } from 'App/Hook/CompilationLogs/UseCompilationLogsStore'
 import { type CompilationLog } from 'App/Lib/Compilation/CompilationLog'
 import { useTranslation } from 'react-i18next'
 import { Result } from 'ts-results'
@@ -24,7 +24,7 @@ function LogItem({
   hidden: boolean
 }) {
   const { t } = useTranslation()
-  const { remove } = useCompilationLogs()
+  const { remove } = useCompilationLogsStore()
   const isSuccessful = log.status === 'success'
   const isError = log.status === 'error'
 

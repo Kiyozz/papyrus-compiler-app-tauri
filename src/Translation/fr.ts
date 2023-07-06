@@ -224,7 +224,7 @@ const fr: TranslationSchema = {
         },
         theme: {
           title: 'Thème',
-          description: "Paramétrer l'apparence de PCA",
+          description: "Paramétrer l'apparence de PCA.",
           options: {
             system: 'Système',
 

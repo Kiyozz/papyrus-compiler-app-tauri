@@ -6,7 +6,7 @@
  */
 
 import { fromNullable } from 'App/Lib/TsResults'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { type Option } from 'ts-results'
 
 export const useDialog = <S>({
@@ -20,17 +20,21 @@ export const useDialog = <S>({
   close: () => void
 } => {
   const [state, setState] = useState<Option<S>>(defaultState)
-  const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const open = useCallback((state?: S) => {
+    setState(fromNullable(state))
+    setIsOpen(true)
+  }, [])
+
+  const close = useCallback(() => {
+    setIsOpen(false)
+  }, [])
 
   return {
-    isOpen: open,
-    open: (state) => {
-      setState(fromNullable(state))
-      setOpen(true)
-    },
+    isOpen,
+    open,
     state,
-    close: () => {
-      setOpen(false)
-    },
+    close,
   }
 }

@@ -17,11 +17,11 @@ import {
 } from '@heroicons/react/24/outline'
 import AnimateAppLogo from 'App/Component/AnimateAppLogo'
 import TutorialTooltip, { type TutorialTooltipProps } from 'App/Component/Tutorial/Settings/TutorialTooltip'
-import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
+import { compilationLogsStoreComputed } from 'App/Hook/CompilationLogs/UseCompilationLogsStore'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
-import { useDialogs } from 'App/Hook/UseDialogs'
+import { useDialogsStore } from 'App/Hook/UseDialogsStore'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
 import { swapOffAnimate, swapOnAnimate } from 'App/Lib/Framer'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
@@ -53,13 +53,11 @@ const ArrowLeftCircleIconMotion = motion(ArrowLeftCircleIcon)
 function Drawer() {
   const { t } = useTranslation()
   const { open } = useDocumentation()
-  const {
-    compilationLogs: [, setCompilationLogsDialogOpen],
-    openDocumentation: [, setOpenDocumentationDialogOpen],
-  } = useDialogs()
+  const { setCompilationLogs: setCompilationLogsDialogOpen, setOpenDocumentation: setOpenDocumentationDialogOpen } =
+    useDialogsStore()
   const conf = useConf()
   const updateConf = useUpdateConf()
-  const { hasAllSuccess, hasAnyError } = useCompilationLogs()
+  const { hasAllSuccess, hasAnyError } = compilationLogsStoreComputed
   const { refs } = useSettingsTutorial()
 
   if (!isQueryNonNullable(conf)) return <>Waiting...</>
@@ -92,7 +90,7 @@ function Drawer() {
       icon: hasAllSuccess ? (
         <CheckCircleIcon className="text-green-500 group-hover:text-green-400" />
       ) : (
-        <ExclamationTriangleIcon className={twMerge(hasAnyError && 'text-red-400 group-hover:text-red-600')} />
+        <ExclamationTriangleIcon className={twMerge(hasAnyError && 'text-red-400 group-hover:text-red-500')} />
       ),
       onClick: () => {
         // open logs dialog

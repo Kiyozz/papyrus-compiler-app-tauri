@@ -10,7 +10,7 @@ import * as Dialog from 'App/Component/UI/Dialog'
 import Switch from 'App/Component/UI/Switch'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useUpdateConf } from 'App/Hook/Conf/UseUpdateConf'
-import { useDialogs } from 'App/Hook/UseDialogs'
+import { useDialogsStore } from 'App/Hook/UseDialogsStore'
 import { useDocumentation } from 'App/Hook/UseDocumentation'
 import { isQueryNonNullable } from 'App/Lib/IsQueryNonNullable'
 import React, { useRef } from 'react'
@@ -18,9 +18,7 @@ import { useTranslation } from 'react-i18next'
 
 function OpenDocumentationDialog(props: Omit<Dialog.DialogProps, 'onKeyDown' | 'onClose' | 'open'>) {
   const { t } = useTranslation()
-  const {
-    openDocumentation: [isOpen, setOpen],
-  } = useDialogs()
+  const { openDocumentation: isOpen, setOpenDocumentation: setOpen } = useDialogsStore()
   const conf = useConf()
   const updateConf = useUpdateConf()
   const confirmButtonRef = useRef<HTMLButtonElement>(null)

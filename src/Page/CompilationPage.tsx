@@ -15,13 +15,13 @@ import PageAppBar from 'App/Component/Page/PageAppBar'
 import SearchScriptButton from 'App/Component/SearchScriptButton'
 import TutorialTooltip from 'App/Component/Tutorial/Settings/TutorialTooltip'
 import * as Alert from 'App/Component/UI/Alert'
-import { useCompilationLogs } from 'App/Hook/CompilationLogs/UseCompilationLogs'
+import { useCompilationLogsStore } from 'App/Hook/CompilationLogs/UseCompilationLogsStore'
 import { isCheckConfQueryError, useCheckConf } from 'App/Hook/Conf/UseCheckConf'
 import { useConf } from 'App/Hook/Conf/UseConf'
 import { useGroups } from 'App/Hook/Group/UseGroups'
 import { useCompilation } from 'App/Hook/UseCompilation'
-import { useDialogs } from 'App/Hook/UseDialogs'
 import { useSettingsTutorial } from 'App/Hook/Tutorial/UseSettingsTutorial'
+import { useDialogsStore } from 'App/Hook/UseDialogsStore'
 import { useMatomo } from 'App/Hook/UseMatomo'
 import { createLogs } from 'App/Lib/CreateLog'
 import { type FileScriptCompilation } from 'App/Lib/Compilation/FileScriptCompilation'
@@ -46,11 +46,9 @@ const logs = createLogs('CompilationPage')
 function CompilationPage() {
   const { t } = useTranslation()
   const { trackEvent } = useMatomo()
-  const {
-    compilationLogs: [, setCompilationLogsDialogOpen],
-  } = useDialogs()
+  const { setCompilationLogs: setCompilationLogsDialogOpen } = useDialogsStore()
   const { scripts, add: addScripts, clear: clearScripts, remove: removeScripts, compile } = useCompilation()
-  const { remove: removeCompilationLog, clear: clearCompilationLogs } = useCompilationLogs()
+  const { remove: removeCompilationLog, clear: clearCompilationLogs } = useCompilationLogsStore()
   const [isRecentFilesDialogOpen, setRecentFilesDialogOpen] = useState(false)
   const groups = useGroups()
   const conf = useConf()
