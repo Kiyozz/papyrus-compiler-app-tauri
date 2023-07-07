@@ -21,7 +21,7 @@ const GroupsListItemSecondaryAction = ({
 
   return (
     <FloatingMenu.Root as="div" key="choose-group-action">
-      <FloatingMenu.Button variant="ghost" className="dark:text-gray-300">
+      <FloatingMenu.Button variant="ghost" className="-mx-2.5 dark:text-gray-300">
         <Button.Icon>
           <EllipsisVerticalIcon />
         </Button.Icon>

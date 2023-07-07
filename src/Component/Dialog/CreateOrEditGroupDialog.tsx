@@ -92,7 +92,7 @@ function CreateOrEditGroupDialog({
         <Dialog.Title>
           <Input autoComplete="off" placeholder={t('dialog.group.name.label')} {...register('name')} />
         </Dialog.Title>
-        <Dialog.Content>
+        <Dialog.Content className="px-6 pb-6">
           <AnimatePresence mode="wait" initial={false}>
             {is.nonEmptyArray(scripts) ? (
               <FileScriptsList
@@ -117,7 +117,6 @@ function CreateOrEditGroupDialog({
         <Dialog.Actions>
           <SearchScriptButton
             className="mr-auto px-3 py-2"
-            color="inherit"
             onFileSelect={(files, reason) => {
               addScripts(files)
               trackEvent({
@@ -134,11 +133,7 @@ function CreateOrEditGroupDialog({
             <Button.Root ref={closeButtonRef} disabled={actionsDisabled} onClick={onClose} variant="secondary">
               {t('common.cancel')}
             </Button.Root>
-            <Button.Root
-              type="submit"
-              disabled={actionsDisabled || actionsIsLoading || !formState.isValid}
-              color="inherit"
-            >
+            <Button.Root type="submit" disabled={actionsDisabled || actionsIsLoading || !formState.isValid}>
               <AnimatePresence>
                 {actionsIsLoading && (
                   <motion.span {...fadeAnimate}>

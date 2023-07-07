@@ -51,7 +51,7 @@ function FileScriptsList<T extends FileScript>({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ type: 'spring' }}
-                  className="flex items-center gap-x-3 px-4 py-2"
+                  className="flex items-center gap-x-3"
                 >
                   {isFileScriptCompilation(script) ? (
                     <Button.Root

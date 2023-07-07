@@ -17,7 +17,11 @@ const List = forwardRef<ListElement, ListProps>(({ asChild = false, children, cl
   const Comp = asChild ? Slot : Primitive.ul
 
   return (
-    <Comp className={twMerge('divide-y divide-gray-100 py-1.5 dark:divide-gray-600', className)} {...props} ref={ref}>
+    <Comp
+      className={twMerge('divide-y divide-gray-300 rounded-md border border-gray-300 dark:border-gray-700', className)}
+      {...props}
+      ref={ref}
+    >
       {children}
     </Comp>
   )
@@ -33,7 +37,7 @@ const ListItem = forwardRef<ListItemElement, ListItemProps>(
     const Comp = asChild ? Slot : Primitive.li
 
     return (
-      <Comp className={twMerge('px-2 py-1.5', className)} {...props} ref={ref}>
+      <Comp className={twMerge('px-6 py-2', className)} {...props} ref={ref}>
         {children}
       </Comp>
     )
