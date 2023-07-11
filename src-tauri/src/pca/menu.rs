@@ -5,7 +5,9 @@
  *
  */
 
-use tauri::{AboutMetadata, CustomMenuItem, Menu, MenuItem, Submenu};
+use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
+#[cfg(target_os = "macos")]
+use tauri::AboutMetadata;
 
 /// Taken from tauri::Menu::os_default.
 ///
@@ -47,16 +49,19 @@ pub fn create_menu() -> Menu {
     let mut file_menu = Menu::new();
     #[cfg(not(target_os = "macos"))]
     {
-        file_menu = file_menu.add_native_item(MenuItem::Quit);
+        file_menu = file_menu
+            .add_item(check_for_updates)
+            .add_native_item(MenuItem::Separator)
+            .add_submenu(settings)
+            .add_native_item(MenuItem::Separator)
+            .add_item(CustomMenuItem::new("open_logs", "Logs"))
+            .add_submenu(Submenu::new(
+                "Previous sessions...",
+                Menu::new().add_item(CustomMenuItem::new("open_previous_logs", "Logs")),
+            ))
+            .add_native_item(MenuItem::Separator)
+            .add_native_item(MenuItem::Quit);
     }
-    file_menu = file_menu
-        .add_item(CustomMenuItem::new("open_logs", "Logs"))
-        .add_submenu(Submenu::new(
-            "Previous sessions...",
-            Menu::new().add_item(CustomMenuItem::new("open_previous_logs", "Logs")),
-        ))
-        .add_native_item(MenuItem::Separator)
-        .add_native_item(MenuItem::CloseWindow);
     menu = menu.add_submenu(Submenu::new("File", file_menu));
 
     #[cfg(not(target_os = "linux"))]

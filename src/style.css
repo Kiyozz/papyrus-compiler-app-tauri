@@ -19,3 +19,16 @@
 [data-radix-popper-content-wrapper] {
   z-index: 50 !important;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: theme('colors.gray.600');
+  border-radius: theme('borderRadius.DEFAULT');
+}
+
+html {
+  overflow-y: scroll;
+}

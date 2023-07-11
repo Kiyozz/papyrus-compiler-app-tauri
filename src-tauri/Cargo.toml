@@ -1,6 +1,6 @@
 [package]
 name = "pca"
-version = "2023.1.0-NEXT"
+version = "23.1.0-1"
 description = "A Tauri App"
 authors = ["you"]
 license = ""

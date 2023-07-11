@@ -37,10 +37,10 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
             <>
               <Transition.Child
                 as={Fragment}
-                enter="ease-out duration-200"
+                enter="duration-200 ease-out"
                 enterFrom="opacity-0"
                 enterTo="opacity-100"
-                leave="ease-in duration-200"
+                leave="duration-200 ease-in"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
                 afterLeave={onLeaveEnd}
@@ -50,12 +50,12 @@ const Dialog = forwardRef<DialogElement, DialogProps>(
 
               <Transition.Child
                 as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-[0.98]"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                leaveTo="opacity-0 scale-[0.98]"
+                enter="duration-300 ease-out"
+                enterFrom="scale-[0.98] opacity-0"
+                enterTo="scale-100 opacity-100"
+                leave="duration-200 ease-in"
+                leaveFrom="translate-y-0 opacity-100 sm:scale-100"
+                leaveTo="scale-[0.98] opacity-0"
               >
                 <div className="fixed inset-0 mx-auto max-w-6xl p-4">
                   <div
@@ -130,7 +130,7 @@ const DialogContent = forwardRef<DialogContentElement, DialogContentProps>(
     const Comp = asChild ? Slot : Primitive.div
 
     return (
-      <Comp className={twMerge('flex grow flex-col overflow-y-auto', className)} ref={ref}>
+      <Comp className={twMerge('flex grow flex-col overflow-y-scroll', className)} ref={ref}>
         {children}
       </Comp>
     )

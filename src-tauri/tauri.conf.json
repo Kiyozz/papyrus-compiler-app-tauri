@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "PCA",
-    "version": "2023.1.0-next"
+    "version": "23.1.0-1"
   },
   "tauri": {
     "allowlist": {
@@ -77,7 +77,7 @@
         "height": 820,
         "width": 800,
         "resizable": true,
-        "title": "PCA 2023.1-NEXT",
+        "title": "PCA 23.1-1",
         "minWidth": 850,
         "minHeight": 900,
         "userAgent": "Pca-App"

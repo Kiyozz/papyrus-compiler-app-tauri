@@ -12,6 +12,8 @@ import * as Button from 'App/Component/UI/Button'
 function ZodErrorFormat({ error }: { error: ZodError }) {
   const { t } = useTranslation()
 
+  console.log({ error })
+
   return (
     <pre className="prose max-w-full dark:prose-invert">
       {error.errors.map((err) => (

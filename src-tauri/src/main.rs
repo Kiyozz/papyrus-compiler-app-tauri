@@ -24,7 +24,12 @@ fn main() {
         .menu(pca::menu::create_menu())
         .setup(|app| {
             let path_resolver = app.path_resolver();
-            let window = app.get_window("main").unwrap();
+
+            #[cfg(debug_assertions)] // only include this code on debug builds
+            {
+                let window = app.get_window("main").unwrap();
+                window.open_devtools();
+            }
 
             let managed = app.manage(LogsState {
                 logs: Logs::new(&path_resolver),
@@ -37,9 +42,6 @@ fn main() {
             }
 
             info!("Starting PCA");
-
-            #[cfg(debug_assertions)] // only include this code on debug builds
-            window.open_devtools();
 
             Ok(())
         })
